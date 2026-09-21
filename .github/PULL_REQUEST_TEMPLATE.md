@@ -1,7 +1,6 @@
-## Title
-<!-- Summarize the user-facing change, not the files touched.
-     Good: "Refactor Notification Handling to Reduce Cognitive Complexity"
-     Avoid: "Refactor code in src/cli/manage.js" -->
+## Title (Remove this)
+<!-- PR titles should follow the same convention as commit messages above, except 
+for the issue number as that should be mentioned below -->
 
 ## Resolves
 <!-- Reference the issue(s) this PR closes, e.g. "Closes #14"

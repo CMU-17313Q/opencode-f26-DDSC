@@ -8,9 +8,11 @@ import { Flag } from "@opencode-ai/core/flag/flag"
 import { useBindings, useOpencodeModeStack } from "../keymap"
 import { useClipboard } from "../context/clipboard"
 
+export type DialogSize = "medium" | "large" | "xlarge" | "full"
+
 export function Dialog(
   props: ParentProps<{
-    size?: "medium" | "large" | "xlarge"
+    size?: DialogSize
     onClose: () => void
   }>,
 ) {
@@ -20,6 +22,7 @@ export function Dialog(
 
   let dismiss = false
   const width = () => {
+    if (props.size === "full") return dimensions().width - 4
     if (props.size === "xlarge") return 116
     if (props.size === "large") return 88
     return 60
@@ -42,7 +45,7 @@ export function Dialog(
       alignItems="center"
       position="absolute"
       zIndex={3000}
-      paddingTop={dimensions().height / 4}
+      paddingTop={props.size === "full" ? 2 : dimensions().height / 4}
       left={0}
       top={0}
       backgroundColor={RGBA.fromInts(0, 0, 0, 150)}
@@ -57,6 +60,7 @@ export function Dialog(
         }}
         width={width()}
         maxWidth={dimensions().width - 2}
+        height={props.size === "full" ? dimensions().height - 4 : undefined}
         backgroundColor={theme.backgroundPanel}
         paddingTop={1}
       >
@@ -72,7 +76,7 @@ function init() {
       element: JSX.Element
       onClose?: () => void
     }[],
-    size: "medium" as "medium" | "large" | "xlarge",
+    size: "medium" as DialogSize,
   })
 
   const renderer = useRenderer()
@@ -169,7 +173,7 @@ function init() {
     get size() {
       return store.size
     },
-    setSize(size: "medium" | "large" | "xlarge") {
+    setSize(size: DialogSize) {
       setStore("size", size)
     },
   }

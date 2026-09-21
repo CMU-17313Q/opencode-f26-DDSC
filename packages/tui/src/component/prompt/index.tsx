@@ -33,8 +33,10 @@ import { createStore, produce, unwrap } from "solid-js/store"
 import { usePromptHistory, type PromptInfo } from "../../prompt/history"
 import { computePromptTraits } from "../../prompt/traits"
 import { expandPastedTextPlaceholders, expandTrackedPastedText } from "../../prompt/part"
+import { findPastedTextAtOffset, getBufferOffsetFromMouse } from "../../prompt/paste-chip"
 import { usePromptStash } from "../../prompt/stash"
 import { DialogStash } from "../dialog-stash"
+import { DialogPastedText } from "../dialog-pasted-text"
 import { type AutocompleteRef, Autocomplete } from "./autocomplete"
 import { useRenderer, useTerminalDimensions, type JSX } from "@opentui/solid"
 import type { AssistantMessage, FilePart, UserMessage } from "@opencode-ai/sdk/v2"
@@ -1436,6 +1438,21 @@ export function Prompt(props: PromptProps) {
                 }, 0)
               }}
               onMouseDown={(r: MouseEvent) => r.target?.focus()}
+              onMouseUp={(event: MouseEvent) => {
+                if (!input || input.isDestroyed) return
+                const offset = getBufferOffsetFromMouse(input, event)
+                if (offset < 0) return
+                const text = findPastedTextAtOffset(
+                  input.extmarks,
+                  promptPartTypeId,
+                  store.extmarkToPartIndex,
+                  store.prompt.parts,
+                  offset,
+                )
+                if (text) {
+                  dialog.replace(() => <DialogPastedText content={text} onClose={() => dialog.clear()} />)
+                }
+              }}
               focusedBackgroundColor={theme.backgroundElement}
               cursorColor={props.disabled ? theme.backgroundElement : theme.text}
               cursorStyle={tuiConfig.cursor}

@@ -43,6 +43,22 @@
 
 ---
 
+### Team
+
+Maintained by Team DDSC
+<ul>
+    <li>Ravin Kumar [Ravin-Kumar] (ravink@andrew.cmu.edu)</li>
+    <li>Mohammed Al-Marri [mrmarri1] (mrmarri@andrew.cmu.edu)</li>
+    <li>Simon Malinka [smalinka] (smalinka@andrew.cmu.edu)</li>
+    <li>Ebil Jacob [RobbyTato] (ebilj@andrew.cmu.edu)</li>
+    <li>Sultan Abdulla [saabdullcmuq] (saabdull@andrew.cmu.edu)</li>
+</ul>
+
+
+This project is **_not_** affiliated with the Opencode team
+
+---
+
 ### Installation
 
 ```bash
@@ -126,8 +142,8 @@ See [TESTING.md](./TESTING.md) for what runs in CI (typecheck, unit tests, e2e s
 
 ### Building on OpenCode
 
-If you are working on a project that's related to OpenCode and is using "opencode" as part of its name, for example "opencode-dashboard" or "opencode-mobile", please add a note to your README to clarify that it is not built by the OpenCode team and is not affiliated with us in any way.
+If you are working on a project that's related to OpenCode and is using "opencode" as part of its name, for example "opencode-dashboard" or "opencode-mobile", please add a note to your README to clarify that it is not built by the OpenCode team and is not affiliated with them in any way.
 
 ---
 
-**Join our community** [Discord](https://discord.gg/opencode) | [X.com](https://x.com/opencode)
+**Join the Opencode community** [Discord](https://discord.gg/opencode) | [X.com](https://x.com/opencode)

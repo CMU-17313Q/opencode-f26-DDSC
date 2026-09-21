@@ -209,9 +209,47 @@ Long, AI-generated PR descriptions and issues are not acceptable and may be igno
 - Explain what changed and why in your own words
 - If you can't explain it briefly, your PR might be too large
 
+### Commit Message Convention
+
+We use **conventional/semantic commits** so history is easy to scan.
+
+**Format:**
+
+```
+<type>(<scope>)[<issue-number>]: <short summary>
+
+<optional body - what changed and why, concise but detailed>
+```
+
+**Types:**
+
+| Type       | Use for                                                    |
+|------------|------------------------------------------------------------|
+| `feat`     | A new feature                                              |
+| `fix`      | A bug fix                                                  |
+| `wip`      | Work in progress (incomplete implementation/change/fix)    |
+| `refactor` | Code change that neither fixes a bug nor adds a feature    |
+| `docs`     | Documentation only                                         |
+| `style`    | Formatting, missing semicolons, etc. (no logic change)     |
+| `test`     | Adding or correcting tests                                 |
+| `chore`    | Build process, tooling, dependencies                       |
+
+**Examples:**
+
+```
+feat(auth)[#67]: add password reset flow
+
+fix(notifications): prevent duplicate emails on retry
+
+refactor(cli): simplify argument parsing in manage.js
+
+docs(readme): add setup instructions for local dev
+```
+
 ### PR Titles
 
-PR titles should follow conventional commit standards:
+PR titles should follow the same convention as commit messages above, except 
+for the issue number as that should be mentioned in the PR itself (see [Commit Message Convention](#commit-message-convention)):
 
 - `feat:` new feature or functionality
 - `fix:` bug fix

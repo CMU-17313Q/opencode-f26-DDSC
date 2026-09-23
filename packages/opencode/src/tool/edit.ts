@@ -14,6 +14,7 @@ import { Watcher } from "@opencode-ai/core/filesystem/watcher"
 import { EventV2Bridge } from "@/event-v2-bridge"
 import { Format } from "../format"
 import { InstanceState } from "@/effect/instance-state"
+import { displayPath, resolvePath } from "../project/instance-context"
 import { Snapshot } from "@/snapshot"
 import { assertExternalDirectoryEffect } from "./external-directory"
 import { FSUtil } from "@opencode-ai/core/fs-util"
@@ -77,9 +78,7 @@ export const EditTool = Tool.define(
           }
 
           const instance = yield* InstanceState.context
-          const filePath = path.isAbsolute(params.filePath)
-            ? params.filePath
-            : path.join(instance.directory, params.filePath)
+          const filePath = resolvePath(params.filePath, instance)
           yield* assertExternalDirectoryEffect(ctx, filePath)
 
           let diff = ""
@@ -206,7 +205,7 @@ export const EditTool = Tool.define(
               diff,
               filediff,
             },
-            title: `${path.relative(instance.worktree, filePath)}`,
+            title: displayPath(filePath, instance),
             output,
           }
         }),

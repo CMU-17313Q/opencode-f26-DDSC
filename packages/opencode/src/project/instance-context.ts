@@ -24,3 +24,16 @@ export function containsPath(filepath: string, ctx: InstanceContext): boolean {
   if (ctx.worktree === "/") return false
   return FSUtil.contains(ctx.worktree, filepath)
 }
+
+/**
+ * Resolve a tool supplied path. `repo-b/src/x.ts` resolves inside the root aliased `repo-b` when the project
+ * has extra roots; otherwise relative paths resolve against ctx.directory exactly as before.
+ */
+export function resolvePath(input: string, ctx: InstanceContext) {
+  return ProjectRoots.resolve(input, ctx.directory, ctx.worktree, ctx.project.roots)
+}
+
+/** Path shown to the user; prefixed with the owning repo's alias once the project has several roots. */
+export function displayPath(filepath: string, ctx: InstanceContext) {
+  return ProjectRoots.display(filepath, ctx.worktree, ctx.project.roots)
+}

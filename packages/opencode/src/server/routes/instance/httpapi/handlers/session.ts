@@ -64,6 +64,7 @@ export const sessionHandlers = HttpApiBuilder.group(InstanceHttpApi, "session", 
     const list = Effect.fn("SessionHttpApi.list")(function* (ctx: { query: typeof ListQuery.Type }) {
       const directory = ctx.query.directory ? yield* InstanceState.directory : undefined
       return yield* session.list({
+        archived: ctx.query.archived,
         directory: ctx.query.scope === "project" ? undefined : directory,
         scope: ctx.query.scope,
         path: ctx.query.path,
@@ -198,7 +199,9 @@ export const sessionHandlers = HttpApiBuilder.group(InstanceHttpApi, "session", 
         })
       }
       if (ctx.payload.time?.archived !== undefined) {
-        yield* session.setArchived({ sessionID: ctx.params.sessionID, time: ctx.payload.time.archived })
+        yield* SessionError.mapStorageNotFound(
+          session.setArchived({ sessionID: ctx.params.sessionID, time: ctx.payload.time.archived ?? undefined }),
+        )
       }
       return yield* requireSession(ctx.params.sessionID)
     })

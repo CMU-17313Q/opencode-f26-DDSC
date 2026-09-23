@@ -54,6 +54,7 @@ export type HomeSessionsViewProps = {
   onCreateSession: () => void
   onOpenSession: (session: Session, options?: OpenSessionOptions) => void
   onArchiveSession: (session: Session) => Promise<void>
+  onShowArchived?: () => void
   onSetHoverTarget: (element: HTMLElement) => void
   onSetThumbTrack: (element: HTMLDivElement) => void
   onSetContent: (element: HTMLDivElement) => void
@@ -81,18 +82,30 @@ export function HomeSessionsView(props: HomeSessionsViewProps) {
       <div class="sticky top-0 z-30 shrink-0 bg-v2-background-bg-base pb-3 pt-6 lg:pt-12" onWheel={props.onWheel}>
         <HomeSessionSearch {...props} />
         <Suspense>
-          <Show when={props.groups().length > 0 && props.canCreateSession()}>
+          <Show when={props.onShowArchived || (props.groups().length > 0 && props.canCreateSession())}>
             <div class="pointer-events-none absolute right-0 top-[84px] z-20 flex lg:top-[108px]">
-              <ButtonV2
-                data-action="home-new-session"
-                variant="ghost-muted"
-                size="normal"
-                icon="edit"
-                class="pointer-events-auto h-7 px-2 [font-weight:530]"
-                onClick={props.onCreateSession}
-              >
-                {props.language.t("command.session.new")}
-              </ButtonV2>
+              <Show when={props.onShowArchived}>
+                <ButtonV2
+                  variant="ghost-muted"
+                  size="normal"
+                  class="pointer-events-auto h-7 px-2 [font-weight:530]"
+                  onClick={props.onShowArchived}
+                >
+                  {props.language.t("session.archived.title")}
+                </ButtonV2>
+              </Show>
+              <Show when={props.groups().length > 0 && props.canCreateSession()}>
+                <ButtonV2
+                  data-action="home-new-session"
+                  variant="ghost-muted"
+                  size="normal"
+                  icon="edit"
+                  class="pointer-events-auto h-7 px-2 [font-weight:530]"
+                  onClick={props.onCreateSession}
+                >
+                  {props.language.t("command.session.new")}
+                </ButtonV2>
+              </Show>
             </div>
           </Show>
         </Suspense>

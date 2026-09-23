@@ -4,6 +4,7 @@ import { useRoute } from "../context/route"
 import { useSync } from "../context/sync"
 import { createMemo, createResource, createSignal, onCleanup, onMount } from "solid-js"
 import path from "path"
+import { createStore } from "solid-js/store"
 import { Locale } from "../util/locale"
 import { useProject } from "../context/project"
 import { useTheme } from "../context/theme"
@@ -19,7 +20,7 @@ import { DialogSessionDeleteFailed } from "./dialog-session-delete-failed"
 import { useCommandShortcut } from "../keymap"
 import { useEvent } from "../context/event"
 
-type SessionListFilter = { scope?: "project"; path?: string }
+type SessionListFilter = { scope?: "project"; path?: string; archived?: boolean }
 
 export function createDialogSessionListQuery(input: { search?: string; filter: SessionListFilter }) {
   const search = input.search?.trim()
@@ -42,7 +43,8 @@ export function loadDialogSessionList<T>(input: {
   )
 }
 
-export function DialogSessionList() {
+export function DialogSessionList(props: { archived?: boolean } = {}) {
+  const [state, setState] = createStore({ pending: "", removed: [] as string[] })
   const dialog = useDialog()
   const route = useRoute()
   const sync = useSync()
@@ -60,11 +62,11 @@ export function DialogSessionList() {
   const quickSwitch9 = useCommandShortcut("session.quick_switch.9")
 
   const [browseResults, { refetch: refetchBrowse }] = createResource(
-    () => sync.session.query(),
+    () => ({ ...sync.session.query(), archived: props.archived ?? false }),
     (filter) => loadDialogSessionList({ filter, list: (query) => sdk.client.session.list(query) }),
   )
   const [searchResults, { refetch }] = createResource(
-    () => ({ query: search(), filter: sync.session.query() }),
+    () => ({ query: search(), filter: { ...sync.session.query(), archived: props.archived ?? false } }),
     (input) => {
       if (!input.query) return undefined
       return loadDialogSessionList({
@@ -87,8 +89,9 @@ export function DialogSessionList() {
       return session ? [session] : []
     })
     const query = search().trim().toLowerCase()
-    return [...result.map((session) => synced.get(session.id) ?? session), ...extra]
-      .filter((session) => !deleted().has(session.id))
+    return [...result, ...extra]
+      .filter((session) => !deleted().has(session.id) && !state.removed.includes(session.id))
+      .filter((session) => (session.time.archived !== undefined) === !!props.archived)
       .filter((session) => !query || session.title.toLowerCase().includes(query))
   })
 
@@ -97,6 +100,35 @@ export function DialogSessionList() {
       setDeleted((current) => new Set(current).add(event.properties.info.id))
     }),
   )
+
+  onCleanup(
+    event.on("session.updated", () => {
+      void refetchBrowse()
+      if (search()) void refetch()
+    }),
+  )
+
+  async function restore(sessionID: string) {
+    if (state.pending) return
+    setState("pending", sessionID)
+    await sdk.client.session
+      .update(
+        {
+          sessionID,
+          time: { archived: null },
+        },
+        { throwOnError: true },
+      )
+      .then(async () => {
+        setState("removed", (ids) => [...ids, sessionID])
+        await sync.session.refresh()
+        toast.show({ variant: "success", message: "Session restored" })
+      })
+      .catch((error) => {
+        toast.show({ variant: "error", message: errorMessage(error) })
+      })
+      .finally(() => setState("pending", ""))
+  }
 
   function recover(session: NonNullable<ReturnType<typeof sessions>[number]>) {
     const workspace = project.workspace.get(session.workspaceID!)
@@ -218,7 +250,7 @@ export function DialogSessionList() {
     const current = currentSessionID()
     const displayOrder = current && sessionMap.has(current) && !order.includes(current) ? [...order, current] : order
 
-    const pinned = local.session.pinned().filter((id) => sessionMap.has(id))
+    const pinned = props.archived ? [] : local.session.pinned().filter((id) => sessionMap.has(id))
     const pinnedSet = new Set(pinned)
     const slotByID = new Map<string, number>(local.session.slots().map((id, i) => [id, i + 1]))
 
@@ -271,16 +303,28 @@ export function DialogSessionList() {
 
   return (
     <DialogSelect
-      title="Sessions"
+      title={props.archived ? "Archived sessions" : "Sessions"}
       options={options()}
       skipFilter={true}
+      renderFilter={!props.archived}
       preserveSelection={true}
       current={currentSessionID()}
       onFilter={setSearch}
       onMove={() => {
         setToDelete(undefined)
       }}
-      onSelect={(option) => {
+      onSelect={async (option) => {
+        if (props.archived) {
+          void restore(option.value)
+          return
+        }
+        const result = await sdk.client.session.get({ sessionID: option.value }).catch(() => undefined)
+        if (!result?.data) return
+        if (result.data.time.archived !== undefined) {
+          setState("removed", (ids) => [...ids, option.value])
+          toast.show({ variant: "error", message: "Restore this session with /unarchive before opening it" })
+          return
+        }
         route.navigate({
           type: "session",
           sessionID: option.value,
@@ -289,8 +333,21 @@ export function DialogSessionList() {
       }}
       actions={[
         {
+          command: "session.unarchive",
+          title: "restore",
+          hidden: !props.archived,
+          onTrigger: (option) => void restore(option.value),
+        },
+        {
+          command: "session.archived",
+          title: props.archived ? "active" : "archived",
+          onEmpty: () => dialog.replace(() => <DialogSessionList archived={!props.archived} />),
+          onTrigger: () => dialog.replace(() => <DialogSessionList archived={!props.archived} />),
+        },
+        {
           command: "session.pin.toggle",
           title: "pin/unpin",
+          hidden: props.archived,
           onTrigger: (option: { value: string }) => {
             local.session.togglePin(option.value)
           },
@@ -298,6 +355,7 @@ export function DialogSessionList() {
         {
           command: "session.delete",
           title: "delete",
+          hidden: props.archived,
           onTrigger: async (option) => {
             if (toDelete() === option.value) {
               const session = sessions().find((item) => item.id === option.value)
@@ -347,6 +405,7 @@ export function DialogSessionList() {
         {
           command: "session.rename",
           title: "rename",
+          hidden: props.archived,
           onTrigger: async (option) => {
             dialog.replace(() => <DialogSessionRename session={option.value} />)
           },

@@ -45,6 +45,28 @@ const awaitDeferred = <T>(deferred: Deferred.Deferred<T>, message: string) =>
 const remove = (id: SessionID) => SessionNs.use.remove(id)
 
 describe("session.created event", () => {
+  it.instance("restores archived sessions, bumps recency, and leaves active sessions unchanged", () =>
+    Effect.gen(function* () {
+      const session = yield* SessionNs.Service
+      const archived = yield* session.create({ title: "archived" })
+      yield* session.setArchived({ sessionID: archived.id, time: 0 })
+      expect((yield* session.get(archived.id)).time.archived).toBe(0)
+      const active = yield* session.create({ title: "active" })
+      yield* Effect.sleep("2 millis")
+      yield* session.setArchived({ sessionID: archived.id })
+      const restored = yield* session.get(archived.id)
+      expect(restored.time.archived).toBeUndefined()
+      expect(restored.time.updated).toBeGreaterThan(archived.time.updated)
+      expect((yield* session.list({ archived: false }))[0]?.id).toBe(archived.id)
+      expect(yield* session.list({ archived: true })).toEqual([])
+      expect(yield* session.get(active.id)).toEqual(active)
+      yield* session.setArchived({ sessionID: archived.id })
+      expect(yield* session.get(archived.id)).toEqual(restored)
+      yield* session.setArchived({ sessionID: active.id })
+      expect(yield* session.get(active.id)).toEqual(active)
+    }),
+  )
+
   it.instance("should emit session.created event when session is created", () =>
     Effect.gen(function* () {
       const session = yield* SessionNs.Service

@@ -353,8 +353,9 @@ exports[`opencode CLI help-text snapshots every documented command emits stable 
 manage sessions
 
 Commands:
-  opencode session list                list sessions
-  opencode session delete <sessionID>  delete a session
+  opencode session list                   list sessions
+  opencode session delete <sessionID>     delete a session
+  opencode session unarchive <sessionID>  restore an archived session
 
 Options:
   -h, --help        show help                                                              [boolean]
@@ -561,6 +562,7 @@ Options:
       --print-logs  print logs to stderr                                                   [boolean]
       --log-level   log level                   [string] [choices: "DEBUG", "INFO", "WARN", "ERROR"]
       --pure        run without external plugins                                           [boolean]
+      --archived    list only archived sessions                                            [boolean]
   -n, --max-count   limit to N most recent sessions                                         [number]
       --format      output format             [string] [choices: "table", "json"] [default: "table"]"
 `;

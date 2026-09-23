@@ -37,6 +37,11 @@ export const Info = Schema.Struct({
   commands: optional(Commands),
   time: Time,
   sandboxes: Schema.Array(Schema.String),
+  roots: optional(
+    Schema.Array(Schema.String).annotate({
+      description: "Additional repository roots the agent may read and write in besides the worktree",
+    }),
+  ),
 }).annotate({ identifier: "Project" })
 export interface Info extends Schema.Schema.Type<typeof Info> {}
 

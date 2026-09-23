@@ -131,7 +131,30 @@ export function createHomeSessionsController(home: HomeController) {
       })
   })
 
+  async function showArchived() {
+    const ctx = home.server.focusedContext()
+    if (!ctx) return
+    const { DialogArchivedSessions } = await import("@/components/archived-sessions")
+    dialog.show(() => (
+      <DialogArchivedSessions
+        directories={projectDirectories()}
+        client={ctx.sdk.client}
+        onRestore={async (session) => {
+          ctx.sync.session.remember(session)
+          homeSessions().apply({ type: "session.updated", properties: { sessionID: session.id, info: session } })
+          await sessionLoad.refetch()
+        }}
+      />
+    ))
+  }
+
   command.register("home.palette", () => [
+    {
+      id: "session.archived",
+      title: language.t("session.archived.title"),
+      keybind: "mod+shift+h",
+      onSelect: () => void showArchived(),
+    },
     {
       id: "command.palette",
       title: language.t("command.palette"),
@@ -174,6 +197,7 @@ export function createHomeSessionsController(home: HomeController) {
       searchRecords: allRecords,
     },
     session: {
+      showArchived,
       showProjectName: () => !home.project.selected(),
       server: () => home.selection.value().server,
       canCreate: () => !!home.project.newSession(),

@@ -44,8 +44,22 @@ function pagerCmd(): string[] {
 export const SessionCommand = cmd({
   command: "session",
   describe: "manage sessions",
-  builder: (yargs: Argv) => yargs.command(SessionListCommand).command(SessionDeleteCommand).demandCommand(),
+  builder: (yargs: Argv) =>
+    yargs.command(SessionListCommand).command(SessionDeleteCommand).command(SessionUnarchiveCommand).demandCommand(),
   async handler() {},
+})
+
+export const SessionUnarchiveCommand = effectCmd({
+  command: "unarchive <sessionID>",
+  describe: "restore an archived session",
+  builder: (yargs) => yargs.positional("sessionID", { type: "string", demandOption: true }),
+  handler: Effect.fn("Cli.session.unarchive")(function* (args) {
+    const session = yield* Session.Service
+    yield* session
+      .setArchived({ sessionID: SessionID.make(args.sessionID) })
+      .pipe(Effect.catchIf(NotFoundError.isInstance, () => fail(`Session not found: ${args.sessionID}`)))
+    UI.println(UI.Style.TEXT_SUCCESS_BOLD + `Session ${args.sessionID} restored` + UI.Style.TEXT_NORMAL)
+  }),
 })
 
 export const SessionDeleteCommand = effectCmd({
@@ -72,6 +86,7 @@ export const SessionListCommand = effectCmd({
   describe: "list sessions",
   builder: (yargs) =>
     yargs
+      .option("archived", { type: "boolean", describe: "list only archived sessions" })
       .option("max-count", {
         alias: "n",
         describe: "limit to N most recent sessions",
@@ -84,7 +99,9 @@ export const SessionListCommand = effectCmd({
         default: "table",
       }),
   handler: Effect.fn("Cli.session.list")(function* (args) {
-    const sessions = yield* Session.Service.use((svc) => svc.list({ roots: true, limit: args.maxCount }))
+    const sessions = yield* Session.Service.use((svc) =>
+      svc.list({ roots: true, limit: args.maxCount, archived: args.archived }),
+    )
 
     if (sessions.length === 0) return
 

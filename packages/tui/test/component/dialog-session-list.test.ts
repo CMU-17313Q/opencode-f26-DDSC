@@ -10,6 +10,15 @@ describe("dialog session list", () => {
     })
   })
 
+  test("requests archived sessions before applying the result limit", () => {
+    expect(createDialogSessionListQuery({ filter: { archived: true }, search: " old " })).toEqual({
+      roots: true,
+      limit: 30,
+      search: "old",
+      archived: true,
+    })
+  })
+
   test("requests root sessions for search results", () => {
     expect(createDialogSessionListQuery({ search: " deploy ", filter: { scope: "project" } })).toEqual({
       roots: true,

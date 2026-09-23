@@ -3367,6 +3367,7 @@ export class Session2 extends HeyApiClient {
    */
   public list<ThrowOnError extends boolean = false>(
     parameters?: {
+      archived?: boolean | "true" | "false"
       directory?: string
       workspace?: string
       scope?: "project"
@@ -3383,6 +3384,7 @@ export class Session2 extends HeyApiClient {
       [
         {
           args: [
+            { in: "query", key: "archived" },
             { in: "query", key: "directory" },
             { in: "query", key: "workspace" },
             { in: "query", key: "scope" },
@@ -3567,7 +3569,7 @@ export class Session2 extends HeyApiClient {
       }
       permission?: PermissionRuleset
       time?: {
-        archived?: number
+        archived?: number | null
       }
     },
     options?: Options<never, ThrowOnError>,

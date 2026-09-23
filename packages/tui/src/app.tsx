@@ -579,6 +579,35 @@ function App(props: { onSnapshot?: () => Promise<string[]>; pluginHost: TuiPlugi
         },
       },
       {
+        name: "session.archived",
+        title: "Archived sessions",
+        category: "Session",
+        slashName: "unarchive",
+        slashAliases: ["archived"],
+        run: () => dialog.replace(() => <DialogSessionList archived />),
+      },
+      {
+        name: "session.archive",
+        title: "Archive session",
+        category: "Session",
+        slashName: "archive",
+        run: async () => {
+          if (route.data.type !== "session") {
+            toast.show({ variant: "error", message: "Open a session to archive it" })
+            return
+          }
+          await sdk.client.session
+            .update({ sessionID: route.data.sessionID, time: { archived: Date.now() } }, { throwOnError: true })
+            .then(async () => {
+              await sync.session.refresh()
+              route.navigate({ type: "home" })
+              dialog.clear()
+              toast.show({ variant: "success", message: "Session archived" })
+            })
+            .catch((error) => toast.show({ variant: "error", message: errorMessage(error) }))
+        },
+      },
+      {
         name: "session.new",
         title: "New session",
         suggested: route.data.type === "session",

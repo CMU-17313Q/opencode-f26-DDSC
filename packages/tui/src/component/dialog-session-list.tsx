@@ -89,7 +89,7 @@ export function DialogSessionList(props: { archived?: boolean } = {}) {
       return session ? [session] : []
     })
     const query = search().trim().toLowerCase()
-    return [...result.map((session) => synced.get(session.id) ?? session), ...extra]
+    return [...result, ...extra]
       .filter((session) => !deleted().has(session.id) && !state.removed.includes(session.id))
       .filter((session) => (session.time.archived !== undefined) === !!props.archived)
       .filter((session) => !query || session.title.toLowerCase().includes(query))
@@ -98,6 +98,13 @@ export function DialogSessionList(props: { archived?: boolean } = {}) {
   onCleanup(
     event.on("session.deleted", (event) => {
       setDeleted((current) => new Set(current).add(event.properties.info.id))
+    }),
+  )
+
+  onCleanup(
+    event.on("session.updated", () => {
+      void refetchBrowse()
+      if (search()) void refetch()
     }),
   )
 
@@ -299,15 +306,23 @@ export function DialogSessionList(props: { archived?: boolean } = {}) {
       title={props.archived ? "Archived sessions" : "Sessions"}
       options={options()}
       skipFilter={true}
+      renderFilter={!props.archived}
       preserveSelection={true}
       current={currentSessionID()}
       onFilter={setSearch}
       onMove={() => {
         setToDelete(undefined)
       }}
-      onSelect={(option) => {
+      onSelect={async (option) => {
         if (props.archived) {
           void restore(option.value)
+          return
+        }
+        const result = await sdk.client.session.get({ sessionID: option.value }).catch(() => undefined)
+        if (!result?.data) return
+        if (result.data.time.archived !== undefined) {
+          setState("removed", (ids) => [...ids, option.value])
+          toast.show({ variant: "error", message: "Restore this session with /unarchive before opening it" })
           return
         }
         route.navigate({
@@ -326,6 +341,7 @@ export function DialogSessionList(props: { archived?: boolean } = {}) {
         {
           command: "session.archived",
           title: props.archived ? "active" : "archived",
+          onEmpty: () => dialog.replace(() => <DialogSessionList archived={!props.archived} />),
           onTrigger: () => dialog.replace(() => <DialogSessionList archived={!props.archived} />),
         },
         {

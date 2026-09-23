@@ -42,6 +42,7 @@ export interface DialogSelectProps<T> {
     side?: "left" | "right"
     hidden?: boolean
     disabled?: boolean | ((option: DialogSelectOption<T> | undefined) => boolean)
+    onEmpty?: () => void
     onTrigger: (option: DialogSelectOption<T>) => void
   }[]
   footerHints?: {
@@ -441,9 +442,7 @@ export function DialogSelect<T>(props: DialogSelectProps<T>) {
             if (props.locked) return
             if (isActionDisabled(item)) return
             setStore("input", "keyboard")
-            const option = selected()
-            if (!option) return
-            item.onTrigger(option)
+            triggerDialogAction(item, selected())
           },
         })),
       ],
@@ -504,9 +503,7 @@ export function DialogSelect<T>(props: DialogSelectProps<T>) {
     if (props.locked) return
     if (!item || !isActionItem(item) || isActionDisabled(item)) return
     setStore("input", "keyboard")
-    const option = selected()
-    if (!option) return
-    item.onTrigger(option)
+    triggerDialogAction(item, selected())
   }
 
   function isActionItem(item: VisibleAction): item is Action & { label: string } {
@@ -788,4 +785,12 @@ function Option(props: {
       </Show>
     </>
   )
+}
+
+export function triggerDialogAction<T>(
+  action: Pick<NonNullable<DialogSelectProps<T>["actions"]>[number], "onTrigger" | "onEmpty">,
+  option: DialogSelectOption<T> | undefined,
+) {
+  if (!option) return action.onEmpty?.()
+  action.onTrigger(option)
 }

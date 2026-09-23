@@ -142,11 +142,21 @@ function Picker(props: { api: TuiPluginApi; directory: string }) {
       .toSorted((a, b) => a.localeCompare(b)),
   )
   const options = createMemo(() => [
+    ...folders()
+      .filter((dir) => existsSync(path.join(dir, ".git")) && !taken().has(dir))
+      .map((dir) => ({
+        title: path.basename(dir),
+        value: { type: "add", directory: dir } satisfies Choice as Choice,
+        description: "add repository",
+        category: "Git repositories here",
+      })),
     {
       title: `Add ${abbreviateHome(props.directory, paths.home)}`,
       value: { type: "add", directory: props.directory } satisfies Choice as Choice,
       category: "Current folder",
-      disabled: taken().has(props.directory),
+      // A folder containing the primary repo would swallow it (and everything beside it) as one root.
+      disabled:
+        taken().has(props.directory) || ProjectRoots.contains(props.directory, project.data.project.worktree ?? "/"),
     },
     {
       title: "Type a path…",
@@ -162,14 +172,6 @@ function Picker(props: { api: TuiPluginApi; directory: string }) {
             category: "Current folder",
           },
         ]),
-    ...folders()
-      .filter((dir) => existsSync(path.join(dir, ".git")) && !taken().has(dir))
-      .map((dir) => ({
-        title: path.basename(dir),
-        value: { type: "add", directory: dir } satisfies Choice as Choice,
-        description: "add repository",
-        category: "Git repositories here",
-      })),
     ...folders().map((dir) => ({
       title: path.basename(dir) + "/",
       value: { type: "open", directory: dir } satisfies Choice as Choice,

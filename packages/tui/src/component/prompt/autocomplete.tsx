@@ -2,6 +2,7 @@ import type { BoxRenderable, TextareaRenderable, ScrollBoxRenderable } from "@op
 import { pathToFileURL } from "bun"
 import fuzzysort from "fuzzysort"
 import path from "path"
+import { ProjectRoots } from "@opencode-ai/core/project/roots"
 import { firstBy } from "remeda"
 import { createMemo, createResource, createEffect, onMount, onCleanup, Index, Show, createSignal } from "solid-js"
 import { createStore } from "solid-js/store"
@@ -320,43 +321,47 @@ export function Autocomplete(props: {
       if (referenceMatch()) return []
       const { lineRange, baseQuery } = extractLineRange(input.query ?? "")
 
-      // Get files from SDK
-      const result = await sdk.client.v2.fs.find({
-        query: baseQuery,
-        limit: "20",
-        location: {
-          directory: input.location?.directory,
-          workspace: input.location?.workspaceID ?? project.workspace.current(),
-        },
-      })
-
-      const options: AutocompleteOption[] = []
+      // Get files from SDK, searching every extra repository root of the project as well
+      const worktree = project.data.project.worktree
+      const extra = worktree ? ProjectRoots.list(worktree, project.roots()).filter((root) => !root.primary) : []
+      const workspace = input.location?.workspaceID ?? project.workspace.current()
+      const results = await Promise.all(
+        [input.location?.directory, ...extra.map((root) => root.directory)].map((directory) =>
+          sdk.client.v2.fs.find({ query: baseQuery, limit: "20", location: { directory, workspace } }),
+        ),
+      )
 
       // Add file options. Trust the order returned by fff (frecency, fuzzy
-      // score, filename bonus, etc. are already factored in).
-      if (!result.error && result.data) {
-        const width = props.anchor().width - 4
-        options.push(
-          ...result.data.data.map((item): AutocompleteOption => {
-            const { filename, part } = createFilePart(
-              item,
-              path.join(result.data.location.directory, item.path),
-              lineRange,
-            )
-            return {
-              display: Locale.truncateMiddle(filename, width),
-              value: filename,
-              isDirectory: item.type === "directory",
-              path: item.path,
-              onSelect: () => {
-                insertPart(filename, part)
-              },
-            }
-          }),
+      // score, filename bonus, etc. are already factored in); interleave repos by rank.
+      const width = props.anchor().width - 4
+      return results
+        .flatMap((result) => (!result.error && result.data ? [result.data] : []))
+        .flatMap((data) =>
+          data.data.map((item, rank) => ({ item, rank, absolute: path.join(data.location.directory, item.path) })),
         )
-      }
-
-      return options
+        .toSorted((a, b) => a.rank - b.rank)
+        .map((entry): AutocompleteOption => {
+          // With several repos, label every file with the repo it belongs to (repo-b/src/x.ts).
+          const item =
+            worktree && extra.length > 0
+              ? {
+                  ...entry.item,
+                  path:
+                    ProjectRoots.display(entry.absolute, worktree, project.roots()) +
+                    (entry.item.path.endsWith("/") ? "/" : ""),
+                }
+              : entry.item
+          const { filename, part } = createFilePart(item, entry.absolute, lineRange)
+          return {
+            display: Locale.truncateMiddle(filename, width),
+            value: filename,
+            isDirectory: item.type === "directory",
+            path: item.path,
+            onSelect: () => {
+              insertPart(filename, part)
+            },
+          }
+        })
     },
     {
       initialValue: [],

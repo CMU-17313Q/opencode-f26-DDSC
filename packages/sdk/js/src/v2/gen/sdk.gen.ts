@@ -2631,6 +2631,7 @@ export class Project extends HeyApiClient {
       name?: string
       icon?: ProjectIcon
       commands?: ProjectCommands
+      roots?: Array<string>
     },
     options?: Options<never, ThrowOnError>,
   ) {
@@ -2645,6 +2646,7 @@ export class Project extends HeyApiClient {
             { in: "body", key: "name" },
             { in: "body", key: "icon" },
             { in: "body", key: "commands" },
+            { in: "body", key: "roots" },
           ],
         },
       ],

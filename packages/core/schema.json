@@ -1,8 +1,8 @@
 {
   "version": "7",
   "dialect": "sqlite",
-  "id": "f14a9b18-8207-487e-a3d3-227e629ba9ad",
-  "prevIds": ["169a0f0f-d58f-479f-b024-fa1c7b9a09db"],
+  "id": "7dca3dd2-48f7-4820-a175-859fb6f4c15b",
+  "prevIds": ["f14a9b18-8207-487e-a3d3-227e629ba9ad"],
   "ddl": [
     {
       "name": "workspace",
@@ -767,6 +767,16 @@
       "default": null,
       "generated": null,
       "name": "commands",
+      "entityType": "columns",
+      "table": "project"
+    },
+    {
+      "type": "text",
+      "notNull": false,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "roots",
       "entityType": "columns",
       "table": "project"
     },

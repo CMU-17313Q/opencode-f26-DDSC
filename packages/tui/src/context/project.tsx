@@ -24,6 +24,7 @@ export const { use: useProject, provider: ProjectProvider } = createSimpleContex
         id: undefined as string | undefined,
         worktree: undefined as string | undefined,
         mainDir: undefined as string | undefined,
+        roots: [] as string[],
       },
       instance: {
         path: defaultPath,
@@ -48,6 +49,7 @@ export const { use: useProject, provider: ProjectProvider } = createSimpleContex
         setStore("instance", "path", reconcile(instancePath.data || defaultPath))
         setStore("project", "id", project.data?.id)
         setStore("project", "worktree", project.data?.worktree)
+        setStore("project", "roots", reconcile(project.data?.roots ?? []))
         setStore("project", "mainDir", directories?.data?.findLast((item) => item.strategy === undefined)?.directory)
       })
     }
@@ -71,13 +73,31 @@ export const { use: useProject, provider: ProjectProvider } = createSimpleContex
       if (event.payload.type === "workspace.status") {
         setStore("workspace", "status", event.payload.properties.workspaceID, event.payload.properties.status)
       }
+      if (event.payload.type === "project.updated" && event.payload.properties.id === store.project.id) {
+        setStore("project", "roots", reconcile(event.payload.properties.roots ?? []))
+      }
     })
+
+    async function setRoots(roots: string[]) {
+      if (!store.project.id) return
+      const result = await sdk.client.project.update({
+        projectID: store.project.id,
+        roots,
+        workspace: store.workspace.current,
+      })
+      if (result.error) throw new Error("Failed to update repository roots")
+      setStore("project", "roots", reconcile(result.data?.roots ?? []))
+    }
 
     return {
       data: store,
       project() {
         return store.project.id
       },
+      roots() {
+        return store.project.roots
+      },
+      setRoots,
       instance: {
         path() {
           return store.instance.path

@@ -54,6 +54,7 @@ export function fromRow(row: Row): Info {
     },
     sandboxes: row.sandboxes,
     commands: row.commands ?? undefined,
+    roots: row.roots ?? undefined,
   }
 }
 
@@ -62,6 +63,7 @@ export const UpdateInput = Schema.Struct({
   name: Schema.optional(Schema.String),
   icon: Schema.optional(Project.Icon),
   commands: Schema.optional(Project.Commands),
+  roots: Schema.optional(Schema.Array(Schema.String)),
 })
 export type UpdateInput = Types.DeepMutable<Schema.Schema.Type<typeof UpdateInput>>
 
@@ -69,6 +71,7 @@ export const UpdatePayload = Schema.Struct({
   name: Schema.optional(Schema.String),
   icon: Schema.optional(Project.Icon),
   commands: Schema.optional(Project.Commands),
+  roots: Schema.optional(Schema.Array(Schema.String)),
 }).annotate({ identifier: "ProjectUpdateInput" })
 export type UpdatePayload = Types.DeepMutable<Schema.Schema.Type<typeof UpdatePayload>>
 
@@ -351,6 +354,14 @@ const layer = Layer.effect(
           icon_url_override: input.icon?.override,
           icon_color: input.icon?.color,
           commands: input.commands,
+          // Roots must be absolute, deduplicated, and existing directories.
+          roots: input.roots
+            ? yield* Effect.forEach(
+                input.roots.map((root) => AbsolutePath.make(FSUtil.resolve(root))).filter((r, i, a) => a.indexOf(r) === i),
+                (root) => fs.isDir(root).pipe(Effect.orDie, Effect.map((ok) => (ok ? root : undefined))),
+                { concurrency: "unbounded" },
+              ).pipe(Effect.map((arr) => arr.filter((x): x is AbsolutePath => x !== undefined)))
+            : undefined,
           time_updated: Date.now(),
         })
         .where(eq(ProjectTable.id, input.projectID))

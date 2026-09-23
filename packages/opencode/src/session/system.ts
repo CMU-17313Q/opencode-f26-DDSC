@@ -21,6 +21,7 @@ import { AbsolutePath } from "@opencode-ai/core/schema"
 import { Location } from "@opencode-ai/core/location"
 import { LocationServiceMap, locationServiceMapLayer } from "@opencode-ai/core/location-services"
 import { Reference } from "@opencode-ai/core/reference"
+import { ProjectRoots } from "@opencode-ai/core/project/roots"
 import { MCP } from "@/mcp"
 import { PermissionV1 } from "@opencode-ai/core/v1/permission"
 
@@ -74,6 +75,17 @@ const layer = Layer.effect(
             `  Today's date: ${new Date().toDateString()}`,
             `</env>`,
           ].join("\n"),
+          (ctx.project.roots?.length ?? 0) === 0
+            ? undefined
+            : [
+                "This session spans multiple repositories. Each root below may be read and written directly.",
+                "Use absolute paths, or prefix a relative path with the root alias (e.g. `repo-b/src/main.py`).",
+                "<repository_roots>",
+                ...ProjectRoots.list(ctx.worktree, ctx.project.roots).map(
+                  (root) => `  ${root.alias}: ${root.directory}${root.primary ? " (primary)" : ""}`,
+                ),
+                "</repository_roots>",
+              ].join("\n"),
           references.length === 0
             ? undefined
             : [

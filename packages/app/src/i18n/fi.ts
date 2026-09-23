@@ -1,4 +1,12 @@
 export const dict = {
+  "session.unarchive": "Unarchive",
+  "session.unarchive.shortcut": "Unarchive (Ctrl/⌘+Shift+U)",
+  "session.unarchive.success": "Session restored",
+  "session.unarchive.failed": "Failed to restore session",
+  "session.archived.title": "Archived sessions",
+  "session.archived.search": "Search archived sessions",
+  "session.archived.empty": "No archived sessions",
+  "session.archived.retry": "Retry loading archived sessions",
   "command.category.suggested": "Ehdotetut",
   "command.category.view": "Näytä",
   "command.category.project": "Projekti",

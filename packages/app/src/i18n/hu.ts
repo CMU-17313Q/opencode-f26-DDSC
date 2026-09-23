@@ -94,6 +94,14 @@ const desktop = [
 ]
 
 export const dict = {
+  "session.unarchive": "Unarchive",
+  "session.unarchive.shortcut": "Unarchive (Ctrl/⌘+Shift+U)",
+  "session.unarchive.success": "Session restored",
+  "session.unarchive.failed": "Failed to restore session",
+  "session.archived.title": "Archived sessions",
+  "session.archived.search": "Search archived sessions",
+  "session.archived.empty": "No archived sessions",
+  "session.archived.retry": "Retry loading archived sessions",
   ...Object.fromEntries(DESKTOP_NATIVE_KEYS.map((key, index) => [key, desktop[index]])),
   "command.category.suggested": "Javasolt",
   "command.category.view": "Nézet",

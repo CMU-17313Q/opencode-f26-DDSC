@@ -1,5 +1,12 @@
 import { describe, expect, test } from "bun:test"
-import { createDialogSessionListQuery, loadDialogSessionList } from "../../src/component/dialog-session-list"
+import {
+  NO_FOLDER_LABEL,
+  compareFolderLabels,
+  createDialogSessionListQuery,
+  loadDialogSessionList,
+  sessionFolderLabel,
+} from "../../src/component/dialog-session-list"
+import { buildFolderOptions, collectFolderNames } from "../../src/component/session-folder"
 
 describe("dialog session list", () => {
   test("requests root sessions for the default browse list", () => {
@@ -42,5 +49,43 @@ describe("dialog session list", () => {
         list: () => Promise.reject(new Error("offline")),
       }),
     ).toBeUndefined()
+  })
+
+  test("maps missing folders to No folder", () => {
+    expect(sessionFolderLabel(undefined)).toBe(NO_FOLDER_LABEL)
+    expect(sessionFolderLabel("")).toBe(NO_FOLDER_LABEL)
+    expect(sessionFolderLabel("  ")).toBe(NO_FOLDER_LABEL)
+    expect(sessionFolderLabel(" Work ")).toBe("Work")
+  })
+
+  test("sorts folders alphabetically with No folder last", () => {
+    expect(["No folder", "b", "A"].toSorted(compareFolderLabels)).toEqual(["A", "b", "No folder"])
+    expect(compareFolderLabels("a", "a")).toBe(0)
+  })
+
+  test("collects unique trimmed folder names", () => {
+    expect(
+      collectFolderNames([
+        { folder: " Work " },
+        { folder: "Work" },
+        { folder: undefined },
+        { folder: "  " },
+        { folder: "play" },
+      ]),
+    ).toEqual(["play", "Work"])
+  })
+
+  test("builds No folder plus matches plus Create row", () => {
+    expect(buildFolderOptions(["Work", "play"], "").map((option) => option.title)).toEqual([
+      "No folder",
+      "Work",
+      "play",
+    ])
+    expect(buildFolderOptions(["Work", "play"], "wo").map((option) => option.title)).toEqual([
+      "No folder",
+      "Work",
+      'Create "wo"',
+    ])
+    expect(buildFolderOptions(["Work"], "work").map((option) => option.title)).toEqual(["No folder", "Work"])
   })
 })

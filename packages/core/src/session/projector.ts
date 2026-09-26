@@ -51,6 +51,7 @@ function sessionRow(info: SessionV1.SessionInfo): typeof SessionTable.$inferInse
     directory: info.directory,
     path: info.path,
     title: info.title,
+    folder: info.folder,
     agent: info.agent,
     model: info.model,
     version: info.version,

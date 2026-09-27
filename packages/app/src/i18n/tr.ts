@@ -3,14 +3,14 @@ import { dict as en } from "./en"
 type Keys = keyof typeof en
 
 export const dict = {
-  "session.unarchive": "Unarchive",
-  "session.unarchive.shortcut": "Unarchive (Ctrl/⌘+Shift+U)",
-  "session.unarchive.success": "Session restored",
-  "session.unarchive.failed": "Failed to restore session",
-  "session.archived.title": "Archived sessions",
-  "session.archived.search": "Search archived sessions",
-  "session.archived.empty": "No archived sessions",
-  "session.archived.retry": "Retry loading archived sessions",
+  "session.unarchive": "Arşivden çıkar",
+  "session.unarchive.shortcut": "Arşivden çıkar (Ctrl/⌘+Shift+U)",
+  "session.unarchive.success": "Oturum geri yüklendi",
+  "session.unarchive.failed": "Oturum geri yüklenemedi",
+  "session.archived.title": "Arşivlenmiş oturumlar",
+  "session.archived.search": "Arşivlenmiş oturumlarda ara",
+  "session.archived.empty": "Arşivlenmiş oturum yok",
+  "session.archived.retry": "Arşivlenmiş oturumları yüklemeyi yeniden dene",
   "desktop.menu.app": "OpenCode",
   "desktop.menu.file": "Dosya",
   "desktop.menu.edit": "Düzen",

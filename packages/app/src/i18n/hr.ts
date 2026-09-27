@@ -94,14 +94,14 @@ const desktop = [
 ]
 
 export const dict = {
-  "session.unarchive": "Unarchive",
-  "session.unarchive.shortcut": "Unarchive (Ctrl/⌘+Shift+U)",
-  "session.unarchive.success": "Session restored",
-  "session.unarchive.failed": "Failed to restore session",
-  "session.archived.title": "Archived sessions",
-  "session.archived.search": "Search archived sessions",
-  "session.archived.empty": "No archived sessions",
-  "session.archived.retry": "Retry loading archived sessions",
+  "session.unarchive": "Vrati iz arhive",
+  "session.unarchive.shortcut": "Vrati iz arhive (Ctrl/⌘+Shift+U)",
+  "session.unarchive.success": "Sesija je vraćena",
+  "session.unarchive.failed": "Vraćanje sesije nije uspjelo",
+  "session.archived.title": "Arhivirane sesije",
+  "session.archived.search": "Pretraži arhivirane sesije",
+  "session.archived.empty": "Nema arhiviranih sesija",
+  "session.archived.retry": "Pokušaj ponovno učitati arhivirane sesije",
   ...Object.fromEntries(DESKTOP_NATIVE_KEYS.map((key, index) => [key, desktop[index]])),
   "command.category.suggested": "Predloženo",
   "command.category.view": "Prikaz",

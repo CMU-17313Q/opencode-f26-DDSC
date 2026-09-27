@@ -3,14 +3,14 @@ import { dict as en } from "./en"
 type Keys = keyof typeof en
 
 export const dict = {
-  "session.unarchive": "Unarchive",
-  "session.unarchive.shortcut": "Unarchive (Ctrl/⌘+Shift+U)",
-  "session.unarchive.success": "Session restored",
-  "session.unarchive.failed": "Failed to restore session",
-  "session.archived.title": "Archived sessions",
-  "session.archived.search": "Search archived sessions",
-  "session.archived.empty": "No archived sessions",
-  "session.archived.retry": "Retry loading archived sessions",
+  "session.unarchive": "取消归档",
+  "session.unarchive.shortcut": "取消归档 (Ctrl/⌘+Shift+U)",
+  "session.unarchive.success": "会话已恢复",
+  "session.unarchive.failed": "恢复会话失败",
+  "session.archived.title": "已归档会话",
+  "session.archived.search": "搜索已归档会话",
+  "session.archived.empty": "没有已归档会话",
+  "session.archived.retry": "重试加载已归档会话",
   "desktop.menu.app": "OpenCode",
   "desktop.menu.file": "文件",
   "desktop.menu.edit": "编辑",

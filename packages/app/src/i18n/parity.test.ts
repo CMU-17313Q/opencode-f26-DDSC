@@ -153,6 +153,20 @@ describe("i18n parity", () => {
     }
   })
 
+  test("archive session labels are translated and preserve the shortcut", async () => {
+    const source = await dictionary("./en.ts")
+    const keys = Object.keys(source).filter(
+      (key) =>
+        key === "session.unarchive" || key.startsWith("session.unarchive.") || key.startsWith("session.archived."),
+    )
+    for (const locale of appLocales) {
+      const target = await dictionary(`./${locale}.ts`)
+      const untranslated = keys.filter((key) => !target[key]?.trim() || target[key] === source[key])
+      expect({ locale, untranslated }).toEqual({ locale, untranslated: [] })
+      expect(target["session.unarchive.shortcut"]).toContain("Ctrl/⌘+Shift+U")
+    }
+  })
+
   test("changed-file summary keys preserve rendered English copy and localize complete phrases", async () => {
     const source = await dictionary("../../../ui/src/i18n/en.ts")
     expect(source["ui.sessionTurn.diffs.changed.one"].replace("{{count}}", "1")).toBe("1 Changed file")

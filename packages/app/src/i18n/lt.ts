@@ -94,14 +94,14 @@ const desktop = [
 ]
 
 export const dict = {
-  "session.unarchive": "Unarchive",
-  "session.unarchive.shortcut": "Unarchive (Ctrl/⌘+Shift+U)",
-  "session.unarchive.success": "Session restored",
-  "session.unarchive.failed": "Failed to restore session",
-  "session.archived.title": "Archived sessions",
-  "session.archived.search": "Search archived sessions",
-  "session.archived.empty": "No archived sessions",
-  "session.archived.retry": "Retry loading archived sessions",
+  "session.unarchive": "Grąžinti iš archyvo",
+  "session.unarchive.shortcut": "Grąžinti iš archyvo (Ctrl/⌘+Shift+U)",
+  "session.unarchive.success": "Seansas atkurtas",
+  "session.unarchive.failed": "Nepavyko atkurti seanso",
+  "session.archived.title": "Archyvuoti seansai",
+  "session.archived.search": "Ieškoti archyvuotų seansų",
+  "session.archived.empty": "Nėra archyvuotų seansų",
+  "session.archived.retry": "Bandyti dar kartą įkelti archyvuotus seansus",
   ...Object.fromEntries(DESKTOP_NATIVE_KEYS.map((key, index) => [key, desktop[index]])),
   "command.category.suggested": "Siūloma",
   "command.category.view": "Rodinys",

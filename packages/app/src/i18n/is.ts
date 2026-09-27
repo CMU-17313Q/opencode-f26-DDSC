@@ -94,14 +94,14 @@ const desktop = [
 ]
 
 export const dict = {
-  "session.unarchive": "Unarchive",
-  "session.unarchive.shortcut": "Unarchive (Ctrl/⌘+Shift+U)",
-  "session.unarchive.success": "Session restored",
-  "session.unarchive.failed": "Failed to restore session",
-  "session.archived.title": "Archived sessions",
-  "session.archived.search": "Search archived sessions",
-  "session.archived.empty": "No archived sessions",
-  "session.archived.retry": "Retry loading archived sessions",
+  "session.unarchive": "Taka úr geymslu",
+  "session.unarchive.shortcut": "Taka úr geymslu (Ctrl/⌘+Shift+U)",
+  "session.unarchive.success": "Seta endurheimt",
+  "session.unarchive.failed": "Ekki tókst að endurheimta setu",
+  "session.archived.title": "Setur í geymslu",
+  "session.archived.search": "Leita að setum í geymslu",
+  "session.archived.empty": "Engar setur í geymslu",
+  "session.archived.retry": "Reyna aftur að hlaða setum úr geymslu",
   ...Object.fromEntries(DESKTOP_NATIVE_KEYS.map((key, index) => [key, desktop[index]])),
   "command.category.suggested": "Tillögur",
   "command.category.view": "Skoða",

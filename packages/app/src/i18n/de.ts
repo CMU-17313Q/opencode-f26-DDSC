@@ -3,14 +3,14 @@ import { dict as en } from "./en"
 type Keys = keyof typeof en
 
 export const dict = {
-  "session.unarchive": "Unarchive",
-  "session.unarchive.shortcut": "Unarchive (Ctrl/⌘+Shift+U)",
-  "session.unarchive.success": "Session restored",
-  "session.unarchive.failed": "Failed to restore session",
-  "session.archived.title": "Archived sessions",
-  "session.archived.search": "Search archived sessions",
-  "session.archived.empty": "No archived sessions",
-  "session.archived.retry": "Retry loading archived sessions",
+  "session.unarchive": "Archivierung aufheben",
+  "session.unarchive.shortcut": "Archivierung aufheben (Ctrl/⌘+Shift+U)",
+  "session.unarchive.success": "Sitzung wiederhergestellt",
+  "session.unarchive.failed": "Sitzung konnte nicht wiederhergestellt werden",
+  "session.archived.title": "Archivierte Sitzungen",
+  "session.archived.search": "Archivierte Sitzungen durchsuchen",
+  "session.archived.empty": "Keine archivierten Sitzungen",
+  "session.archived.retry": "Archivierte Sitzungen erneut laden",
   "command.category.suggested": "Vorgeschlagen",
   "command.category.view": "Ansicht",
   "command.category.project": "Projekt",

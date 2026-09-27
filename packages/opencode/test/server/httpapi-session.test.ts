@@ -1087,4 +1087,38 @@ describe("session HttpApi", () => {
       }),
     { git: true, config: { formatter: false, lsp: false } },
   )
+
+  it.instance(
+    "returns archived sessions when archived query parameter is true",
+    () =>
+      Effect.gen(function* () {
+        const test = yield* TestInstance
+        const headers = { "x-opencode-directory": test.directory, "content-type": "application/json" }
+        const active = yield* createSession({ title: "httpapi-active" })
+        const archived = yield* createSession({ title: "httpapi-archived" })
+
+        yield* request(pathFor(SessionPaths.update, { sessionID: archived.id }), {
+          method: "PATCH",
+          headers,
+          body: JSON.stringify({ time: { archived: Date.now() } }),
+        })
+
+        const defaultResponse = yield* requestJson<Session.Info[]>(
+          `${SessionPaths.list}?search=httpapi-`,
+          { method: "GET", headers },
+        )
+        const defaultIDs = defaultResponse.map((s) => s.id)
+        expect(defaultIDs).toContain(active.id)
+        expect(defaultIDs).not.toContain(archived.id)
+
+        const archivedResponse = yield* requestJson<Session.Info[]>(
+          `${SessionPaths.list}?search=httpapi-&archived=true`,
+          { method: "GET", headers },
+        )
+        const archivedIDs = archivedResponse.map((s) => s.id)
+        expect(archivedIDs).toContain(active.id)
+        expect(archivedIDs).toContain(archived.id)
+      }),
+    { git: true, config: { formatter: false, lsp: false } },
+  )
 })

@@ -11,7 +11,7 @@ import { useSDK } from "../context/sdk"
 import { useLocal } from "../context/local"
 import { DialogSessionRename } from "./dialog-session-rename"
 import { DialogSessionFolder } from "./dialog-session-folder"
-import { collectFolderNames, compareFolderLabels, sessionFolderLabel } from "./session-folder"
+import { collectFolderNames, orderIDsByFolder, sessionFolderLabel } from "./session-folder"
 export { NO_FOLDER_LABEL, compareFolderLabels, sessionFolderLabel } from "./session-folder"
 import { createDebouncedSignal } from "../util/signal"
 import { useToast } from "../ui/toast"
@@ -254,25 +254,15 @@ export function DialogSessionList() {
       }
     }
 
-    const remaining = [...displayOrder
-      .filter((id) => !pinnedSet.has(id))
-      .reduce((groups, id) => {
-        const x = sessionMap.get(id)
-        if (!x) return groups
-        const label = sessionFolderLabel(x.folder)
-        const list = groups.get(label)
-        if (list) list.push(id)
-        else groups.set(label, [id])
-        return groups
-      }, new Map<string, string[]>())
-      .entries()]
-      .toSorted(([a], [b]) => compareFolderLabels(a, b))
-      .flatMap(([, ids]) => ids)
-      .map((id) => {
+    const remaining = orderIDsByFolder(
+      displayOrder.filter((id) => !pinnedSet.has(id)),
+      (id) => {
         const x = sessionMap.get(id)
         if (!x) return undefined
-        return buildOption(id, sessionFolderLabel(x.folder))
-      })
+        return sessionFolderLabel(x.folder)
+      },
+    )
+      .map((id) => buildOption(id, sessionFolderLabel(sessionMap.get(id)?.folder)))
       .filter((x) => x !== undefined)
 
     return [...pinned.map((id) => buildOption(id, "Pinned")).filter((x) => x !== undefined), ...remaining]

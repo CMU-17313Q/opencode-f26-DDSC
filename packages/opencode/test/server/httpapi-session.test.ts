@@ -793,6 +793,61 @@ describe("session HttpApi", () => {
   )
 
   it.instance(
+    "trims, clears, and preserves folder on session update",
+    () =>
+      Effect.gen(function* () {
+        const test = yield* TestInstance
+        const headers = { "x-opencode-directory": test.directory, "content-type": "application/json" }
+
+        const created = yield* requestJson<Session.Info>(SessionPaths.create, {
+          method: "POST",
+          headers,
+          body: JSON.stringify({ title: "folder-http" }),
+        })
+        expect(created.folder).toBeUndefined()
+
+        const assigned = yield* requestJson<Session.Info>(pathFor(SessionPaths.update, { sessionID: created.id }), {
+          method: "PATCH",
+          headers,
+          body: JSON.stringify({ folder: "  Work  " }),
+        })
+        expect(assigned.folder).toBe("Work")
+
+        const untouched = yield* requestJson<Session.Info>(pathFor(SessionPaths.update, { sessionID: created.id }), {
+          method: "PATCH",
+          headers,
+          body: JSON.stringify({ title: "folder-http-renamed" }),
+        })
+        expect(untouched.folder).toBe("Work")
+
+        const cleared = yield* requestJson<Session.Info>(pathFor(SessionPaths.update, { sessionID: created.id }), {
+          method: "PATCH",
+          headers,
+          body: JSON.stringify({ folder: "" }),
+        })
+        expect(cleared.folder).toBeUndefined()
+
+        const reassigned = yield* requestJson<Session.Info>(pathFor(SessionPaths.update, { sessionID: created.id }), {
+          method: "PATCH",
+          headers,
+          body: JSON.stringify({ folder: "Play" }),
+        })
+        expect(reassigned.folder).toBe("Play")
+
+        const blankCleared = yield* requestJson<Session.Info>(
+          pathFor(SessionPaths.update, { sessionID: created.id }),
+          {
+            method: "PATCH",
+            headers,
+            body: JSON.stringify({ folder: "   " }),
+          },
+        )
+        expect(blankCleared.folder).toBeUndefined()
+      }),
+    { git: true, config: { formatter: false, lsp: false, share: "disabled" } },
+  )
+
+  it.instance(
     "persists selected workspace id when creating a session",
     () =>
       Effect.gen(function* () {

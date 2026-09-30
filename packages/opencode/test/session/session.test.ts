@@ -295,4 +295,42 @@ describe("Session", () => {
       expect((yield* session.get(created.id)).folder).toBeUndefined()
     }),
   )
+
+  it.instance("leaves new sessions without a folder", () =>
+    Effect.gen(function* () {
+      const session = yield* SessionNs.Service
+      const created = yield* Effect.acquireRelease(session.create({ title: "folder-default" }), (info) =>
+        session.remove(info.id).pipe(Effect.ignore),
+      )
+      expect(created.folder).toBeUndefined()
+      expect((yield* session.get(created.id)).folder).toBeUndefined()
+    }),
+  )
+
+  it.instance("starts forks without a folder", () =>
+    Effect.gen(function* () {
+      const session = yield* SessionNs.Service
+      const created = yield* Effect.acquireRelease(session.create({ title: "folder-fork" }), (info) =>
+        session.remove(info.id).pipe(Effect.ignore),
+      )
+      yield* session.setFolder({ sessionID: created.id, folder: "Work" })
+      const fork = yield* Effect.acquireRelease(session.fork({ sessionID: created.id }), (info) =>
+        session.remove(info.id).pipe(Effect.ignore),
+      )
+      expect(fork.folder).toBeUndefined()
+      expect((yield* session.get(fork.id)).folder).toBeUndefined()
+    }),
+  )
+
+  it.instance("lists sessions with their folder", () =>
+    Effect.gen(function* () {
+      const session = yield* SessionNs.Service
+      const created = yield* Effect.acquireRelease(session.create({ title: "folder-list" }), (info) =>
+        session.remove(info.id).pipe(Effect.ignore),
+      )
+      yield* session.setFolder({ sessionID: created.id, folder: "Work" })
+      const listed = (yield* session.list()).find((item) => item.id === created.id)
+      expect(listed?.folder).toBe("Work")
+    }),
+  )
 })

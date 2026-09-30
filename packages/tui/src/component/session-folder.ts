@@ -38,3 +38,17 @@ export function buildFolderOptions(folders: string[], query: string): DialogSele
   if (trimmed && !exact) options.push({ title: `Create "${trimmed}"`, value: { type: "create", name: trimmed } })
   return options
 }
+
+export function orderIDsByFolder(ids: string[], folderOf: (id: string) => string | undefined) {
+  const groups = new Map<string, string[]>()
+  for (const id of ids) {
+    const folder = folderOf(id)
+    if (folder === undefined) continue
+    const list = groups.get(folder)
+    if (list) list.push(id)
+    else groups.set(folder, [id])
+  }
+  return [...groups.entries()]
+    .toSorted(([a], [b]) => compareFolderLabels(a, b))
+    .flatMap(([, group]) => group)
+}

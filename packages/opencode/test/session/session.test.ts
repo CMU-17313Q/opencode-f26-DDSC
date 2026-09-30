@@ -282,4 +282,17 @@ describe("Session", () => {
       expect(saved.metadata).toBeUndefined()
     }),
   )
+
+  it.instance("clears folder assignment back to no folder", () =>
+    Effect.gen(function* () {
+      const session = yield* SessionNs.Service
+      const created = yield* Effect.acquireRelease(session.create({ title: "folder-clear" }), (info) =>
+        session.remove(info.id).pipe(Effect.ignore),
+      )
+      yield* session.setFolder({ sessionID: created.id, folder: "Work" })
+      expect((yield* session.get(created.id)).folder).toBe("Work")
+      yield* session.setFolder({ sessionID: created.id, folder: undefined })
+      expect((yield* session.get(created.id)).folder).toBeUndefined()
+    }),
+  )
 })

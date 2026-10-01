@@ -28,6 +28,7 @@ import { ModelV2 } from "@opencode-ai/core/model"
 
 const root = "/session"
 export const ListQuery = Schema.Struct({
+  archived: Schema.optional(QueryBoolean),
   ...WorkspaceRoutingQueryFields,
   scope: Schema.optional(Schema.Literals(["project"])),
   path: Schema.optional(Schema.String),
@@ -52,7 +53,7 @@ export const UpdatePayload = Schema.Struct({
   permission: Schema.optional(PermissionV1.Ruleset),
   time: Schema.optional(
     Schema.Struct({
-      archived: Schema.optional(Session.ArchivedTimestamp),
+      archived: Schema.optional(Schema.NullOr(Session.ArchivedTimestamp)),
     }),
   ),
 })

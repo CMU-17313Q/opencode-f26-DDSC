@@ -1,4 +1,12 @@
 export const dict = {
+  "session.unarchive": "Desarxiva",
+  "session.unarchive.shortcut": "Desarxiva (Ctrl/⌘+Shift+U)",
+  "session.unarchive.success": "S'ha restaurat la sessió",
+  "session.unarchive.failed": "No s'ha pogut restaurar la sessió",
+  "session.archived.title": "Sessions arxivades",
+  "session.archived.search": "Cerca sessions arxivades",
+  "session.archived.empty": "No hi ha sessions arxivades",
+  "session.archived.retry": "Torna a provar de carregar les sessions arxivades",
   "desktop.menu.app": "OpenCode",
   "desktop.menu.file": "Fitxer",
   "desktop.menu.edit": "Edita",

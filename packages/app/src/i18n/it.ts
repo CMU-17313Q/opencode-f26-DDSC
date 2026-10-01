@@ -1,4 +1,12 @@
 export const dict = {
+  "session.unarchive": "Rimuovi dall'archivio",
+  "session.unarchive.shortcut": "Rimuovi dall'archivio (Ctrl/⌘+Shift+U)",
+  "session.unarchive.success": "Sessione ripristinata",
+  "session.unarchive.failed": "Impossibile ripristinare la sessione",
+  "session.archived.title": "Sessioni archiviate",
+  "session.archived.search": "Cerca sessioni archiviate",
+  "session.archived.empty": "Nessuna sessione archiviata",
+  "session.archived.retry": "Riprova a caricare le sessioni archiviate",
   "command.category.suggested": "Suggeriti",
   "command.category.view": "Visualizzazione",
   "command.category.project": "Progetto",

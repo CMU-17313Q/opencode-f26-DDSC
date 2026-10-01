@@ -1,4 +1,12 @@
 export const dict: Record<string, string> = {
+  "session.unarchive": "अभिलेखबाट हटाउनुहोस्",
+  "session.unarchive.shortcut": "अभिलेखबाट हटाउनुहोस् (Ctrl/⌘+Shift+U)",
+  "session.unarchive.success": "सत्र पुनर्स्थापित भयो",
+  "session.unarchive.failed": "सत्र पुनर्स्थापित गर्न सकिएन",
+  "session.archived.title": "अभिलेख गरिएका सत्रहरू",
+  "session.archived.search": "अभिलेख गरिएका सत्रहरू खोज्नुहोस्",
+  "session.archived.empty": "अभिलेख गरिएका सत्रहरू छैनन्",
+  "session.archived.retry": "अभिलेख गरिएका सत्रहरू लोड गर्न फेरि प्रयास गर्नुहोस्",
   "desktop.menu.app": "OpenCode",
   "desktop.menu.file": "फाइल",
   "desktop.menu.edit": "सम्पादन गर्नुहोस्",

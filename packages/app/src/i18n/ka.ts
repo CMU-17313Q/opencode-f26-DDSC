@@ -1,4 +1,12 @@
 export const dict = {
+  "session.unarchive": "არქივიდან ამოღება",
+  "session.unarchive.shortcut": "არქივიდან ამოღება (Ctrl/⌘+Shift+U)",
+  "session.unarchive.success": "სესია აღდგენილია",
+  "session.unarchive.failed": "სესიის აღდგენა ვერ მოხერხდა",
+  "session.archived.title": "დაარქივებული სესიები",
+  "session.archived.search": "დაარქივებული სესიების ძიება",
+  "session.archived.empty": "დაარქივებული სესიები არ არის",
+  "session.archived.retry": "დაარქივებული სესიების ჩატვირთვის ხელახლა ცდა",
   "desktop.menu.app": "OpenCode",
   "desktop.menu.file": "ფაილი",
   "desktop.menu.edit": "რედაქტირება",

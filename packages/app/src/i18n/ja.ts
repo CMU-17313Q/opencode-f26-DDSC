@@ -1,4 +1,12 @@
 export const dict = {
+  "session.unarchive": "アーカイブを解除",
+  "session.unarchive.shortcut": "アーカイブを解除 (Ctrl/⌘+Shift+U)",
+  "session.unarchive.success": "セッションを復元しました",
+  "session.unarchive.failed": "セッションを復元できませんでした",
+  "session.archived.title": "アーカイブ済みセッション",
+  "session.archived.search": "アーカイブ済みセッションを検索",
+  "session.archived.empty": "アーカイブ済みセッションはありません",
+  "session.archived.retry": "アーカイブ済みセッションの読み込みを再試行",
   "desktop.menu.app": "OpenCode",
   "desktop.menu.file": "ファイル",
   "desktop.menu.edit": "編集",

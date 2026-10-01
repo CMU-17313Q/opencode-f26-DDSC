@@ -1,4 +1,12 @@
 export const dict = {
+  "session.unarchive": "Palauta arkistosta",
+  "session.unarchive.shortcut": "Palauta arkistosta (Ctrl/⌘+Shift+U)",
+  "session.unarchive.success": "Istunto palautettu",
+  "session.unarchive.failed": "Istunnon palauttaminen epäonnistui",
+  "session.archived.title": "Arkistoidut istunnot",
+  "session.archived.search": "Hae arkistoituja istuntoja",
+  "session.archived.empty": "Ei arkistoituja istuntoja",
+  "session.archived.retry": "Yritä ladata arkistoidut istunnot uudelleen",
   "command.category.suggested": "Ehdotetut",
   "command.category.view": "Näytä",
   "command.category.project": "Projekti",

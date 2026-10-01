@@ -1,4 +1,12 @@
 export const dict = {
+  "session.unarchive": "Izņemt no arhīva",
+  "session.unarchive.shortcut": "Izņemt no arhīva (Ctrl/⌘+Shift+U)",
+  "session.unarchive.success": "Sesija atjaunota",
+  "session.unarchive.failed": "Neizdevās atjaunot sesiju",
+  "session.archived.title": "Arhivētās sesijas",
+  "session.archived.search": "Meklēt arhivētās sesijas",
+  "session.archived.empty": "Nav arhivētu sesiju",
+  "session.archived.retry": "Mēģināt vēlreiz ielādēt arhivētās sesijas",
   "desktop.menu.app": "OpenCode",
   "desktop.menu.file": "Fails",
   "desktop.menu.edit": "Rediģēt",

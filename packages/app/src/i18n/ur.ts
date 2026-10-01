@@ -1,4 +1,12 @@
 export const dict = {
+  "session.unarchive": "آرکائیو سے نکالیں",
+  "session.unarchive.shortcut": "آرکائیو سے نکالیں (Ctrl/⌘+Shift+U)",
+  "session.unarchive.success": "سیشن بحال ہو گیا",
+  "session.unarchive.failed": "سیشن بحال نہیں ہو سکا",
+  "session.archived.title": "آرکائیو شدہ سیشنز",
+  "session.archived.search": "آرکائیو شدہ سیشنز تلاش کریں",
+  "session.archived.empty": "کوئی آرکائیو شدہ سیشن نہیں ہے",
+  "session.archived.retry": "آرکائیو شدہ سیشنز لوڈ کرنے کی دوبارہ کوشش کریں",
   "desktop.menu.app": "OpenCode",
   "desktop.menu.file": "فائل",
   "desktop.menu.edit": "ترمیم",

@@ -1,4 +1,12 @@
 export const dict = {
+  "session.unarchive": "Dezarhivează",
+  "session.unarchive.shortcut": "Dezarhivează (Ctrl/⌘+Shift+U)",
+  "session.unarchive.success": "Sesiune restaurată",
+  "session.unarchive.failed": "Restaurarea sesiunii a eșuat",
+  "session.archived.title": "Sesiuni arhivate",
+  "session.archived.search": "Caută sesiuni arhivate",
+  "session.archived.empty": "Nu există sesiuni arhivate",
+  "session.archived.retry": "Reîncearcă încărcarea sesiunilor arhivate",
   "desktop.menu.app": "OpenCode",
   "desktop.menu.file": "Fișier",
   "desktop.menu.edit": "Editare",

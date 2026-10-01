@@ -9440,6 +9440,7 @@ export type SessionListData = {
   body?: never
   path?: never
   query?: {
+    archived?: boolean | "true" | "false"
     directory?: string
     workspace?: string
     scope?: "project"
@@ -9618,7 +9619,7 @@ export type SessionUpdateData = {
     }
     permission?: PermissionRuleset
     time?: {
-      archived?: number
+      archived?: number | null
     }
   }
   path: {

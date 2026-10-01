@@ -1,4 +1,12 @@
 export const dict = {
+  "session.unarchive": "Vrati iz arhive",
+  "session.unarchive.shortcut": "Vrati iz arhive (Ctrl/⌘+Shift+U)",
+  "session.unarchive.success": "Sesija je vraćena",
+  "session.unarchive.failed": "Vraćanje sesije nije uspjelo",
+  "session.archived.title": "Arhivirane sesije",
+  "session.archived.search": "Pretraži arhivirane sesije",
+  "session.archived.empty": "Nema arhiviranih sesija",
+  "session.archived.retry": "Pokušaj ponovo učitati arhivirane sesije",
   "desktop.menu.app": "OpenCode",
   "desktop.menu.file": "Datoteka",
   "desktop.menu.edit": "Uredi",

@@ -1,4 +1,12 @@
 export const dict = {
+  "session.unarchive": "Arxivdən çıxar",
+  "session.unarchive.shortcut": "Arxivdən çıxar (Ctrl/⌘+Shift+U)",
+  "session.unarchive.success": "Sessiya bərpa edildi",
+  "session.unarchive.failed": "Sessiyanı bərpa etmək alınmadı",
+  "session.archived.title": "Arxivlənmiş sessiyalar",
+  "session.archived.search": "Arxivlənmiş sessiyaları axtar",
+  "session.archived.empty": "Arxivlənmiş sessiya yoxdur",
+  "session.archived.retry": "Arxivlənmiş sessiyaları yükləməyə yenidən cəhd et",
   "desktop.menu.app": "OpenCode",
   "desktop.menu.file": "Fayl",
   "desktop.menu.edit": "Redaktə",

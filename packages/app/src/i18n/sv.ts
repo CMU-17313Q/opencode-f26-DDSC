@@ -1,4 +1,12 @@
 export const dict = {
+  "session.unarchive": "Ta bort från arkivet",
+  "session.unarchive.shortcut": "Ta bort från arkivet (Ctrl/⌘+Shift+U)",
+  "session.unarchive.success": "Sessionen har återställts",
+  "session.unarchive.failed": "Det gick inte att återställa sessionen",
+  "session.archived.title": "Arkiverade sessioner",
+  "session.archived.search": "Sök bland arkiverade sessioner",
+  "session.archived.empty": "Inga arkiverade sessioner",
+  "session.archived.retry": "Försök läsa in arkiverade sessioner igen",
   "desktop.menu.app": "OpenCode",
   "desktop.menu.file": "Arkiv",
   "desktop.menu.edit": "Redigera",

@@ -53,6 +53,7 @@ import { useDialog } from "@opencode-ai/ui/context/dialog"
 import { useTheme, type ColorScheme } from "@opencode-ai/ui/theme/context"
 import { useCommand, type CommandOption } from "@/context/command"
 import { ConstrainDragXAxis, getDraggableId } from "@/utils/solid-dnd"
+import { DialogArchivedSessions } from "@/components/archived-sessions"
 import { DebugBar } from "@/components/debug-bar"
 import { TabsInfoPopup } from "@/components/help-button"
 import { Titlebar, type TitlebarUpdate } from "@/components/titlebar"
@@ -868,6 +869,22 @@ export default function LegacyLayout(props: ParentProps) {
     }
   }
 
+  function restoreSession(session: Session) {
+    serverSync().session.remember(session)
+    const [, setStore] = serverSync().child(session.directory)
+    setStore(
+      "session",
+      produce((sessions) => {
+        const match = Binary.search(sessions, session.id, (item) => item.id)
+        if (match.found) {
+          sessions[match.index] = session
+          return
+        }
+        sessions.splice(match.index, 0, session)
+      }),
+    )
+  }
+
   async function archiveSession(session: Session) {
     if ((await serverSDK().protocol) !== "v1") return
     const [store, setStore] = serverSync().child(session.directory)
@@ -971,6 +988,21 @@ export default function LegacyLayout(props: ParentProps) {
         category: language.t("command.category.session"),
         keybind: "shift+alt+arrowdown",
         onSelect: () => navigateSessionByUnseen(1),
+      },
+      {
+        id: "session.archived",
+        title: language.t("session.archived.title"),
+        category: language.t("command.category.session"),
+        keybind: "mod+shift+h",
+        disabled: !currentDir(),
+        onSelect: () =>
+          dialog.show(() => (
+            <DialogArchivedSessions
+              directories={[currentDir()]}
+              client={serverSDK().client}
+              onRestore={restoreSession}
+            />
+          )),
       },
       {
         id: "session.archive",
@@ -1878,6 +1910,8 @@ export default function LegacyLayout(props: ParentProps) {
     clearHoverProjectSoon,
     prefetchSession,
     archiveSession,
+    restoreSession,
+    archiveClient: () => serverSDK().client,
     workspaceName,
     renameWorkspace,
     editorOpen,

@@ -1,4 +1,12 @@
 export const dict = {
+  "session.unarchive": "خارج کردن از آرشیو",
+  "session.unarchive.shortcut": "خارج کردن از آرشیو (Ctrl/⌘+Shift+U)",
+  "session.unarchive.success": "جلسه بازیابی شد",
+  "session.unarchive.failed": "بازیابی جلسه ناموفق بود",
+  "session.archived.title": "جلسه‌های آرشیوشده",
+  "session.archived.search": "جستجوی جلسه‌های آرشیوشده",
+  "session.archived.empty": "هیچ جلسهٔ آرشیوشده‌ای وجود ندارد",
+  "session.archived.retry": "تلاش دوباره برای بارگذاری جلسه‌های آرشیوشده",
   "desktop.menu.app": "OpenCode",
   "desktop.menu.file": "فایل",
   "desktop.menu.edit": "ویرایش کنید",

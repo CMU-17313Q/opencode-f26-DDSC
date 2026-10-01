@@ -2,6 +2,14 @@ import { dict as en } from "./en"
 type Keys = keyof typeof en
 
 export const dict = {
+  "session.unarchive": "Fjern fra arkivet",
+  "session.unarchive.shortcut": "Fjern fra arkivet (Ctrl/⌘+Shift+U)",
+  "session.unarchive.success": "Sesjonen er gjenopprettet",
+  "session.unarchive.failed": "Kunne ikke gjenopprette sesjonen",
+  "session.archived.title": "Arkiverte sesjoner",
+  "session.archived.search": "Søk i arkiverte sesjoner",
+  "session.archived.empty": "Ingen arkiverte sesjoner",
+  "session.archived.retry": "Prøv å laste arkiverte sesjoner på nytt",
   "desktop.menu.app": "OpenCode",
   "desktop.menu.file": "Arkiv",
   "desktop.menu.edit": "Rediger",

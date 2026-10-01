@@ -25,7 +25,10 @@ type OpenApiOperation = {
     readonly schema?: { readonly type?: string }
   }>
   readonly responses?: Record<string, OpenApiResponse>
-  readonly requestBody?: { readonly required?: boolean }
+  readonly requestBody?: {
+    readonly required?: boolean
+    readonly content?: Record<string, { readonly schema?: OpenApiSchema }>
+  }
   readonly security?: unknown
 }
 type OpenApiPathItem = Partial<Record<Method, OpenApiOperation>>
@@ -347,4 +350,14 @@ describe("PublicApi OpenAPI v2 errors", () => {
       "ProjectNotFoundError",
     )
   })
+})
+
+test("publishes an explicit nullable archive timestamp for restoring sessions", () => {
+  const spec = OpenApi.fromApi(PublicApi) as OpenApiSpec
+  const body = spec.paths["/session/{sessionID}"]?.patch?.requestBody?.content?.["application/json"]?.schema
+  const payload = body?.$ref ? spec.components.schemas[componentName(body.$ref)] : body
+  const time = payload?.properties?.time
+  const fields = time?.$ref ? spec.components.schemas[componentName(time.$ref)] : time
+  expect(fields?.properties?.archived?.anyOf).toContainEqual({ type: "null" })
+  expect(fields?.required ?? []).not.toContain("archived")
 })

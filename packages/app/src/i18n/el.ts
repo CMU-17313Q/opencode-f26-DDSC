@@ -1,4 +1,12 @@
 export const dict = {
+  "session.unarchive": "Αναίρεση αρχειοθέτησης",
+  "session.unarchive.shortcut": "Αναίρεση αρχειοθέτησης (Ctrl/⌘+Shift+U)",
+  "session.unarchive.success": "Η συνεδρία επαναφέρθηκε",
+  "session.unarchive.failed": "Αποτυχία επαναφοράς της συνεδρίας",
+  "session.archived.title": "Αρχειοθετημένες συνεδρίες",
+  "session.archived.search": "Αναζήτηση αρχειοθετημένων συνεδριών",
+  "session.archived.empty": "Δεν υπάρχουν αρχειοθετημένες συνεδρίες",
+  "session.archived.retry": "Επανάληψη φόρτωσης αρχειοθετημένων συνεδριών",
   "desktop.menu.app": "OpenCode",
   "desktop.menu.file": "Αρχείο",
   "desktop.menu.edit": "Επεξεργασία",

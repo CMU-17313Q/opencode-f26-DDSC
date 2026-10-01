@@ -1,4 +1,12 @@
 export const dict = {
+  "session.unarchive": "إلغاء الأرشفة",
+  "session.unarchive.shortcut": "إلغاء الأرشفة (Ctrl/⌘+Shift+U)",
+  "session.unarchive.success": "تمت استعادة الجلسة",
+  "session.unarchive.failed": "تعذّرت استعادة الجلسة",
+  "session.archived.title": "الجلسات المؤرشفة",
+  "session.archived.search": "البحث في الجلسات المؤرشفة",
+  "session.archived.empty": "لا توجد جلسات مؤرشفة",
+  "session.archived.retry": "إعادة محاولة تحميل الجلسات المؤرشفة",
   "desktop.menu.app": "OpenCode",
   "desktop.menu.file": "ملف",
   "desktop.menu.edit": "تحرير",

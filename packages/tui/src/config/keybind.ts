@@ -199,6 +199,8 @@ export const Definitions = {
   history_previous: keybind("up", "Previous history item"),
   history_next: keybind("down", "Next history item"),
 
+  "session.archived": keybind("ctrl+shift+h", "Browse archived sessions"),
+  "session.unarchive": keybind("ctrl+shift+u", "Restore selected session"),
   "dialog.select.prev": keybind("up,ctrl+p", "Move to previous dialog item"),
   "dialog.select.next": keybind("down,ctrl+n", "Move to next dialog item"),
   "dialog.select.page_up": keybind("pageup", "Move up one page in dialog"),

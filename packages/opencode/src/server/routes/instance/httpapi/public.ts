@@ -64,6 +64,7 @@ const QueryParameterSchemas: Record<string, OpenApiSchema> = {
   "GET /experimental/session limit": { type: "number" },
   "GET /session start": { type: "number" },
   "GET /session roots": QueryBooleanOpenApi,
+  "GET /session archived": QueryBooleanOpenApi,
   "GET /session limit": { type: "number" },
   "GET /session/{sessionID}/message limit": { type: "integer", minimum: 0, maximum: Number.MAX_SAFE_INTEGER },
   "GET /vcs/diff context": { type: "integer", minimum: 0 },
@@ -113,6 +114,16 @@ function matchLegacyOpenApi(input: Record<string, unknown>) {
         if (!isV2Api) delete operation.requestBody.required
         const body = operation.requestBody.content?.["application/json"]
         if (body?.schema) body.schema = stripOptionalNull(structuredClone(body.schema))
+        if (path === "/session/{sessionID}" && method === "patch") {
+          // Null explicitly restores a session; omission leaves archive state unchanged.
+          const ref = body?.schema?.$ref?.replace("#/components/schemas/", "")
+          const properties = ref ? spec.components?.schemas?.[ref]?.properties : body?.schema?.properties
+          const time = properties?.time
+          const fields = time?.$ref
+            ? spec.components?.schemas?.[time.$ref.replace("#/components/schemas/", "")]?.properties
+            : time?.properties
+          if (fields?.archived) fields.archived = nullable(fields.archived)
+        }
         if (path === "/experimental/workspace" && method === "post") {
           // Workspace creation fields `branch` and `extra` are Schema.NullOr —
           // genuinely nullable, not just optional. Re-add the null that the

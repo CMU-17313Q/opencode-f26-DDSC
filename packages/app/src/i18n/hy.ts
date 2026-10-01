@@ -1,4 +1,12 @@
 export const dict = {
+  "session.unarchive": "Հանել արխիվից",
+  "session.unarchive.shortcut": "Հանել արխիվից (Ctrl/⌘+Shift+U)",
+  "session.unarchive.success": "Նիստը վերականգնված է",
+  "session.unarchive.failed": "Չհաջողվեց վերականգնել նիստը",
+  "session.archived.title": "Արխիվացված նիստեր",
+  "session.archived.search": "Որոնել արխիվացված նիստեր",
+  "session.archived.empty": "Արխիվացված նիստեր չկան",
+  "session.archived.retry": "Կրկին փորձել բեռնել արխիվացված նիստերը",
   "desktop.menu.app": "OpenCode",
   "desktop.menu.file": "Ֆայլ",
   "desktop.menu.edit": "Խմբագրել",

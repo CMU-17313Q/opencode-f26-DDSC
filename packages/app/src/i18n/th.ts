@@ -1,4 +1,12 @@
 export const dict = {
+  "session.unarchive": "นำออกจากที่เก็บถาวร",
+  "session.unarchive.shortcut": "นำออกจากที่เก็บถาวร (Ctrl/⌘+Shift+U)",
+  "session.unarchive.success": "กู้คืนเซสชันแล้ว",
+  "session.unarchive.failed": "ไม่สามารถกู้คืนเซสชันได้",
+  "session.archived.title": "เซสชันที่จัดเก็บถาวร",
+  "session.archived.search": "ค้นหาเซสชันที่จัดเก็บถาวร",
+  "session.archived.empty": "ไม่มีเซสชันที่จัดเก็บถาวร",
+  "session.archived.retry": "ลองโหลดเซสชันที่จัดเก็บถาวรอีกครั้ง",
   "desktop.menu.app": "OpenCode",
   "desktop.menu.file": "ไฟล์",
   "desktop.menu.edit": "แก้ไข",

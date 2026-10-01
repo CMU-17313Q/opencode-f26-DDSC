@@ -1,4 +1,12 @@
 export const dict = {
+  "session.unarchive": "Fjern fra arkiv",
+  "session.unarchive.shortcut": "Fjern fra arkiv (Ctrl/⌘+Shift+U)",
+  "session.unarchive.success": "Session gendannet",
+  "session.unarchive.failed": "Kunne ikke gendanne sessionen",
+  "session.archived.title": "Arkiverede sessioner",
+  "session.archived.search": "Søg i arkiverede sessioner",
+  "session.archived.empty": "Ingen arkiverede sessioner",
+  "session.archived.retry": "Prøv at indlæse arkiverede sessioner igen",
   "command.category.suggested": "Foreslået",
   "command.category.view": "Vis",
   "command.category.project": "Projekt",

@@ -1,4 +1,12 @@
 export const dict = {
+  "session.unarchive": "Obnoviť z archívu",
+  "session.unarchive.shortcut": "Obnoviť z archívu (Ctrl/⌘+Shift+U)",
+  "session.unarchive.success": "Relácia bola obnovená",
+  "session.unarchive.failed": "Reláciu sa nepodarilo obnoviť",
+  "session.archived.title": "Archivované relácie",
+  "session.archived.search": "Hľadať archivované relácie",
+  "session.archived.empty": "Žiadne archivované relácie",
+  "session.archived.retry": "Skúsiť znova načítať archivované relácie",
   "desktop.menu.app": "OpenCode",
   "desktop.menu.file": "Súbor",
   "desktop.menu.edit": "Upraviť",

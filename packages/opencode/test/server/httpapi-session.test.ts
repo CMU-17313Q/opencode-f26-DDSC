@@ -825,6 +825,52 @@ describe("session HttpApi", () => {
   )
 
   it.instance(
+    "archives and restores a session through HTTP without changing other sessions",
+    () =>
+      Effect.gen(function* () {
+        const test = yield* TestInstance
+        const headers = { "x-opencode-directory": test.directory, "content-type": "application/json" }
+        const archived = yield* createSession({ title: "restore me" })
+        const active = yield* createSession({ title: "keep active" })
+        const url = pathFor(SessionPaths.update, { sessionID: archived.id })
+        yield* requestJson<Session.Info>(url, {
+          method: "PATCH",
+          headers,
+          body: JSON.stringify({ time: { archived: 1 } }),
+        })
+        const archives = yield* requestJson<Session.Info[]>(`${SessionPaths.list}?archived=true`, { headers })
+        expect(archives.map((s) => s.id)).toEqual([archived.id])
+        const before = yield* requestJson<Session.Info[]>(`${SessionPaths.list}?archived=false`, { headers })
+        expect(before.map((s) => s.id)).toEqual([active.id])
+        yield* Effect.sleep("2 millis")
+        const restored = yield* requestJson<Session.Info>(url, {
+          method: "PATCH",
+          headers,
+          body: JSON.stringify({ time: { archived: null } }),
+        })
+        expect(restored.time.archived).toBeUndefined()
+        expect(restored.time.updated).toBeGreaterThan(archived.time.updated)
+        const after = yield* requestJson<Session.Info[]>(`${SessionPaths.list}?archived=false`, { headers })
+        expect(after.map((s) => s.id)).toEqual([archived.id, active.id])
+        expect(after[1]).toEqual(active)
+        expect(yield* requestJson<Session.Info[]>(`${SessionPaths.list}?archived=true`, { headers })).toEqual([])
+        const retry = yield* requestJson<Session.Info>(url, {
+          method: "PATCH",
+          headers,
+          body: JSON.stringify({ time: { archived: null } }),
+        })
+        expect(retry).toEqual(restored)
+        const rename = yield* requestJson<Session.Info>(url, {
+          method: "PATCH",
+          headers,
+          body: JSON.stringify({ title: "renamed", time: {} }),
+        })
+        expect(rename.time).toEqual(restored.time)
+      }),
+    { git: true, config: { formatter: false, lsp: false } },
+  )
+
+  it.instance(
     "validates archived timestamp values",
     () =>
       Effect.gen(function* () {

@@ -195,6 +195,7 @@ export type Session = {
     url: string
   }
   title: string
+  folder?: string
   agent?: string
   model?: {
     id: string
@@ -2220,6 +2221,7 @@ export type GlobalSession = {
     url: string
   }
   title: string
+  folder?: string
   agent?: string
   model?: {
     id: string
@@ -9613,6 +9615,7 @@ export type SessionGetResponse = SessionGetResponses[keyof SessionGetResponses]
 export type SessionUpdateData = {
   body?: {
     title?: string
+    folder?: string
     metadata?: {
       [key: string]: unknown
     }

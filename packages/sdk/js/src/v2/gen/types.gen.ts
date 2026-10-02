@@ -9450,6 +9450,7 @@ export type SessionListData = {
     start?: number
     search?: string
     limit?: number
+    archived?: boolean | "true" | "false"
   }
   url: "/session"
 }

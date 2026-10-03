@@ -1489,6 +1489,10 @@ export type GlobalEvent = {
           commands?: ProjectCommands
           time: ProjectTime
           sandboxes: Array<string>
+          /**
+           * Additional repository roots the agent may read and write in besides the worktree
+           */
+          roots?: Array<string>
         }
       }
     | {
@@ -2432,6 +2436,10 @@ export type Project = {
   commands?: ProjectCommands
   time: ProjectTime
   sandboxes: Array<string>
+  /**
+   * Additional repository roots the agent may read and write in besides the worktree
+   */
+  roots?: Array<string>
 }
 
 export type ProjectNotFoundError = {
@@ -5909,6 +5917,10 @@ export type ProjectUpdated = {
     commands?: ProjectCommands
     time: ProjectTime
     sandboxes: Array<string>
+    /**
+     * Additional repository roots the agent may read and write in besides the worktree
+     */
+    roots?: Array<string>
   }
 }
 
@@ -6927,6 +6939,10 @@ export type EventProjectUpdated = {
     commands?: ProjectCommands
     time: ProjectTime
     sandboxes: Array<string>
+    /**
+     * Additional repository roots the agent may read and write in besides the worktree
+     */
+    roots?: Array<string>
   }
 }
 
@@ -8793,6 +8809,7 @@ export type ProjectUpdateData = {
     name?: string
     icon?: ProjectIcon
     commands?: ProjectCommands
+    roots?: Array<string>
   }
   path: {
     projectID: string

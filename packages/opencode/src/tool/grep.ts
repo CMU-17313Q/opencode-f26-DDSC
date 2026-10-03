@@ -1,6 +1,7 @@
 import path from "path"
 import { Effect, Schema } from "effect"
 import { InstanceState } from "@/effect/instance-state"
+import { resolvePath } from "../project/instance-context"
 import { FSUtil } from "@opencode-ai/core/fs-util"
 import { Ripgrep } from "@opencode-ai/core/ripgrep"
 import { assertExternalDirectoryEffect } from "./external-directory"
@@ -48,9 +49,7 @@ export const GrepTool = Tool.define(
           })
 
           const ins = yield* InstanceState.context
-          const requested = path.isAbsolute(params.path ?? ins.directory)
-            ? (params.path ?? ins.directory)
-            : path.join(ins.directory, params.path ?? ".")
+          const requested = resolvePath(params.path ?? ins.directory, ins)
           const requestedInfo = yield* fs.stat(requested).pipe(Effect.catch(() => Effect.succeed(undefined)))
           yield* assertExternalDirectoryEffect(ctx, requested, {
             bypass: false,

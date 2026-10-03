@@ -31,7 +31,7 @@ describe("Session schema", () => {
   test("encodes undefined optional session fields as omitted keys", () => {
     const encoded = Schema.encodeUnknownSync(Session.Info)(info) as Record<string, unknown>
 
-    for (const key of ["workspaceID", "parentID", "summary", "share", "permission", "revert"]) {
+    for (const key of ["workspaceID", "parentID", "summary", "share", "permission", "revert", "folder"]) {
       expect(Object.hasOwn(encoded, key)).toBe(false)
     }
     expect(Object.hasOwn(encoded.time as Record<string, unknown>, "compacting")).toBe(false)
@@ -74,5 +74,14 @@ describe("Session schema", () => {
     for (const key of ["partID", "snapshot", "diff"]) {
       expect(Object.hasOwn(encoded.revert as Record<string, unknown>, key)).toBe(false)
     }
+  })
+
+  test("round-trips folder through row mappers", () => {
+    expect(Session.toRow({ ...info, folder: "Work" }).folder).toBe("Work")
+    expect(Session.toRow(info).folder).toBeUndefined()
+    expect(Session.fromRow({ ...Session.toRow({ ...info, folder: "Work" }), folder: null } as never).folder).toBeUndefined()
+    expect(Session.fromRow({ ...Session.toRow({ ...info, folder: "Work" }), folder: "Work" } as never).folder).toBe(
+      "Work",
+    )
   })
 })

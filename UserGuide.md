@@ -84,3 +84,68 @@ cd packages/opencode && bun test test/session/session.test.ts test/session/sessi
 ```
 
 The unit tests cover all code paths taken by the changes and test all changes apart from graphical changes to the TUI and verification of keyboard actions and database changes on real data (the migration is only tested on an empty DB, not with real data). The TUI changes are tested manually and are therefore covered and the database changes are still tested as well as unit tests can feasibly test the change.
+
+## Work Across Multiple Repositories in One Session
+
+Contributer: Sultan Abdulla [saabdullcmuq] \
+Issue Number: #6 \
+Pull Request Number: #15 \
+Branch Name: saabdull/multi-repo \
+
+### Description
+
+An opencode project used to be tied to a single repository. Working on a change that spans two repos (for example a backend and its client) meant separate sessions, or approving an `external_directory` prompt every time the agent touched the other repo. A project can now have extra repository roots, and the agent can read, write and search every root in a single session.
+
+Each root gets a short alias taken from its folder name. If two folders share a name, the second gets a suffix such as `api-2`. Once a project has more than one root:
+
+* File paths are shown with the repo alias in front, like `repo-b/src/main.py`, so files with the same name in different repos stay distinct.
+* The agent's system prompt lists every root, and the agent can use alias-prefixed paths in its read, write, edit, patch, glob and grep tools. Extra roots never trigger the `external_directory` prompt.
+* `@` file mentions search every root and label each result with its repo.
+* The sidebar gets a **Repositories** section listing each root (primary marked) and the files the agent touched in it. A `⎇ <repo> · N repos` indicator appears next to the prompt.
+
+Roots are saved on the project in the database (new `roots` column and migration), so they persist across sessions and restarts. Projects with a single repository behave exactly as before.
+
+### How to use
+
+```bash
+git checkout saabdull/multi-repo
+bun install
+```
+
+1. Launch the opencode TUI inside a git repository. This repository is the primary root.
+2. Type `/add-repo`, or choose "Add repository root" from the command palette. A folder picker opens in the folder that contains your current repo:
+   * Git repositories next to your repo appear first under "Git repositories here". Select one to add it.
+   * You can also browse folders, use `..` to go up, or pick "Type a path…" and enter a path (`~` works).
+3. A toast confirms the repo was added. The sidebar shows **Repositories (2)**, and the `⎇` indicator appears next to the prompt.
+4. Ask the agent to work across repos, for example: "Read `main.py` in repo-a and write a matching client in repo-b." It reads and edits both repos with no permission prompt, and the sidebar lists the touched files under each repo.
+5. Type `@` in the prompt to mention a file. Results come from every repo and are prefixed with the repo alias.
+6. Type `/remove-repo` to remove an extra root. The primary repository can't be removed.
+
+### Testing
+
+Test files:
+
+* `packages/core/test/project-roots.test.ts` (new)
+* `packages/opencode/test/server/httpapi-multi-repo.test.ts` (new)
+
+Run:
+
+```bash
+cd packages/core && bun test test/project-roots.test.ts
+cd packages/opencode && bun test test/server/httpapi-multi-repo.test.ts
+```
+
+What is covered and why it is sufficient:
+
+* `project-roots.test.ts`: unit tests for the path helpers everything else builds on.
+  * `list()`: the primary root comes first, aliases come from folder names and get suffixes on collisions, and duplicates are dropped.
+  * `display()`: a single root keeps the old worktree-relative path, identical file names in two repos get distinct prefixes, a nested root wins over its parent, and paths outside every root fall back safely.
+  * `resolve()`: alias prefixes route into the right root, other relative paths and absolute paths behave as before, and `resolve`/`display` round-trip.
+  * `find()`: returns the root that owns a file.
+
+  Together these prove paths are named and resolved correctly in every repo.
+* `httpapi-multi-repo.test.ts`: integration tests through the real HTTP API.
+  * One test adds a second repo, then reads from repo 1 and writes to repo 2 in the same session. This proves the agent's tools and permissions work end to end across roots.
+  * A regression guard checks that single-repo sessions keep plain worktree-relative paths.
+
+All green (16 tests total) on the branch after merging the latest `main`. The database migration test in `packages/core` also passes with this branch's migration and `main`'s session-folder migration together.

@@ -152,56 +152,60 @@ All green (16 tests total) on the branch after merging the latest `main`. The da
 
 ## Search Archived Sessions
 
-Contributor: Simon
-Issue Number: #1
-Pull Request Number: #18
-Branch Name: smalinka/search-archive
-
+Contributer: Simon Malinka [smalinka] \
+Issue Number: #1 \
+Pull Request Number: #18 \
+Branch Name: smalinka/search-archive \
 
 ### Description
 
-Adds the ability to search archived sessions by title. Previously, archived sessions were completely excluded from the search layer, forcing users to manually scroll through the archive list to find past work. This feature adds an "Include archived" toggle directly into the main session search bar. Active session search remains fast and unchanged by default, while toggling the option queries the backend to return matching archived sessions marked with an "Archived" badge, which can be opened directly into the workspace with a single click.
+Archived sessions were excluded from session search entirely, so finding past work meant scrolling through the archive list by hand. The session search bar now has an "Include archived" toggle. With the toggle off, search behaves exactly as before and only returns active sessions. With it on, the backend also returns archived sessions whose titles match the query. These show up in the dropdown with an "Archived" badge and open directly in the workspace when clicked.
 
 ### How to use
 
+```bash
+git checkout smalinka/search-archive
+bun install
+```
 
-# Start backend server
+```bash
+# Start the backend server
 bun run --cwd packages/opencode --conditions=browser src/index.ts serve --port 4096
 
-# In a separate terminal, start frontend dev server
+# In a separate terminal, start the frontend dev server
 bun --cwd packages/app dev
+```
 
-1. Navigate to http://localhost:3001/ in your browser.
-2. Click the "Search sessions" input field on the home page.
-3. Type a query. Notice that only active sessions are displayed by default.
-4. Click the "Include archived" toggle button located inside the right side of the search bar.
-5. Matching archived sessions will immediately appear in the dropdown with a distinct "Archived" badge.
-6. Click any archived result to open and view the session in your workspace.
+1. Open http://localhost:3001/ in your browser.
+2. Click the "Search sessions" input on the home page.
+3. Type a query. Only active sessions are shown by default.
+4. Click the "Include archived" toggle on the right side of the search bar.
+5. Matching archived sessions appear in the dropdown with an "Archived" badge.
+6. Click an archived result to open the session in your workspace.
 
 ### Testing
 
-Location of test files:
-- packages/opencode/test/server/session-list.test.ts
-- packages/opencode/test/server/httpapi-session.test.ts
-- scripts/verify-search-matrix.ts
+Test files:
 
-The commands required to run your tests:
-# 1. Run backend unit and HTTP API route tests
-cd packages/opencode
-bun test test/server/session-list.test.ts test/server/httpapi-session.test.ts
+* `packages/opencode/test/server/session-list.test.ts`
+* `packages/opencode/test/server/httpapi-session.test.ts`
+* `scripts/verify-search-matrix.ts`
 
-# 2. Run frontend typechecking
-cd ../app
-bun typecheck
+Run:
 
-# 3. Run the automated truth matrix test (from repository root)
-cd ../..
-bun run scripts/verify-search-matrix.ts
+```bash
+cd packages/opencode && bun test test/server/session-list.test.ts test/server/httpapi-session.test.ts
+cd packages/app && bun typecheck
+bun run scripts/verify-search-matrix.ts   # from the repository root
+```
 
-Description of what is being tested and how your tests are sufficient to show that your feature works:
-- Default Isolation: Verifies that search queries without the flag strictly exclude archived sessions (time_archived IS NULL), ensuring zero regressions to standard active search.
-- Archived Querying: Confirms that passing archived: true lifts the exclusion filter and surfaces matching archived sessions filtered by title.
-- Active Preservation: Tests that active sessions continue to appear alongside archived sessions when the toggle is active.
-- 7-Scenario Truth Matrix: Tests 7 distinct combinations of queries (active-only, archived-only, shared keywords, case-insensitivity, and non-existent terms) to mathematically guarantee no false positives or false negatives occur.
-- UI Integration & Navigation: Browser tests verify that the toggle updates results dynamically, renders the "Archived" badge, and correctly navigates to the session timeline upon selection.
+What is covered and why it is sufficient:
 
+* `session-list.test.ts` and `httpapi-session.test.ts`: backend and HTTP API route tests.
+  * Searches without the flag only return sessions where `time_archived IS NULL`. This is the regression guard for the default active-only search.
+  * Passing `archived: true` lifts that filter and returns archived sessions matching the title query.
+  * Active sessions still appear alongside archived ones when the flag is set.
+* `verify-search-matrix.ts`: runs 7 query scenarios (active-only matches, archived-only matches, keywords shared by both, case-insensitive matches, and terms that match nothing) and checks the exact result set for each, with and without the flag. This shows there are no false positives or false negatives across those cases.
+* `bun typecheck` passes in `packages/app`.
+
+All green. Manually verified in the browser: the toggle updates results as it is switched, archived results show the "Archived" badge, and clicking one opens the session timeline.

@@ -1190,7 +1190,7 @@ describe("session HttpApi", () => {
   )
 
   it.instance(
-    "returns archived sessions when archived query parameter is true",
+    "returns only archived sessions when archived query parameter is true",
     () =>
       Effect.gen(function* () {
         const test = yield* TestInstance
@@ -1217,7 +1217,7 @@ describe("session HttpApi", () => {
           { method: "GET", headers },
         )
         const archivedIDs = archivedResponse.map((s) => s.id)
-        expect(archivedIDs).toContain(active.id)
+        expect(archivedIDs).not.toContain(active.id)
         expect(archivedIDs).toContain(archived.id)
       }),
     { git: true, config: { formatter: false, lsp: false } },

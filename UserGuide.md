@@ -209,3 +209,48 @@ What is covered and why it is sufficient:
 * `bun typecheck` passes in `packages/app`.
 
 All green. Manually verified in the browser: the toggle updates results as it is switched, archived results show the "Archived" badge, and clicking one opens the session timeline.
+
+## Session Archive and Unarchive
+Contributor: Mohammed Al-Marri [mrmarri1]\
+Issue Number: #11\
+Pull Request Number: #16\
+Branch Name: mrmarri/implement-unarchive
+
+
+### Description
+Adds /archive and /unarchive to the terminal. Users can archive their current session and restore archived sessions from a list. Restoring updates the session’s timestamp and moves it to the top of /sessions.
+
+### How to use
+Run from the repository root:\
+`git checkout mrmarri/implement-unarchive`\
+`bun install`\
+`bun run dev`
+1. Open a conversation and enter /archive to archive it.
+2. Enter /unarchive to open the archived sessions list.
+3. Click a session, or select it using the arrow keys and press Enter, to restore it.
+4. Enter /sessions to find the restored session at the top.
+
+Inside the session picker, Ctrl+Shift+H switches between active and archived sessions. Ctrl+Shift+U restores the selected archived session. Esc closes the list.
+
+
+### Testing
+
+Test files:
+- packages/tui/test/component/dialog-session-list.test.ts:  9 tests covering session filtering and picker actions.
+- packages/tui/test/session-archive.test.tsx: 12  interaction tests using the actual terminal renderer with simulated server responses.
+Run from the repository root:
+cd packages/tui\
+bun test --timeout 30000 test/component/dialog-session-list.test.ts test/session-archive.test.tsx\
+bun typecheck\
+Results should be 21 tests passed, 0 failed. Type checking passed.
+
+The tests cover:
+- Typing /archive, /unarchive, and /sessions.
+- Restoring through Enter, mouse clicks, and the keyboard shortcut.
+- Switching lists when the archived list is empty.
+- Restored sessions appearing above older active sessions.
+- Keeping another open conversation unchanged during restoration.
+- Failed requests, retrying, and preventing duplicate restore requests.
+- Preventing archived sessions from opening through a stale active list.
+
+For a manual check, archive a conversation, make sure it disappears from /sessions, restore it through /unarchive, and make sure it returns at the top. The automated tests cover the main terminal interactions and error cases. This manual checkalso verifies the flow against the running backend.

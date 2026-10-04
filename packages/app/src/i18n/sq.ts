@@ -1,4 +1,12 @@
 export const dict = {
+  "session.unarchive": "Hiq nga arkivi",
+  "session.unarchive.shortcut": "Hiq nga arkivi (Ctrl/⌘+Shift+U)",
+  "session.unarchive.success": "Sesioni u rikthye",
+  "session.unarchive.failed": "Rikthimi i sesionit dështoi",
+  "session.archived.title": "Sesione të arkivuara",
+  "session.archived.search": "Kërko sesione të arkivuara",
+  "session.archived.empty": "Nuk ka sesione të arkivuara",
+  "session.archived.retry": "Provo sërish ngarkimin e sesioneve të arkivuara",
   "desktop.menu.app": "OpenCode",
   "desktop.menu.file": "Skedari",
   "desktop.menu.edit": "Redakto",

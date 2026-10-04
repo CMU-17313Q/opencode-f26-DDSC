@@ -1,4 +1,12 @@
 export const dict = {
+  "session.unarchive": "Eemalda arhiivist",
+  "session.unarchive.shortcut": "Eemalda arhiivist (Ctrl/⌘+Shift+U)",
+  "session.unarchive.success": "Seanss taastatud",
+  "session.unarchive.failed": "Seansi taastamine ebaõnnestus",
+  "session.archived.title": "Arhiveeritud seansid",
+  "session.archived.search": "Otsi arhiveeritud seansse",
+  "session.archived.empty": "Arhiveeritud seansse pole",
+  "session.archived.retry": "Proovi arhiveeritud seansse uuesti laadida",
   "desktop.menu.app": "OpenCode",
   "desktop.menu.file": "Fail",
   "desktop.menu.edit": "Muuda",

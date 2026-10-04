@@ -1,4 +1,12 @@
 export const dict = {
+  "session.unarchive": "Розархівувати",
+  "session.unarchive.shortcut": "Розархівувати (Ctrl/⌘+Shift+U)",
+  "session.unarchive.success": "Сесію відновлено",
+  "session.unarchive.failed": "Не вдалося відновити сесію",
+  "session.archived.title": "Архівні сесії",
+  "session.archived.search": "Пошук архівних сесій",
+  "session.archived.empty": "Немає архівних сесій",
+  "session.archived.retry": "Повторити завантаження архівних сесій",
   "desktop.menu.app": "OpenCode",
   "desktop.menu.file": "Файл",
   "desktop.menu.edit": "Редагування",

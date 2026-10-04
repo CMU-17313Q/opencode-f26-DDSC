@@ -22,6 +22,7 @@ import { isNull } from "drizzle-orm"
 import { desc } from "drizzle-orm"
 import { like } from "drizzle-orm"
 import { sql } from "drizzle-orm"
+import { isNotNull } from "drizzle-orm"
 import { inArray } from "drizzle-orm"
 import { lt } from "drizzle-orm"
 import { or } from "drizzle-orm"
@@ -156,7 +157,7 @@ export function toRow(info: Info) {
     time_created: info.time.created,
     time_updated: info.time.updated,
     time_compacting: info.time.compacting,
-    time_archived: info.time.archived,
+    time_archived: info.time.archived ?? null,
   }
 }
 
@@ -433,7 +434,7 @@ export interface Interface {
   readonly get: (id: SessionID) => Effect.Effect<Info, NotFound>
   readonly setTitle: (input: { sessionID: SessionID; title: string }) => Effect.Effect<void>
   readonly setFolder: (input: { sessionID: SessionID; folder?: string }) => Effect.Effect<void>
-  readonly setArchived: (input: { sessionID: SessionID; time?: number }) => Effect.Effect<void>
+  readonly setArchived: (input: { sessionID: SessionID; time?: number }) => Effect.Effect<void, NotFoundError>
   readonly setMetadata: (input: typeof SetMetadataInput.Type) => Effect.Effect<void>
   readonly setAgentModel: (input: {
     sessionID: SessionID
@@ -766,7 +767,15 @@ const layer: Layer.Layer<
     })
 
     const setArchived = Effect.fn("Session.setArchived")(function* (input: { sessionID: SessionID; time?: number }) {
-      yield* patch(input.sessionID, { time: { archived: input.time } }).pipe(Effect.orDie)
+      if (input.time !== undefined) {
+        yield* patch(input.sessionID, { time: { archived: input.time } }).pipe(Effect.orDie)
+        return
+      }
+      const current = yield* get(input.sessionID)
+      if (current.time.archived === undefined) return
+      yield* patch(input.sessionID, {
+        time: { archived: undefined, updated: Math.max(Date.now(), current.time.updated + 1) },
+      }).pipe(Effect.orDie)
     })
 
     const setMetadata = Effect.fn("Session.setMetadata")(function* (input: typeof SetMetadataInput.Type) {
@@ -972,6 +981,9 @@ function listByProject(
   },
 ) {
   const conditions = [eq(SessionTable.project_id, input.projectID)]
+  if (input.archived !== undefined) {
+    conditions.push(input.archived ? isNotNull(SessionTable.time_archived) : isNull(SessionTable.time_archived))
+  }
 
   if (input.workspaceID) {
     conditions.push(eq(SessionTable.workspace_id, input.workspaceID))

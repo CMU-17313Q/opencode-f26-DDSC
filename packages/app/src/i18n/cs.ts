@@ -1,4 +1,12 @@
 export const dict = {
+  "session.unarchive": "Vyjmout z archivu",
+  "session.unarchive.shortcut": "Vyjmout z archivu (Ctrl/⌘+Shift+U)",
+  "session.unarchive.success": "Relace byla obnovena",
+  "session.unarchive.failed": "Relaci se nepodařilo obnovit",
+  "session.archived.title": "Archivované relace",
+  "session.archived.search": "Hledat archivované relace",
+  "session.archived.empty": "Žádné archivované relace",
+  "session.archived.retry": "Znovu načíst archivované relace",
   "desktop.menu.app": "OpenCode",
   "desktop.menu.file": "Soubor",
   "desktop.menu.edit": "Upravit",

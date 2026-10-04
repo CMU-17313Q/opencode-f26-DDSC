@@ -1,4 +1,12 @@
 export const dict: Record<string, string> = {
+  "session.unarchive": "සංරක්ෂිතයෙන් ඉවත් කරන්න",
+  "session.unarchive.shortcut": "සංරක්ෂිතයෙන් ඉවත් කරන්න (Ctrl/⌘+Shift+U)",
+  "session.unarchive.success": "සැසිය ප්‍රතිසාධනය කරන ලදී",
+  "session.unarchive.failed": "සැසිය ප්‍රතිසාධනය කිරීමට නොහැකි විය",
+  "session.archived.title": "සංරක්ෂිත සැසි",
+  "session.archived.search": "සංරක්ෂිත සැසි සොයන්න",
+  "session.archived.empty": "සංරක්ෂිත සැසි නොමැත",
+  "session.archived.retry": "සංරක්ෂිත සැසි පූරණය කිරීමට නැවත උත්සාහ කරන්න",
   "desktop.menu.app": "OpenCode",
   "desktop.menu.file": "ගොනුව",
   "desktop.menu.edit": "සංස්කරණය කරන්න",

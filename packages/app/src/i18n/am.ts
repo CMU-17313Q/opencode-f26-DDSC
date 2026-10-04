@@ -1,4 +1,12 @@
 export const dict = {
+  "session.unarchive": "ከማህደር መልስ",
+  "session.unarchive.shortcut": "ከማህደር መልስ (Ctrl/⌘+Shift+U)",
+  "session.unarchive.success": "ክፍለ ጊዜው ተመልሷል",
+  "session.unarchive.failed": "ክፍለ ጊዜውን መመለስ አልተቻለም",
+  "session.archived.title": "በማህደር የተቀመጡ ክፍለ ጊዜዎች",
+  "session.archived.search": "በማህደር የተቀመጡ ክፍለ ጊዜዎችን ፈልግ",
+  "session.archived.empty": "በማህደር የተቀመጡ ክፍለ ጊዜዎች የሉም",
+  "session.archived.retry": "በማህደር የተቀመጡ ክፍለ ጊዜዎችን እንደገና ለመጫን ሞክር",
   "desktop.menu.app": "OpenCode",
   "desktop.menu.file": "ፋይል",
   "desktop.menu.edit": "አርትዕ",

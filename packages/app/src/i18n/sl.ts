@@ -1,4 +1,12 @@
 export const dict = {
+  "session.unarchive": "Odstrani iz arhiva",
+  "session.unarchive.shortcut": "Odstrani iz arhiva (Ctrl/⌘+Shift+U)",
+  "session.unarchive.success": "Seja je obnovljena",
+  "session.unarchive.failed": "Seje ni bilo mogoče obnoviti",
+  "session.archived.title": "Arhivirane seje",
+  "session.archived.search": "Poišči arhivirane seje",
+  "session.archived.empty": "Ni arhiviranih sej",
+  "session.archived.retry": "Poskusi znova naložiti arhivirane seje",
   "desktop.menu.app": "OpenCode",
   "desktop.menu.file": "Datoteka",
   "desktop.menu.edit": "Uredi",

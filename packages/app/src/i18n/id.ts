@@ -1,4 +1,12 @@
 export const dict = {
+  "session.unarchive": "Keluarkan dari arsip",
+  "session.unarchive.shortcut": "Keluarkan dari arsip (Ctrl/⌘+Shift+U)",
+  "session.unarchive.success": "Sesi dipulihkan",
+  "session.unarchive.failed": "Gagal memulihkan sesi",
+  "session.archived.title": "Sesi yang diarsipkan",
+  "session.archived.search": "Cari sesi yang diarsipkan",
+  "session.archived.empty": "Tidak ada sesi yang diarsipkan",
+  "session.archived.retry": "Coba muat kembali sesi yang diarsipkan",
   "desktop.menu.app": "OpenCode",
   "desktop.menu.file": "Berkas",
   "desktop.menu.edit": "Sunting",

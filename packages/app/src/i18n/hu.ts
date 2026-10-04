@@ -94,6 +94,14 @@ const desktop = [
 ]
 
 export const dict = {
+  "session.unarchive": "Archiválás visszavonása",
+  "session.unarchive.shortcut": "Archiválás visszavonása (Ctrl/⌘+Shift+U)",
+  "session.unarchive.success": "Munkamenet visszaállítva",
+  "session.unarchive.failed": "Nem sikerült visszaállítani a munkamenetet",
+  "session.archived.title": "Archivált munkamenetek",
+  "session.archived.search": "Archivált munkamenetek keresése",
+  "session.archived.empty": "Nincsenek archivált munkamenetek",
+  "session.archived.retry": "Archivált munkamenetek betöltésének újrapróbálása",
   ...Object.fromEntries(DESKTOP_NATIVE_KEYS.map((key, index) => [key, desktop[index]])),
   "command.category.suggested": "Javasolt",
   "command.category.view": "Nézet",

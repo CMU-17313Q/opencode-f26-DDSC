@@ -38,6 +38,14 @@ export const dict = {
   "command.session.previous.unseen": "Previous unread session",
   "command.session.next.unseen": "Next unread session",
   "command.session.archive": "Archive session",
+  "session.unarchive": "Unarchive",
+  "session.unarchive.shortcut": "Unarchive (Ctrl/⌘+Shift+U)",
+  "session.unarchive.success": "Session restored",
+  "session.unarchive.failed": "Failed to restore session",
+  "session.archived.title": "Archived sessions",
+  "session.archived.search": "Search archived sessions",
+  "session.archived.empty": "No archived sessions",
+  "session.archived.retry": "Retry loading archived sessions",
 
   "command.palette": "Command palette",
 

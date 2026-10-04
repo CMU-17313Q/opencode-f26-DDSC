@@ -1,4 +1,12 @@
 export const dict = {
+  "session.unarchive": "Tak úr skjalasavni",
+  "session.unarchive.shortcut": "Tak úr skjalasavni (Ctrl/⌘+Shift+U)",
+  "session.unarchive.success": "Løtan er endurheimtað",
+  "session.unarchive.failed": "Tað bar ikki til at endurheimta løtuna",
+  "session.archived.title": "Løtur í skjalasavni",
+  "session.archived.search": "Leita eftir løtum í skjalasavni",
+  "session.archived.empty": "Ongar løtur í skjalasavni",
+  "session.archived.retry": "Royn aftur at lesa inn løtur úr skjalasavni",
   "desktop.menu.app": "OpenCode",
   "desktop.menu.file": "Skrá",
   "desktop.menu.edit": "Rætta",

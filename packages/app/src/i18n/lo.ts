@@ -1,4 +1,12 @@
 export const dict = {
+  "session.unarchive": "ນຳອອກຈາກຄັງເກັບ",
+  "session.unarchive.shortcut": "ນຳອອກຈາກຄັງເກັບ (Ctrl/⌘+Shift+U)",
+  "session.unarchive.success": "ຟື້ນຟູເຊດຊັນແລ້ວ",
+  "session.unarchive.failed": "ບໍ່ສາມາດຟື້ນຟູເຊດຊັນໄດ້",
+  "session.archived.title": "ເຊດຊັນທີ່ຈັດເກັບໄວ້",
+  "session.archived.search": "ຄົ້ນຫາເຊດຊັນທີ່ຈັດເກັບໄວ້",
+  "session.archived.empty": "ບໍ່ມີເຊດຊັນທີ່ຈັດເກັບໄວ້",
+  "session.archived.retry": "ລອງໂຫຼດເຊດຊັນທີ່ຈັດເກັບໄວ້ອີກຄັ້ງ",
   "desktop.menu.app": "OpenCode",
   "desktop.menu.file": "ໄຟລ໌",
   "desktop.menu.edit": "ແກ້ໄຂ",

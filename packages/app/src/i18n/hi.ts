@@ -1,4 +1,12 @@
 export const dict = {
+  "session.unarchive": "संग्रह से निकालें",
+  "session.unarchive.shortcut": "संग्रह से निकालें (Ctrl/⌘+Shift+U)",
+  "session.unarchive.success": "सेशन पुनर्स्थापित किया गया",
+  "session.unarchive.failed": "सेशन पुनर्स्थापित नहीं हो सका",
+  "session.archived.title": "संग्रहित सेशन",
+  "session.archived.search": "संग्रहित सेशन खोजें",
+  "session.archived.empty": "कोई संग्रहित सेशन नहीं है",
+  "session.archived.retry": "संग्रहित सेशन लोड करने का फिर से प्रयास करें",
   "desktop.menu.app": "OpenCode",
   "desktop.menu.file": "फ़ाइल",
   "desktop.menu.edit": "संपादित करें",

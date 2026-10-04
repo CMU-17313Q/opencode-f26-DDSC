@@ -1,4 +1,12 @@
 export const dict = {
+  "session.unarchive": "မှတ်တမ်းသိမ်းထားရာမှ ပြန်ထုတ်ရန်",
+  "session.unarchive.shortcut": "မှတ်တမ်းသိမ်းထားရာမှ ပြန်ထုတ်ရန် (Ctrl/⌘+Shift+U)",
+  "session.unarchive.success": "အပိုင်းကို ပြန်ယူပြီးပါပြီ",
+  "session.unarchive.failed": "အပိုင်းကို ပြန်ယူ၍ မရပါ",
+  "session.archived.title": "မှတ်တမ်းသိမ်းထားသော အပိုင်းများ",
+  "session.archived.search": "မှတ်တမ်းသိမ်းထားသော အပိုင်းများကို ရှာရန်",
+  "session.archived.empty": "မှတ်တမ်းသိမ်းထားသော အပိုင်းများ မရှိပါ",
+  "session.archived.retry": "မှတ်တမ်းသိမ်းထားသော အပိုင်းများကို ပြန်တင်ရန် ကြိုးစားပါ",
   "desktop.menu.app": "OpenCode",
   "desktop.menu.file": "ဖိုင်",
   "desktop.menu.edit": "တည်းဖြတ်ပါ။",

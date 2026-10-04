@@ -1,4 +1,12 @@
 export const dict = {
+  "session.unarchive": "ដកចេញពីបណ្ណសារ",
+  "session.unarchive.shortcut": "ដកចេញពីបណ្ណសារ (Ctrl/⌘+Shift+U)",
+  "session.unarchive.success": "បានស្ដារសម័យឡើងវិញ",
+  "session.unarchive.failed": "មិនអាចស្ដារសម័យឡើងវិញបានទេ",
+  "session.archived.title": "សម័យដែលបានទុកក្នុងបណ្ណសារ",
+  "session.archived.search": "ស្វែងរកសម័យដែលបានទុកក្នុងបណ្ណសារ",
+  "session.archived.empty": "គ្មានសម័យដែលបានទុកក្នុងបណ្ណសារទេ",
+  "session.archived.retry": "ព្យាយាមផ្ទុកសម័យដែលបានទុកក្នុងបណ្ណសារម្ដងទៀត",
   "desktop.menu.app": "OpenCode",
   "desktop.menu.file": "ឯកសារ",
   "desktop.menu.edit": "កែសម្រួល",

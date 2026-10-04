@@ -1,4 +1,12 @@
 export const dict = {
+  "session.unarchive": "Desarquivar",
+  "session.unarchive.shortcut": "Desarquivar (Ctrl/⌘+Shift+U)",
+  "session.unarchive.success": "Sessão restaurada",
+  "session.unarchive.failed": "Falha ao restaurar a sessão",
+  "session.archived.title": "Sessões arquivadas",
+  "session.archived.search": "Buscar sessões arquivadas",
+  "session.archived.empty": "Nenhuma sessão arquivada",
+  "session.archived.retry": "Tentar carregar as sessões arquivadas novamente",
   "desktop.menu.app": "OpenCode",
   "desktop.menu.file": "Arquivo",
   "desktop.menu.edit": "Editar",

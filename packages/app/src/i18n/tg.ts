@@ -1,4 +1,12 @@
 export const dict = {
+  "session.unarchive": "Аз архив баровардан",
+  "session.unarchive.shortcut": "Аз архив баровардан (Ctrl/⌘+Shift+U)",
+  "session.unarchive.success": "Сеанс барқарор шуд",
+  "session.unarchive.failed": "Барқарор кардани сеанс муяссар нашуд",
+  "session.archived.title": "Сеансҳои архившуда",
+  "session.archived.search": "Ҷустуҷӯи сеансҳои архившуда",
+  "session.archived.empty": "Сеансҳои архившуда нестанд",
+  "session.archived.retry": "Бори дигар бор кардани сеансҳои архившударо кӯшиш кунед",
   "desktop.menu.app": "OpenCode",
   "desktop.menu.file": "Файл",
   "desktop.menu.edit": "Таҳрир",

@@ -1,4 +1,12 @@
 export const dict = {
+  "session.unarchive": "Bỏ lưu trữ",
+  "session.unarchive.shortcut": "Bỏ lưu trữ (Ctrl/⌘+Shift+U)",
+  "session.unarchive.success": "Đã khôi phục phiên",
+  "session.unarchive.failed": "Không thể khôi phục phiên",
+  "session.archived.title": "Các phiên đã lưu trữ",
+  "session.archived.search": "Tìm kiếm các phiên đã lưu trữ",
+  "session.archived.empty": "Không có phiên nào đã lưu trữ",
+  "session.archived.retry": "Thử tải lại các phiên đã lưu trữ",
   "desktop.menu.app": "OpenCode",
   "desktop.menu.file": "Tệp",
   "desktop.menu.edit": "Chỉnh sửa",

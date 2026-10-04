@@ -1,8 +1,8 @@
 {
   "version": "7",
   "dialect": "sqlite",
-  "id": "f14a9b18-8207-487e-a3d3-227e629ba9ad",
-  "prevIds": ["169a0f0f-d58f-479f-b024-fa1c7b9a09db"],
+  "id": "7dca3dd2-48f7-4820-a175-859fb6f4c15b",
+  "prevIds": ["7c358a4a-dcc4-4168-a1df-cd3a4646aee9"],
   "ddl": [
     {
       "name": "workspace",
@@ -776,6 +776,16 @@
       "autoincrement": false,
       "default": null,
       "generated": null,
+      "name": "roots",
+      "entityType": "columns",
+      "table": "project"
+    },
+    {
+      "type": "text",
+      "notNull": false,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
       "name": "id",
       "entityType": "columns",
       "table": "message"
@@ -1137,6 +1147,16 @@
       "default": null,
       "generated": null,
       "name": "title",
+      "entityType": "columns",
+      "table": "session"
+    },
+    {
+      "type": "text",
+      "notNull": false,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "folder",
       "entityType": "columns",
       "table": "session"
     },

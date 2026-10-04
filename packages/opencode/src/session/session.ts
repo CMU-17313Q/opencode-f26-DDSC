@@ -84,6 +84,7 @@ export function fromRow(row: SessionRow): Info {
     path: row.path ?? undefined,
     parentID: row.parent_id ?? undefined,
     title: row.title,
+    folder: row.folder ?? undefined,
     agent: row.agent ?? undefined,
     model: row.model
       ? {
@@ -127,6 +128,7 @@ export function toRow(info: Info) {
     directory: info.directory,
     path: info.path,
     title: info.title,
+    folder: info.folder,
     agent: info.agent,
     model: info.model,
     version: info.version,
@@ -234,6 +236,7 @@ export const Info = Schema.Struct({
   tokens: optional(Tokens),
   share: optional(Share),
   title: Schema.String,
+  folder: optional(Schema.String),
   agent: optional(Schema.String),
   model: optional(Model),
   version: Schema.String,
@@ -429,6 +432,7 @@ export interface Interface {
   readonly touch: (sessionID: SessionID) => Effect.Effect<void>
   readonly get: (id: SessionID) => Effect.Effect<Info, NotFound>
   readonly setTitle: (input: { sessionID: SessionID; title: string }) => Effect.Effect<void>
+  readonly setFolder: (input: { sessionID: SessionID; folder?: string }) => Effect.Effect<void>
   readonly setArchived: (input: { sessionID: SessionID; time?: number }) => Effect.Effect<void>
   readonly setMetadata: (input: typeof SetMetadataInput.Type) => Effect.Effect<void>
   readonly setAgentModel: (input: {
@@ -757,6 +761,10 @@ const layer: Layer.Layer<
       yield* patch(input.sessionID, { title: input.title }).pipe(Effect.orDie)
     })
 
+    const setFolder = Effect.fn("Session.setFolder")(function* (input: { sessionID: SessionID; folder?: string }) {
+      yield* patch(input.sessionID, { folder: input.folder, time: { updated: Date.now() } }).pipe(Effect.orDie)
+    })
+
     const setArchived = Effect.fn("Session.setArchived")(function* (input: { sessionID: SessionID; time?: number }) {
       yield* patch(input.sessionID, { time: { archived: input.time } }).pipe(Effect.orDie)
     })
@@ -914,6 +922,7 @@ const layer: Layer.Layer<
       touch,
       get,
       setTitle,
+      setFolder,
       setArchived,
       setMetadata,
       setAgentModel,

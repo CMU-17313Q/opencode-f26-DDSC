@@ -121,7 +121,8 @@ export default {
           \`time_updated\` integer NOT NULL,
           \`time_initialized\` integer,
           \`sandboxes\` text NOT NULL,
-          \`commands\` text
+          \`commands\` text,
+          \`roots\` text
         );
       `)
       yield* tx.run(`
@@ -188,6 +189,7 @@ export default {
           \`directory\` text NOT NULL,
           \`path\` text,
           \`title\` text NOT NULL,
+          \`folder\` text,
           \`version\` text NOT NULL,
           \`share_url\` text,
           \`summary_additions\` integer,

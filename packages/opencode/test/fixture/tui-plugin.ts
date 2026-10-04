@@ -1,5 +1,6 @@
 import { createOpencodeClient } from "@opencode-ai/sdk/v2"
 import { RGBA, type CliRenderer } from "@opentui/core"
+import type { TuiDialogSize } from "@opencode-ai/plugin/tui"
 import type { HostPluginApi } from "@opencode-ai/tui/plugin/slots"
 import { createTuiResolvedConfig } from "./tui-runtime"
 
@@ -139,7 +140,7 @@ export function createTuiPluginApi(opts: Opts = {}): HostPluginApi {
         : fallback
   const client = () => read()
   let depth = 0
-  let size: "medium" | "large" | "xlarge" = "medium"
+  let size: TuiDialogSize = "medium"
   const has = opts.theme?.has ?? (() => false)
   let selected = opts.theme?.selected ?? "opencode"
   const set =

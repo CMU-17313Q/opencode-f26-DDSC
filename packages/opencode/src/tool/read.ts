@@ -6,6 +6,7 @@ import { FSUtil } from "@opencode-ai/core/fs-util"
 import { LSP } from "@/lsp/lsp"
 import DESCRIPTION from "./read.txt"
 import { InstanceState } from "@/effect/instance-state"
+import { displayPath, resolvePath } from "../project/instance-context"
 import { assertExternalDirectoryEffect } from "./external-directory"
 import { Instruction } from "../session/instruction"
 import { isPdfAttachment, sniffAttachmentMime } from "@/util/media"
@@ -233,12 +234,12 @@ export const ReadTool = Tool.define<
       const instance = yield* InstanceState.context
       let filepath = params.filePath
       if (!path.isAbsolute(filepath)) {
-        filepath = path.resolve(instance.directory, filepath)
+        filepath = resolvePath(filepath, instance)
       }
       if (process.platform === "win32") {
         filepath = FSUtil.normalizePath(filepath)
       }
-      const title = path.relative(instance.worktree, filepath)
+      const title = displayPath(filepath, instance)
 
       const stat = yield* fs.stat(filepath).pipe(
         Effect.catchIf(

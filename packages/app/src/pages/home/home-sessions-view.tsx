@@ -49,6 +49,8 @@ export type HomeSessionsViewProps = {
   searchResults: Accessor<HomeSessionRecord[]>
   searchActive: Accessor<string>
   searchNoResultsLabel: Accessor<string>
+  searchIncludeArchived: Accessor<boolean>
+  onToggleIncludeArchived: () => void
   titleOpacity: (id: HomeSessionGroup["id"]) => number
   isOpenTab: (record: HomeSessionRecord) => boolean
   onCreateSession: () => void
@@ -279,7 +281,7 @@ function HomeSessionSearch(props: HomeSessionsViewProps) {
             </div>
           </div>
         </Show>
-        <label
+        <div
           class={`
             relative z-20 flex h-9 w-full items-center gap-2 rounded-[6px] py-1 pl-3 pr-2
             bg-v2-background-bg-layer-02/60 text-v2-icon-icon-muted transition-[background-color,box-shadow]
@@ -331,6 +333,20 @@ function HomeSessionSearch(props: HomeSessionsViewProps) {
               }
             }}
           />
+          <ButtonV2
+            type="button"
+            variant={props.searchIncludeArchived() ? "neutral" : "ghost-muted"}
+            size="small"
+            class="relative z-20 shrink-0 h-6 px-2 text-[11px] [font-weight:530]"
+            aria-pressed={props.searchIncludeArchived()}
+            onClick={(event: MouseEvent) => {
+              event.preventDefault()
+              event.stopPropagation()
+              props.onToggleIncludeArchived()
+            }}
+          >
+            {props.language.t("home.sessions.search.includeArchived")}
+          </ButtonV2>
           <Show when={props.searchValue()}>
             <IconButtonV2
               type="button"
@@ -345,7 +361,7 @@ function HomeSessionSearch(props: HomeSessionsViewProps) {
               }}
             />
           </Show>
-        </label>
+        </div>
       </div>
     </div>
   )
@@ -397,6 +413,11 @@ function HomeSessionSearchResultRow(
       />
       <div class="flex min-w-0 flex-1 items-center gap-1.5">
         <HomeSessionTitle title={title()} showProjectName={!!showProjectName()} search />
+        <Show when={props.record.session.time?.archived}>
+          <span class="shrink-0 rounded-[4px] bg-v2-background-bg-layer-03 px-1.5 py-0.5 text-[11px] leading-tight text-v2-text-text-muted [font-weight:440]">
+            {props.language.t("common.archived")}
+          </span>
+        </Show>
         <Show when={showProjectName()}>
           <HomeSessionProjectName name={props.record.projectName} search />
         </Show>

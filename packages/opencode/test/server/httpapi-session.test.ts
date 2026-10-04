@@ -793,6 +793,61 @@ describe("session HttpApi", () => {
   )
 
   it.instance(
+    "trims, clears, and preserves folder on session update",
+    () =>
+      Effect.gen(function* () {
+        const test = yield* TestInstance
+        const headers = { "x-opencode-directory": test.directory, "content-type": "application/json" }
+
+        const created = yield* requestJson<Session.Info>(SessionPaths.create, {
+          method: "POST",
+          headers,
+          body: JSON.stringify({ title: "folder-http" }),
+        })
+        expect(created.folder).toBeUndefined()
+
+        const assigned = yield* requestJson<Session.Info>(pathFor(SessionPaths.update, { sessionID: created.id }), {
+          method: "PATCH",
+          headers,
+          body: JSON.stringify({ folder: "  Work  " }),
+        })
+        expect(assigned.folder).toBe("Work")
+
+        const untouched = yield* requestJson<Session.Info>(pathFor(SessionPaths.update, { sessionID: created.id }), {
+          method: "PATCH",
+          headers,
+          body: JSON.stringify({ title: "folder-http-renamed" }),
+        })
+        expect(untouched.folder).toBe("Work")
+
+        const cleared = yield* requestJson<Session.Info>(pathFor(SessionPaths.update, { sessionID: created.id }), {
+          method: "PATCH",
+          headers,
+          body: JSON.stringify({ folder: "" }),
+        })
+        expect(cleared.folder).toBeUndefined()
+
+        const reassigned = yield* requestJson<Session.Info>(pathFor(SessionPaths.update, { sessionID: created.id }), {
+          method: "PATCH",
+          headers,
+          body: JSON.stringify({ folder: "Play" }),
+        })
+        expect(reassigned.folder).toBe("Play")
+
+        const blankCleared = yield* requestJson<Session.Info>(
+          pathFor(SessionPaths.update, { sessionID: created.id }),
+          {
+            method: "PATCH",
+            headers,
+            body: JSON.stringify({ folder: "   " }),
+          },
+        )
+        expect(blankCleared.folder).toBeUndefined()
+      }),
+    { git: true, config: { formatter: false, lsp: false, share: "disabled" } },
+  )
+
+  it.instance(
     "persists selected workspace id when creating a session",
     () =>
       Effect.gen(function* () {
@@ -1130,6 +1185,40 @@ describe("session HttpApi", () => {
           requestID: permissionID,
           message: `Permission request not found: ${permissionID}`,
         })
+      }),
+    { git: true, config: { formatter: false, lsp: false } },
+  )
+
+  it.instance(
+    "returns archived sessions when archived query parameter is true",
+    () =>
+      Effect.gen(function* () {
+        const test = yield* TestInstance
+        const headers = { "x-opencode-directory": test.directory, "content-type": "application/json" }
+        const active = yield* createSession({ title: "httpapi-active" })
+        const archived = yield* createSession({ title: "httpapi-archived" })
+
+        yield* request(pathFor(SessionPaths.update, { sessionID: archived.id }), {
+          method: "PATCH",
+          headers,
+          body: JSON.stringify({ time: { archived: Date.now() } }),
+        })
+
+        const defaultResponse = yield* requestJson<Session.Info[]>(
+          `${SessionPaths.list}?search=httpapi-`,
+          { method: "GET", headers },
+        )
+        const defaultIDs = defaultResponse.map((s) => s.id)
+        expect(defaultIDs).toContain(active.id)
+        expect(defaultIDs).not.toContain(archived.id)
+
+        const archivedResponse = yield* requestJson<Session.Info[]>(
+          `${SessionPaths.list}?search=httpapi-&archived=true`,
+          { method: "GET", headers },
+        )
+        const archivedIDs = archivedResponse.map((s) => s.id)
+        expect(archivedIDs).toContain(active.id)
+        expect(archivedIDs).toContain(archived.id)
       }),
     { git: true, config: { formatter: false, lsp: false } },
   )

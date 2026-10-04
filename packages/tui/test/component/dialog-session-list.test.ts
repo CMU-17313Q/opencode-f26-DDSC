@@ -1,6 +1,13 @@
 import { describe, expect, test } from "bun:test"
 import { triggerDialogAction } from "../../src/ui/dialog-select"
-import { createDialogSessionListQuery, loadDialogSessionList } from "../../src/component/dialog-session-list"
+import {
+  NO_FOLDER_LABEL,
+  compareFolderLabels,
+  createDialogSessionListQuery,
+  loadDialogSessionList,
+  sessionFolderLabel,
+} from "../../src/component/dialog-session-list"
+import { buildFolderOptions, collectFolderNames, orderIDsByFolder } from "../../src/component/session-folder"
 
 describe("dialog session list", () => {
   test("requests root sessions for the default browse list", () => {
@@ -52,6 +59,65 @@ describe("dialog session list", () => {
         list: () => Promise.reject(new Error("offline")),
       }),
     ).toBeUndefined()
+  })
+
+  test("maps missing folders to No folder", () => {
+    expect(sessionFolderLabel(undefined)).toBe(NO_FOLDER_LABEL)
+    expect(sessionFolderLabel("")).toBe(NO_FOLDER_LABEL)
+    expect(sessionFolderLabel("  ")).toBe(NO_FOLDER_LABEL)
+    expect(sessionFolderLabel(" Work ")).toBe("Work")
+  })
+
+  test("sorts folders alphabetically with No folder last", () => {
+    expect(["No folder", "b", "A"].toSorted(compareFolderLabels)).toEqual(["A", "b", "No folder"])
+    expect(compareFolderLabels("a", "a")).toBe(0)
+  })
+
+  test("collects unique trimmed folder names", () => {
+    expect(
+      collectFolderNames([
+        { folder: " Work " },
+        { folder: "Work" },
+        { folder: undefined },
+        { folder: "  " },
+        { folder: "play" },
+      ]),
+    ).toEqual(["play", "Work"])
+  })
+
+  test("keeps case variants as separate folder names", () => {
+    expect(collectFolderNames([{ folder: "Work" }, { folder: "work" }, { folder: null }])).toEqual(["Work", "work"])
+  })
+
+  test("builds No folder plus matches plus Create row", () => {
+    expect(buildFolderOptions(["Work", "play"], "").map((option) => option.title)).toEqual([
+      "No folder",
+      "Work",
+      "play",
+    ])
+    expect(buildFolderOptions(["Work", "play"], "wo").map((option) => option.title)).toEqual([
+      "No folder",
+      "Work",
+      'Create "wo"',
+    ])
+    expect(buildFolderOptions(["Work"], "work").map((option) => option.title)).toEqual(["No folder", "Work"])
+  })
+
+  test("hides Create row for blank or case-insensitive exact queries", () => {
+    expect(buildFolderOptions(["Work"], "   ").map((option) => option.title)).toEqual(["No folder", "Work"])
+    expect(buildFolderOptions(["Work"], "WORK").map((option) => option.title)).toEqual(["No folder", "Work"])
+    expect(buildFolderOptions([], "New").map((option) => option.title)).toEqual(["No folder", 'Create "New"'])
+    expect(buildFolderOptions([], "").map((option) => option.title)).toEqual(["No folder"])
+  })
+
+  test("orders ids by folder with No folder last and recency kept", () => {
+    const folderOf = (id: string) => ({ b: "play", a: "Work", c: "No folder", d: "Work" })[id]
+    expect(orderIDsByFolder(["b", "a", "c", "d"], folderOf)).toEqual(["b", "a", "d", "c"])
+  })
+
+  test("skips ids without a folder mapping", () => {
+    expect(orderIDsByFolder(["a", "missing"], (id) => (id === "a" ? "Work" : undefined))).toEqual(["a"])
+    expect(orderIDsByFolder([], () => "Work")).toEqual([])
   })
 })
 

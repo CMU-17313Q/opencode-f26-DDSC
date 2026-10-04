@@ -37,7 +37,7 @@ export const projectHandlers = HttpApiBuilder.group(InstanceHttpApi, "project", 
       params: { projectID: ProjectV2.ID }
       payload: Project.UpdatePayload
     }) {
-      return yield* svc.update({ ...ctx.payload, projectID: ctx.params.projectID }).pipe(
+      const next = yield* svc.update({ ...ctx.payload, projectID: ctx.params.projectID }).pipe(
         Effect.catchTag("Project.NotFoundError", (error) =>
           Effect.fail(
             new ProjectNotFoundError({
@@ -47,6 +47,11 @@ export const projectHandlers = HttpApiBuilder.group(InstanceHttpApi, "project", 
           ),
         ),
       )
+      // The running instance keeps a snapshot of the project; sync roots so
+      // tools pick them up without an instance reload.
+      const instance = yield* InstanceState.context
+      if (ctx.payload.roots && instance.project.id === next.id) instance.project.roots = next.roots
+      return next
     })
 
     const directories = Effect.fn("ProjectHttpApi.directories")((ctx: { params: { projectID: ProjectV2.ID } }) =>

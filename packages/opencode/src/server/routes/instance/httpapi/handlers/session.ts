@@ -72,6 +72,7 @@ export const sessionHandlers = HttpApiBuilder.group(InstanceHttpApi, "session", 
         start: ctx.query.start,
         search: ctx.query.search,
         limit: ctx.query.limit,
+        archived: ctx.query.archived,
       })
     })
 
@@ -188,6 +189,10 @@ export const sessionHandlers = HttpApiBuilder.group(InstanceHttpApi, "session", 
       const current = yield* requireSession(ctx.params.sessionID)
       if (ctx.payload.title !== undefined) {
         yield* session.setTitle({ sessionID: ctx.params.sessionID, title: ctx.payload.title })
+      }
+      if (ctx.payload.folder !== undefined) {
+        const folder = ctx.payload.folder.trim()
+        yield* session.setFolder({ sessionID: ctx.params.sessionID, folder: folder ? folder : undefined })
       }
       if (ctx.payload.metadata !== undefined) {
         yield* session.setMetadata({ sessionID: ctx.params.sessionID, metadata: ctx.payload.metadata })

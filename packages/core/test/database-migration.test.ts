@@ -80,6 +80,9 @@ describe("DatabaseMigration", () => {
             sql`SELECT name FROM pragma_table_info('session_context_epoch') WHERE name IN ('agent', 'replacement_seq', 'revision')`,
           ),
         ).toBeUndefined()
+        expect(yield* db.get(sql`SELECT name, [notnull] FROM pragma_table_info('session') WHERE name = 'folder'`)).toEqual(
+          { name: "folder", notnull: 0 },
+        )
         expect(yield* db.get(sql`SELECT count(*) as count FROM migration`)).toEqual({ count: migrations.length })
         expect(
           yield* db.all(

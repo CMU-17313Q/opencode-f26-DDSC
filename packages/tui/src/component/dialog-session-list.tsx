@@ -11,6 +11,9 @@ import { useTheme } from "../context/theme"
 import { useSDK } from "../context/sdk"
 import { useLocal } from "../context/local"
 import { DialogSessionRename } from "./dialog-session-rename"
+import { DialogSessionFolder } from "./dialog-session-folder"
+import { collectFolderNames, orderIDsByFolder, sessionFolderLabel } from "./session-folder"
+export { NO_FOLDER_LABEL, compareFolderLabels, sessionFolderLabel } from "./session-folder"
 import { createDebouncedSignal } from "../util/signal"
 import { useToast } from "../ui/toast"
 import { openWorkspaceSelect, type WorkspaceSelection, warpWorkspaceSession } from "./dialog-workspace-create"
@@ -238,7 +241,6 @@ export function DialogSessionList(props: { archived?: boolean } = {}) {
   })
 
   const options = createMemo(() => {
-    const today = new Date().toDateString()
     const sessionMap = new Map(
       sessions()
         .filter((x) => x.parentID === undefined)
@@ -284,14 +286,15 @@ export function DialogSessionList(props: { archived?: boolean } = {}) {
       }
     }
 
-    const remaining = displayOrder
-      .filter((id) => !pinnedSet.has(id))
-      .map((id) => {
+    const remaining = orderIDsByFolder(
+      displayOrder.filter((id) => !pinnedSet.has(id)),
+      (id) => {
         const x = sessionMap.get(id)
         if (!x) return undefined
-        const label = new Date(x.time.updated).toDateString()
-        return buildOption(id, label === today ? "Today" : label)
-      })
+        return sessionFolderLabel(x.folder)
+      },
+    )
+      .map((id) => buildOption(id, sessionFolderLabel(sessionMap.get(id)?.folder)))
       .filter((x) => x !== undefined)
 
     return [...pinned.map((id) => buildOption(id, "Pinned")).filter((x) => x !== undefined), ...remaining]
@@ -408,6 +411,19 @@ export function DialogSessionList(props: { archived?: boolean } = {}) {
           hidden: props.archived,
           onTrigger: async (option) => {
             dialog.replace(() => <DialogSessionRename session={option.value} />)
+          },
+        },
+        {
+          command: "session.folder.move",
+          title: "move to folder",
+          onTrigger: async (option) => {
+            const session = sessions().find((item) => item.id === option.value)
+            const folders = collectFolderNames(sessions())
+            const currentFolder = session?.folder
+            const done = () => dialog.replace(() => <DialogSessionList />)
+            dialog.replace(() => (
+              <DialogSessionFolder sessionID={option.value} folders={folders} currentFolder={currentFolder} onDone={done} />
+            ))
           },
         },
       ]}

@@ -1,9 +1,12 @@
+import { getFilename } from "@opencode-ai/core/util/path"
 import { useCommand } from "@/context/command"
 import { useLanguage } from "@/context/language"
 import { serverName } from "@/context/server"
-import { displayName } from "@/pages/layout/helpers"
+import { displayName, projectForSession } from "@/pages/layout/helpers"
+import { pathKey } from "@/utils/path-key"
+import { normalizeSessionInfo } from "@/utils/session"
 import { makeEventListener } from "@solid-primitives/event-listener"
-import { createMemo, onCleanup } from "solid-js"
+import { createMemo, createResource, onCleanup } from "solid-js"
 import { createStore } from "solid-js/store"
 import type { HomeController } from "./home-controller"
 import { homeSessionSearchKey, type HomeSessionRecord, type HomeSessionsController } from "./home-sessions-controller"
@@ -13,12 +16,54 @@ type HomeSessionSearchSource = Pick<HomeSessionsController, "data" | "session">
 export function createHomeSessionSearchController(home: HomeController, sessions: HomeSessionSearchSource) {
   const command = useCommand()
   const language = useLanguage()
-  const [state, setState] = createStore({ value: "", focused: false, highlighted: "" })
+  const [state, setState] = createStore({ value: "", focused: false, highlighted: "", includeArchived: false })
   let root: HTMLDivElement | undefined
   let input: HTMLInputElement | undefined
   let list: HTMLDivElement | undefined
   const query = createMemo(() => state.value.trim())
+
+  const [remoteResults] = createResource(
+    () => ({
+      query: query(),
+      includeArchived: state.includeArchived,
+      ctx: home.server.focusedContext(),
+      selectedProject: home.project.selected(),
+      projects: home.project.list(),
+    }),
+    async (params) => {
+      if (!params.includeArchived || !params.query || !params.ctx) return []
+      const projectByID = new Map(params.projects.flatMap((p) => (p.id ? [[p.id, p] as const] : [])))
+      const res = await params.ctx.sdk.client.session
+        .list({
+          search: params.query,
+          roots: true,
+          archived: true,
+          limit: 100,
+        })
+        .catch(() => ({ data: [] }))
+
+      const items = (res.data ?? []).map(normalizeSessionInfo)
+      return items.flatMap((session) => {
+        const directory = pathKey(session.directory)
+        const proj =
+          params.projects.find(
+            (item) =>
+              pathKey(item.worktree) === directory ||
+              item.sandboxes?.some((sandbox) => pathKey(sandbox) === directory),
+          ) ?? projectForSession(session, params.projects, projectByID)
+        if (params.selectedProject && proj && pathKey(proj.worktree) !== pathKey(params.selectedProject.worktree)) return []
+        if (params.selectedProject && !proj && pathKey(session.directory) !== pathKey(params.selectedProject.worktree)) return []
+        const project = proj ?? { worktree: session.directory, expanded: false }
+        const projectName = proj ? displayName(proj) : getFilename(session.directory)
+        return [{ session, project, projectName }]
+      })
+    },
+  )
+
   const results = createMemo(() => {
+    if (state.includeArchived) {
+      return remoteResults() ?? []
+    }
     const value = query().toLowerCase()
     if (!value) return []
     return sessions.data
@@ -82,9 +127,11 @@ export function createHomeSessionSearchController(home: HomeController, sessions
       focus,
       input: (value: string) => setState({ value, highlighted: "" }),
       close,
+      includeArchived: () => state.includeArchived,
+      toggleIncludeArchived: () => setState("includeArchived", (val) => !val),
     },
     result: {
-      loading: sessions.data.loading,
+      loading: () => (state.includeArchived ? remoteResults.loading : sessions.data.loading()),
       list: results,
       active,
       noResultsLabel: () => language.t("home.sessions.search.noResults", { query: query() }),

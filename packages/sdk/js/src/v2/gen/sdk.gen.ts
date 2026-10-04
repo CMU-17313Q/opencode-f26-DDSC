@@ -2631,6 +2631,7 @@ export class Project extends HeyApiClient {
       name?: string
       icon?: ProjectIcon
       commands?: ProjectCommands
+      roots?: Array<string>
     },
     options?: Options<never, ThrowOnError>,
   ) {
@@ -2645,6 +2646,7 @@ export class Project extends HeyApiClient {
             { in: "body", key: "name" },
             { in: "body", key: "icon" },
             { in: "body", key: "commands" },
+            { in: "body", key: "roots" },
           ],
         },
       ],
@@ -3367,7 +3369,6 @@ export class Session2 extends HeyApiClient {
    */
   public list<ThrowOnError extends boolean = false>(
     parameters?: {
-      archived?: boolean | "true" | "false"
       directory?: string
       workspace?: string
       scope?: "project"
@@ -3376,6 +3377,7 @@ export class Session2 extends HeyApiClient {
       start?: number
       search?: string
       limit?: number
+      archived?: boolean | "true" | "false"
     },
     options?: Options<never, ThrowOnError>,
   ) {
@@ -3384,7 +3386,6 @@ export class Session2 extends HeyApiClient {
       [
         {
           args: [
-            { in: "query", key: "archived" },
             { in: "query", key: "directory" },
             { in: "query", key: "workspace" },
             { in: "query", key: "scope" },
@@ -3393,6 +3394,7 @@ export class Session2 extends HeyApiClient {
             { in: "query", key: "start" },
             { in: "query", key: "search" },
             { in: "query", key: "limit" },
+            { in: "query", key: "archived" },
           ],
         },
       ],
@@ -3564,6 +3566,7 @@ export class Session2 extends HeyApiClient {
       directory?: string
       workspace?: string
       title?: string
+      folder?: string
       metadata?: {
         [key: string]: unknown
       }
@@ -3583,6 +3586,7 @@ export class Session2 extends HeyApiClient {
             { in: "query", key: "directory" },
             { in: "query", key: "workspace" },
             { in: "body", key: "title" },
+            { in: "body", key: "folder" },
             { in: "body", key: "metadata" },
             { in: "body", key: "permission" },
             { in: "body", key: "time" },

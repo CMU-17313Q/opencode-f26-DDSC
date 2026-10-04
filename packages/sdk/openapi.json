@@ -3850,6 +3850,12 @@
                   },
                   "commands": {
                     "$ref": "#/components/schemas/ProjectCommands"
+                  },
+                  "roots": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
                   }
                 },
                 "additionalProperties": false
@@ -20024,6 +20030,13 @@
                         "items": {
                           "type": "string"
                         }
+                      },
+                      "roots": {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        },
+                        "description": "Additional repository roots the agent may read and write in besides the worktree"
                       }
                     },
                     "required": ["id", "worktree", "time", "sandboxes"],
@@ -22742,6 +22755,13 @@
             "items": {
               "type": "string"
             }
+          },
+          "roots": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Additional repository roots the agent may read and write in besides the worktree"
           }
         },
         "required": ["id", "worktree", "time", "sandboxes"],
@@ -33162,6 +33182,13 @@
                 "items": {
                   "type": "string"
                 }
+              },
+              "roots": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "Additional repository roots the agent may read and write in besides the worktree"
               }
             },
             "required": ["id", "worktree", "time", "sandboxes"],
@@ -36289,6 +36316,13 @@
                 "items": {
                   "type": "string"
                 }
+              },
+              "roots": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "Additional repository roots the agent may read and write in besides the worktree"
               }
             },
             "required": ["id", "worktree", "time", "sandboxes"],

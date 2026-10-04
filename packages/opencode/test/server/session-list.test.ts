@@ -299,4 +299,32 @@ describe("session.list", () => {
       }),
     { git: true },
   )
+
+  it.instance(
+    "excludes archived sessions by default and includes them when archived is true",
+    () =>
+      Effect.gen(function* () {
+        const active = yield* withSession({ title: "search-archived-active" })
+        const archived = yield* withSession({ title: "search-archived-target" })
+
+        yield* SessionNs.Service.use((session) =>
+          session.setArchived({ sessionID: archived.id, time: Date.now() }),
+        )
+
+        const defaultList = yield* SessionNs.Service.use((session) =>
+          session.list({ search: "search-archived" }),
+        )
+        const defaultIDs = defaultList.map((item) => item.id)
+        expect(defaultIDs).toContain(active.id)
+        expect(defaultIDs).not.toContain(archived.id)
+
+        const archivedList = yield* SessionNs.Service.use((session) =>
+          session.list({ search: "search-archived", archived: true }),
+        )
+        const archivedIDs = archivedList.map((item) => item.id)
+        expect(archivedIDs).toContain(active.id)
+        expect(archivedIDs).toContain(archived.id)
+      }),
+    { git: true },
+  )
 })

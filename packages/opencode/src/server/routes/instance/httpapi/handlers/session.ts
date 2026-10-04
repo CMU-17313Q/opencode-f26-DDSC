@@ -64,7 +64,6 @@ export const sessionHandlers = HttpApiBuilder.group(InstanceHttpApi, "session", 
     const list = Effect.fn("SessionHttpApi.list")(function* (ctx: { query: typeof ListQuery.Type }) {
       const directory = ctx.query.directory ? yield* InstanceState.directory : undefined
       return yield* session.list({
-        archived: ctx.query.archived,
         directory: ctx.query.scope === "project" ? undefined : directory,
         scope: ctx.query.scope,
         path: ctx.query.path,

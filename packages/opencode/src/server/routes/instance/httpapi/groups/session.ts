@@ -28,7 +28,6 @@ import { ModelV2 } from "@opencode-ai/core/model"
 
 const root = "/session"
 export const ListQuery = Schema.Struct({
-  archived: Schema.optional(QueryBoolean),
   ...WorkspaceRoutingQueryFields,
   scope: Schema.optional(Schema.Literals(["project"])),
   path: Schema.optional(Schema.String),

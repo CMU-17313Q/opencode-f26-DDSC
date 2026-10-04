@@ -304,7 +304,6 @@ export const MessagesInput = Schema.Struct({
   limit: Schema.optional(NonNegativeInt),
 })
 export type ListInput = {
-  archived?: boolean
   directory?: string
   scope?: "project"
   path?: string

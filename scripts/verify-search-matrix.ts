@@ -45,8 +45,8 @@ async function run() {
       name: "Search 'Alpha' with archived=true (Include Archived)",
       query: "Alpha",
       includeArchived: true,
-      expectedTitles: ["Alpha Active Core", "Alpha Archived Legacy"],
-      unexpectedTitles: [],
+      expectedTitles: ["Alpha Archived Legacy"],
+      unexpectedTitles: ["Alpha Active Core"],
     },
     {
       name: "Search 'Secret' with archived=false (Hidden by default)",
@@ -63,11 +63,11 @@ async function run() {
       unexpectedTitles: [],
     },
     {
-      name: "Search 'Pipeline' with archived=true (Active still works when flag enabled)",
+      name: "Search 'Pipeline' with archived=true (archived-only API excludes active)",
       query: "Pipeline",
       includeArchived: true,
-      expectedTitles: ["Gamma Active Pipeline"],
-      unexpectedTitles: [],
+      expectedTitles: [],
+      unexpectedTitles: ["Gamma Active Pipeline"],
     },
     {
       name: "Search 'NonExistent' with archived=true (No false positives)",

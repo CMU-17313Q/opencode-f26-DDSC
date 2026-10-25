@@ -61,14 +61,15 @@ export function createHomeSessionSearchController(home: HomeController, sessions
   )
 
   const results = createMemo(() => {
-    if (state.includeArchived) {
-      return remoteResults() ?? []
-    }
     const value = query().toLowerCase()
     if (!value) return []
-    return sessions.data
+    const local = sessions.data
       .searchRecords()
       .filter((record) => `${record.session.title} ${record.projectName}`.toLowerCase().includes(value))
+    if (!state.includeArchived) return local
+    const seen = new Set(local.map(homeSessionSearchKey))
+    const archived = (remoteResults() ?? []).filter((record) => !seen.has(homeSessionSearchKey(record)))
+    return [...local, ...archived]
   })
   const active = createMemo(() => {
     const records = results()
@@ -131,7 +132,7 @@ export function createHomeSessionSearchController(home: HomeController, sessions
       toggleIncludeArchived: () => setState("includeArchived", (val) => !val),
     },
     result: {
-      loading: () => (state.includeArchived ? remoteResults.loading : sessions.data.loading()),
+      loading: () => sessions.data.loading() || (state.includeArchived && remoteResults.loading),
       list: results,
       active,
       noResultsLabel: () => language.t("home.sessions.search.noResults", { query: query() }),

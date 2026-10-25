@@ -981,9 +981,7 @@ function listByProject(
   },
 ) {
   const conditions = [eq(SessionTable.project_id, input.projectID)]
-  if (input.archived !== undefined) {
-    conditions.push(input.archived ? isNotNull(SessionTable.time_archived) : isNull(SessionTable.time_archived))
-  }
+  conditions.push(input.archived ? isNotNull(SessionTable.time_archived) : isNull(SessionTable.time_archived))
 
   if (input.workspaceID) {
     conditions.push(eq(SessionTable.workspace_id, input.workspaceID))
@@ -1015,10 +1013,6 @@ function listByProject(
   if (input.search) {
     conditions.push(like(SessionTable.title, `%${input.search}%`))
   }
-  if (!input.archived) {
-    conditions.push(isNull(SessionTable.time_archived))
-  }
-
   const limit = input.limit ?? 100
 
   return db

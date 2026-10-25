@@ -1,0 +1,66 @@
+name: knip
+
+# Knip finds unused files, exports, types and dependencies across the monorepo.
+# Config lives in knip.json at the repo root.
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+env:
+  # PHASE 1 (report only): findings are printed and uploaded but never fail the job.
+  # PHASE 2 (blocking): set this to an empty string ("") once the baseline is clean,
+  # then mark the "knip" job as a required status check in branch protection.
+  KNIP_EXTRA_ARGS: "--no-exit-code"
+
+jobs:
+  knip:
+    name: knip
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
+
+      - name: Setup Bun
+        uses: ./.github/actions/setup-bun
+        with:
+          install-flags: --frozen-lockfile
+
+      - name: Run Knip
+        run: |
+          set -o pipefail
+          # Knip exit codes: 0 = clean, 1 = findings, 2 = Knip itself failed.
+          # --no-exit-code only silences "1"; a crash ("2") still fails the job.
+          bunx knip $KNIP_EXTRA_ARGS 2>&1 | tee knip-report.txt
+
+      - name: Add report to job summary
+        if: always()
+        run: |
+          {
+            echo "### Knip report"
+            echo '```'
+            head -n 200 knip-report.txt 2>/dev/null || echo "No report generated."
+            echo '```'
+            echo "_Truncated to 200 lines. Full report is in the knip-report artifact._"
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Upload Knip report
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: knip-report-${{ github.run_attempt }}
+          path: knip-report.txt
+          if-no-files-found: ignore
+          retention-days: 14

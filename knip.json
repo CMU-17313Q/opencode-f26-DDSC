@@ -1,0 +1,293 @@
+{
+  "$schema": "https://unpkg.com/knip@latest/schema.json",
+  // Generated code, ambient types, build output, and the vendored demo project under
+  // artifacts/ are not part of the dependency graph.
+  "ignore": [
+    "**/*.gen.ts",
+    "**/gen/**",
+    "**/*.d.ts",
+    "**/dist/**",
+    "artifacts/**",
+    "sdks/**"
+  ],
+  "ignoreBinaries": [
+    "ulimit",
+    "vim",
+    "pwsh",
+    "wsl",
+    "sha256sum",
+    "makepkg",
+    "sqlite3",
+    "dev",
+    "opencode"
+  ],
+  "ignoreDependencies": [
+    "@effect/language-service",
+    "react"
+  ],
+  "ignoreUnresolved": [
+    "./scripts/copy-icons.ts",
+    "./scripts/copy-metainfo.ts",
+    "script/build-node.ts",
+    "script/changelog.ts",
+    "./script/build.ts",
+    "./script/format.ts",
+    "./packages/sdk/js/script/build.ts",
+    "./packages/sdk/js/script/publish.ts",
+    "./packages/opencode/script/publish.ts",
+    "./packages/cli/script/publish.ts",
+    "./packages/plugin/script/publish.ts",
+    "./packages/ui/script/publish.ts",
+    "./packages/desktop/scripts/finalize-latest-json.ts",
+    "./packages/desktop/scripts/finalize-latest-yml.ts"
+  ],
+  "workspaces": {
+    ".": {
+      "entry": [
+        "script/**/*.ts",
+        "scripts/**/*.ts",
+        "nix/scripts/**/*.ts",
+        "packages/containers/script/**/*.ts"
+      ],
+      "ignoreDependencies": [
+        "turbo"
+      ]
+    },
+    "github": {},
+    "packages/opencode": {
+      "entry": [
+        "bin/opencode",
+        "script/**/*.ts",
+        "test/**/*.ts"
+      ],
+      "project": [
+        "src/**/*.ts",
+        "script/**/*.ts",
+        "test/**/*.ts"
+      ],
+      "ignoreDependencies": [
+        "@ff-labs/fff-bun",
+        "@parcel/watcher",
+        "opencode-web-ui.gen.ts",
+        "tree-sitter-bash",
+        "tree-sitter-powershell"
+      ]
+    },
+    "packages/app": {
+      "entry": [
+        "e2e/**/*.ts",
+        "*.{ts,js}"
+      ],
+      "project": [
+        "src/**/*.{ts,tsx,css}",
+        "e2e/**/*.ts",
+        "*.{ts,js}"
+      ],
+      "ignoreDependencies": [
+        "tailwindcss"
+      ]
+    },
+    "packages/console/app": {
+      "entry": [
+        "src/app.tsx",
+        "src/entry-client.tsx",
+        "src/entry-server.tsx",
+        "src/middleware.ts",
+        "src/routes/**/*.{ts,tsx}",
+        "script/**/*.ts",
+        "vite.config.ts"
+      ],
+      "project": [
+        "src/**/*.{ts,tsx}",
+        "script/**/*.ts"
+      ],
+      "vite": {
+        "config": []
+      }
+    },
+    "packages/console/core": {
+      "entry": [
+        "script/**/*.ts",
+        "test/**/*.ts",
+        "drizzle.config.ts"
+      ],
+      "drizzle": {
+        "config": []
+      }
+    },
+    "packages/stats/app": {
+      "entry": [
+        "app.config.ts",
+        "src/app.tsx",
+        "src/entry-client.tsx",
+        "src/entry-server.tsx",
+        "src/routes/**/*.{ts,tsx}",
+        "vite.config.ts"
+      ],
+      "project": [
+        "src/**/*.{ts,tsx}"
+      ],
+      "vite": {
+        "config": []
+      }
+    },
+    "packages/stats/core": {
+      "entry": [
+        "drizzle.config.ts",
+        "src/**/*.test.ts"
+      ],
+      "drizzle": {
+        "config": []
+      }
+    },
+    "packages/desktop": {
+      "entry": [
+        "src/main/**/*.ts",
+        "src/renderer/**/*.{ts,tsx}",
+        "scripts/**/*.ts",
+        "electron-builder.config.ts",
+        "electron-builder.config.test.ts"
+      ]
+    },
+    "packages/storybook": {
+      "entry": [
+        ".storybook/**/*.{ts,tsx}"
+      ]
+    },
+    "packages/ui": {
+      "entry": [
+        "script/**/*.ts"
+      ]
+    },
+    "packages/sdk/js": {
+      "entry": [
+        "script/**/*.ts",
+        "example/**/*.ts"
+      ]
+    },
+    "packages/console/support": {
+      "entry": [
+        "src/app.tsx",
+        "src/entry-client.tsx",
+        "src/entry-server.tsx",
+        "src/routes/**/*.{ts,tsx}",
+        "vite.config.ts"
+      ],
+      "project": [
+        "src/**/*.{ts,tsx}"
+      ],
+      "vite": {
+        "config": []
+      }
+    },
+    "packages/enterprise": {
+      "entry": [
+        "src/app.tsx",
+        "src/entry-client.tsx",
+        "src/entry-server.tsx",
+        "src/routes/**/*.{ts,tsx}",
+        "script/**/*.ts",
+        "vite.config.ts"
+      ],
+      "project": [
+        "src/**/*.{ts,tsx,css}",
+        "script/**/*.ts"
+      ],
+      "vite": {
+        "config": []
+      },
+      "ignoreDependencies": [
+        "tailwindcss"
+      ]
+    },
+    "packages/console/function": {
+      "entry": [
+        "src/**/*.ts"
+      ]
+    },
+    "packages/console/mail": {
+      "entry": [
+        "emails/**/*.tsx"
+      ]
+    },
+    "packages/console/resource": {
+      "ignoreDependencies": [
+        "@cloudflare/workers-types"
+      ]
+    },
+    "packages/stats/server": {
+      "entry": [
+        "src/**/*.ts"
+      ]
+    },
+    "packages/function": {
+      "entry": [
+        "src/**/*.ts"
+      ],
+      "ignoreDependencies": [
+        "cloudflare"
+      ]
+    },
+    "packages/httpapi-codegen": {
+      "entry": [
+        "test/generated-consumer.ts"
+      ]
+    },
+    "packages/effect-drizzle-sqlite": {
+      "entry": [
+        "examples/**/*.ts"
+      ]
+    },
+    "packages/schema": {
+      "entry": [
+        "test/**/*.ts"
+      ]
+    },
+    "packages/protocol": {
+      "entry": [
+        "test/**/*.ts"
+      ]
+    },
+    "packages/cli": {
+      "entry": [
+        "script/**/*.ts",
+        "src/**/*.test.ts"
+      ],
+      "ignoreDependencies": [
+        "@opentui/core"
+      ]
+    },
+    "packages/llm": {
+      "entry": [
+        "script/**/*.ts",
+        "test/**/*.ts",
+        "example/**/*.ts"
+      ],
+      "project": [
+        "src/**/*.ts",
+        "script/**/*.ts",
+        "test/**/*.ts",
+        "example/**/*.ts"
+      ]
+    },
+    "packages/plugin": {
+      "entry": [
+        "script/**/*.ts"
+      ]
+    },
+    "packages/core": {
+      "entry": [
+        "script/**/*.ts",
+        "test/**/*.ts"
+      ],
+      "project": [
+        "src/**/*.ts",
+        "script/**/*.ts",
+        "test/**/*.ts"
+      ],
+      "ignoreDependencies": [
+        "@parcel/watcher-*"
+      ]
+    }
+  }
+}

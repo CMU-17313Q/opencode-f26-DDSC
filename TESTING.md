@@ -3,7 +3,7 @@
 This repo runs two CI gates on every push ([`.github/workflows/typecheck.yml`](.github/workflows/typecheck.yml) and
 [`.github/workflows/test.yml`](.github/workflows/test.yml)), plus two nightly runs — an e2e regression suite
 ([`.github/workflows/e2e-regression.yml`](.github/workflows/e2e-regression.yml)) and the HttpApi exerciser gates
-([`.github/workflows/httpapi-nightly.yml`](.github/workflows/httpapi-nightly.yml)). This doc explains what each one
+(`.github/workflows/httpapi-nightly.yml` upstream; that workflow is not included in this fork). This doc explains what each one
 actually covers and, most importantly, **how to get your own tests running in CI** — it doesn't happen automatically.
 
 ## Typecheck

@@ -1,0 +1,83 @@
+name: links
+
+# lychee documentation link checker (Project 3B)
+#
+#   local-links     every PR + push to main. Checks repo-relative file links and
+#                   #anchors in our Markdown docs, offline. BLOCKS merges.
+#   external-links  weekly + manual. Checks outside URLs. REPORT ONLY, because
+#                   other sites go down independently of our code.
+#
+# Config lives in lychee.toml at the repo root.
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  schedule:
+    - cron: "17 5 * * 1" # Mondays 05:17 UTC
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  local-links:
+    name: local links (blocking)
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
+
+      - name: Check local links and anchors
+        uses: lycheeverse/lychee-action@e7477775783ea5526144ba13e8db5eec57747ce8 # v2.9.0
+        with:
+          args: --config lychee.toml --offline --verbose './*.md'
+          output: lychee/local-links.md
+          fail: true
+          jobSummary: true
+
+      - name: Upload report
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: lychee-local-links-report
+          path: lychee/local-links.md
+          retention-days: 90
+
+  external-links:
+    name: external links (report only)
+    if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
+
+      - name: Restore lychee cache
+        uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4.3.0
+        with:
+          path: .lycheecache
+          key: lychee-${{ github.sha }}
+          restore-keys: lychee-
+
+      - name: Check external links
+        uses: lycheeverse/lychee-action@e7477775783ea5526144ba13e8db5eec57747ce8 # v2.9.0
+        with:
+          args: --config lychee.toml --verbose './*.md'
+          output: lychee/external-links.md
+          fail: false
+          jobSummary: true
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload report
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: lychee-external-links-report
+          path: lychee/external-links.md
+          retention-days: 90

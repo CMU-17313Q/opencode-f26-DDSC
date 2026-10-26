@@ -1,0 +1,39 @@
+# lychee link checker configuration
+# Docs: https://lychee.cli.rs/  Source: https://github.com/lycheeverse/lychee
+#
+# Which files get checked is set in .github/workflows/links.yml (the root-level
+# Markdown docs: README*.md, UserGuide.md, CONTRIBUTING.md, TESTING.md, ...).
+# This file holds the behaviour shared by both jobs in that workflow.
+
+# Plain output in the Actions log
+no_progress = true
+
+# Check that #anchors point at a real heading, not just that the file exists
+include_fragments = true
+
+# --- Network behaviour (used by the weekly external-link job) ---
+max_concurrency = 16
+timeout = 20
+max_retries = 3
+retry_wait_time = 2
+
+# 2xx is fine; 429 means "rate limited", not "broken"
+accept = ["100..=103", "200..=299", "429"]
+
+# Reuse results between runs so we do not hammer the same sites every week
+cache = true
+max_cache_age = "1d"
+
+# --- Things we never check ---
+# mailto: links are skipped by default.
+exclude_loopback = true # localhost / 127.0.0.1 (UserGuide's local dev URL)
+exclude_private = true  # 10.x / 192.168.x addresses
+
+exclude = [
+  # Placeholder hosts used in examples
+  '^https?://(www\.)?example\.(com|org|net)',
+  # Pages that need a GitHub login and always answer 403/404 to a bot
+  '^https://github\.com/[^/]+/[^/]+/security/advisories/new',
+  # npm blocks automated requests (Cloudflare 403), even for live packages
+  '^https://(www\.)?npmjs\.com/',
+]

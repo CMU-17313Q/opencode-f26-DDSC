@@ -9,7 +9,7 @@
 no_progress = true
 
 # Check that #anchors point at a real heading, not just that the file exists
-include_fragments = true
+include_fragments = "full"
 
 # --- Network behaviour (used by the weekly external-link job) ---
 max_concurrency = 16

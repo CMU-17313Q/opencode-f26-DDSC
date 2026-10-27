@@ -182,7 +182,7 @@ function shellPart(sessionID: string, message: SessionMessageShell): ToolPart {
   }
 }
 
-export function sessionMessagePartID(messageID: string, type: "text" | "reasoning", ordinal: number) {
+function sessionMessagePartID(messageID: string, type: "text" | "reasoning", ordinal: number) {
   return `${messageID}:${type}:${ordinal}`
 }
 

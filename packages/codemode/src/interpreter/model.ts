@@ -1,12 +1,12 @@
 import type { SafeObject } from "../tool-runtime.js"
 import type { SandboxURL } from "../values.js"
 
-export type SourcePosition = {
+type SourcePosition = {
   line: number
   column: number
 }
 
-export type SourceLocation = {
+type SourceLocation = {
   start: SourcePosition
   end: SourcePosition
 }

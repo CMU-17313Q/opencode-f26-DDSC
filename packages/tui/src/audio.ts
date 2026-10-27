@@ -42,7 +42,7 @@ export function play(sound: AudioSound, options?: AudioPlayOptions) {
   return current.play(sound, options)
 }
 
-export function stopVoice(voice: AudioVoice) {
+function stopVoice(voice: AudioVoice) {
   return audio?.stopVoice(voice) ?? false
 }
 

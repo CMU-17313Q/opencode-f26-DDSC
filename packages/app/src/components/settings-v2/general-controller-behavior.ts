@@ -6,7 +6,7 @@ export type ShellOption = {
   acceptable: boolean
 }
 
-export type ShellSelectOption = {
+type ShellSelectOption = {
   id: string
   value: string
   name: string

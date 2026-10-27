@@ -13,7 +13,7 @@ import type {
 import { AttentionSoundName, type TuiConfig } from "./config"
 import { Schema } from "effect"
 import stripAnsi from "strip-ansi"
-import * as TuiAudio from "./audio"
+import { loadSoundFile, play } from "./audio"
 import defaultSoundPath from "@opencode-ai/ui/audio/bip-bop-01.mp3" with { type: "file" }
 import questionSoundPath from "@opencode-ai/ui/audio/bip-bop-03.mp3" with { type: "file" }
 import permissionSoundPath from "@opencode-ai/ui/audio/staplebops-06.mp3" with { type: "file" }
@@ -115,13 +115,13 @@ export function createTuiAttention(input: {
   renderer: AttentionRenderer
   config: Pick<TuiConfig.Resolved, "attention">
   kv?: TuiKV
-  audio?: Pick<typeof TuiAudio, "loadSoundFile" | "play">
+  audio?: { loadSoundFile: typeof loadSoundFile; play: typeof play }
 }): TuiAttentionHost {
   let focus: FocusState = "unknown"
   let disposed = false
   let activePackID: string | undefined
   const packs = new Map<string, RegisteredSoundPack>([[BUILTIN_PACK.id, BUILTIN_PACK]])
-  const audio = input.audio ?? TuiAudio
+  const audio = input.audio ?? { loadSoundFile, play }
 
   const onFocus = () => {
     focus = "focused"

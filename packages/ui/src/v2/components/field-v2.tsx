@@ -262,4 +262,3 @@ export const FieldV2 = Object.assign(FieldV2Root, {
   Control: FieldControl,
 })
 
-export const Field = FieldV2

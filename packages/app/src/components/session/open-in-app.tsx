@@ -6,7 +6,7 @@ import { useServer } from "@/context/server"
 import { Persist, persisted } from "@/utils/persist"
 import { showToast } from "@/utils/toast"
 
-export const OPEN_APPS = [
+const OPEN_APPS = [
   "vscode",
   "cursor",
   "zed",
@@ -26,7 +26,7 @@ export const OPEN_APPS = [
 export type OpenApp = (typeof OPEN_APPS)[number]
 export type OpenAppOS = "macos" | "windows" | "linux" | "unknown"
 
-export const MAC_OPEN_APPS = [
+const MAC_OPEN_APPS = [
   {
     id: "vscode",
     label: "session.header.open.app.vscode",
@@ -61,7 +61,7 @@ export const MAC_OPEN_APPS = [
   },
 ] as const
 
-export const WINDOWS_OPEN_APPS = [
+const WINDOWS_OPEN_APPS = [
   { id: "vscode", label: "session.header.open.app.vscode", icon: "vscode", openWith: "code" },
   { id: "cursor", label: "session.header.open.app.cursor", icon: "cursor", openWith: "cursor" },
   { id: "zed", label: "session.header.open.app.zed", icon: "zed", openWith: "zed" },
@@ -79,7 +79,7 @@ export const WINDOWS_OPEN_APPS = [
   },
 ] as const
 
-export const LINUX_OPEN_APPS = [
+const LINUX_OPEN_APPS = [
   { id: "vscode", label: "session.header.open.app.vscode", icon: "vscode", openWith: "code" },
   { id: "cursor", label: "session.header.open.app.cursor", icon: "cursor", openWith: "cursor" },
   { id: "zed", label: "session.header.open.app.zed", icon: "zed", openWith: "zed" },
@@ -91,7 +91,7 @@ export const LINUX_OPEN_APPS = [
   },
 ] as const
 
-export function detectOpenAppOS(platform: ReturnType<typeof usePlatform>): OpenAppOS {
+function detectOpenAppOS(platform: ReturnType<typeof usePlatform>): OpenAppOS {
   if (platform.platform === "desktop" && platform.os) return platform.os
   if (typeof navigator !== "object") return "unknown"
   const value = navigator.platform || navigator.userAgent
@@ -101,13 +101,13 @@ export function detectOpenAppOS(platform: ReturnType<typeof usePlatform>): OpenA
   return "unknown"
 }
 
-export function openAppFileManager(os: OpenAppOS) {
+function openAppFileManager(os: OpenAppOS) {
   if (os === "macos") return { label: "session.header.open.finder", icon: "finder" as const }
   if (os === "windows") return { label: "session.header.open.fileExplorer", icon: "file-explorer" as const }
   return { label: "session.header.open.fileManager", icon: "finder" as const }
 }
 
-export function openAppsForOS(os: OpenAppOS) {
+function openAppsForOS(os: OpenAppOS) {
   if (os === "macos") return MAC_OPEN_APPS
   if (os === "windows") return WINDOWS_OPEN_APPS
   return LINUX_OPEN_APPS

@@ -77,7 +77,7 @@ export function DirectoryDataProvider(
 export const ProjectDirString = Schema.String.pipe(Schema.brand("ProjectDirString"))
 export type ProjectDirString = Schema.Schema.Type<typeof ProjectDirString>
 
-export function decodeDirectory(dir: string): ProjectDirString | undefined {
+function decodeDirectory(dir: string): ProjectDirString | undefined {
   const decoded = decode64(dir)
   if (!decoded) return
   return ProjectDirString.make(decoded)

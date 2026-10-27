@@ -23,7 +23,7 @@ interface InviteEmailProps {
   workspaceName: string
   assetsUrl: string
 }
-export const InviteEmail = ({
+const InviteEmail = ({
   inviter = "test@anoma.ly",
   workspaceID = "wrk_01K6XFY7V53T8XN0A7X8G9BTN3",
   workspaceName = "anomaly",

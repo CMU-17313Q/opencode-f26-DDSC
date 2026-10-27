@@ -158,12 +158,12 @@ export function resolveComparisonFamily(catalog: ModelCatalog, value: string) {
   return { ...family, model } satisfies ResolvedComparisonFamily
 }
 
-export function findComparisonFamily(value: string) {
+function findComparisonFamily(value: string) {
   const slug = catalogSlug(value)
   return comparisonFamilies.find((family) => family.slug === slug || family.aliases?.includes(slug))
 }
 
-export function comparisonFamilyCandidates(catalog: ModelCatalog, value: string) {
+function comparisonFamilyCandidates(catalog: ModelCatalog, value: string) {
   const family = findComparisonFamily(value)
   if (!family) return []
   const matches = catalog.models
@@ -204,7 +204,7 @@ export function latestFamilyComparisonPath(catalog: ModelCatalog, first: ModelCa
   return canonicalFamilyComparisonPath(firstFamily, secondFamily)
 }
 
-export function comparisonFamilyForModel(catalog: ModelCatalog, model: ModelCatalogEntry) {
+function comparisonFamilyForModel(catalog: ModelCatalog, model: ModelCatalogEntry) {
   const family = comparisonFamilies.find(
     (candidate) => candidate.lab === model.lab && isFamilyModel(model, candidate) && isGeneralComparisonModel(model),
   )

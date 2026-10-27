@@ -1,6 +1,6 @@
 import type { Effect, Scope } from "effect"
 
-export interface Registration {
+interface Registration {
   readonly dispose: Effect.Effect<void>
 }
 

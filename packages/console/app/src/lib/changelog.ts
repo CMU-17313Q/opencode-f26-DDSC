@@ -8,11 +8,11 @@ type Release = {
   html_url: string
 }
 
-export type HighlightMedia =
+type HighlightMedia =
   | { type: "video"; src: string }
   | { type: "image"; src: string; width: string; height: string }
 
-export type HighlightItem = {
+type HighlightItem = {
   title: string
   description: string
   shortDescription?: string
@@ -24,7 +24,7 @@ export type HighlightGroup = {
   items: HighlightItem[]
 }
 
-export type ChangelogRelease = {
+type ChangelogRelease = {
   tag: string
   name: string
   date: string

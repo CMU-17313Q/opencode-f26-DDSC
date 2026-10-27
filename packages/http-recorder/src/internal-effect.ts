@@ -18,7 +18,7 @@ import { redactUrl } from "./redaction.js"
 import { httpInteractions } from "./schema.js"
 import type { CassetteMetadata, HttpInteraction, RequestMatcher, ResponseSnapshot } from "./types.js"
 
-export { defaultMatcher }
+
 
 export type RecordReplayMode = "auto" | "record" | "replay" | "passthrough"
 

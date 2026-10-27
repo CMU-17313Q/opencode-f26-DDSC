@@ -8,7 +8,7 @@ import { Panel } from "./diff-viewer-ui"
 
 const FILE_TREE_STATUS_WIDTH = 2
 
-export type DiffViewerFileTreeTheme = {
+type DiffViewerFileTreeTheme = {
   readonly background: RGBA
   readonly backgroundPanel: ColorInput
   readonly backgroundElement: ColorInput

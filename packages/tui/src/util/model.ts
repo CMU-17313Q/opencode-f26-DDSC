@@ -9,7 +9,7 @@ export function index(list: Provider[] | undefined) {
   return new Map((list ?? []).map((item) => [item.id, item] as const))
 }
 
-export function get(list: Provider[] | ReadonlyMap<string, Provider> | undefined, providerID: string, modelID: string) {
+function get(list: Provider[] | ReadonlyMap<string, Provider> | undefined, providerID: string, modelID: string) {
   const provider =
     list instanceof Map
       ? list.get(providerID)

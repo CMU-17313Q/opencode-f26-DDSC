@@ -386,7 +386,7 @@ function formatErrorString(error: string, label: string): JSX.Element {
   )
 }
 
-export function TodoWriteTool(props: ToolProps) {
+function TodoWriteTool(props: ToolProps) {
   const messages = useShareMessages()
   const priority: Record<Todo["status"], number> = {
     in_progress: 0,
@@ -425,7 +425,7 @@ export function TodoWriteTool(props: ToolProps) {
   )
 }
 
-export function GrepTool(props: ToolProps) {
+function GrepTool(props: ToolProps) {
   const messages = useShareMessages()
 
   return (
@@ -457,7 +457,7 @@ export function GrepTool(props: ToolProps) {
   )
 }
 
-export function ListTool(props: ToolProps) {
+function ListTool(props: ToolProps) {
   const path = createMemo(() =>
     props.state.input?.path !== props.message.path.cwd
       ? stripWorkingDirectory(props.state.input?.path, props.message.path.cwd)
@@ -485,7 +485,7 @@ export function ListTool(props: ToolProps) {
   )
 }
 
-export function WebFetchTool(props: ToolProps) {
+function WebFetchTool(props: ToolProps) {
   const messages = useShareMessages()
 
   return (
@@ -510,7 +510,7 @@ export function WebFetchTool(props: ToolProps) {
   )
 }
 
-export function ReadTool(props: ToolProps) {
+function ReadTool(props: ToolProps) {
   const messages = useShareMessages()
   const filePath = createMemo(() => stripWorkingDirectory(props.state.input?.filePath, props.message.path.cwd))
 
@@ -543,7 +543,7 @@ export function ReadTool(props: ToolProps) {
   )
 }
 
-export function WriteTool(props: ToolProps) {
+function WriteTool(props: ToolProps) {
   const messages = useShareMessages()
   const filePath = createMemo(() => stripWorkingDirectory(props.state.input?.filePath, props.message.path.cwd))
   const diagnostics = createMemo(() =>
@@ -577,7 +577,7 @@ export function WriteTool(props: ToolProps) {
   )
 }
 
-export function EditTool(props: ToolProps) {
+function EditTool(props: ToolProps) {
   const messages = useShareMessages()
   const filePath = createMemo(() => stripWorkingDirectory(props.state.input.filePath, props.message.path.cwd))
   const diagnostics = createMemo(() =>
@@ -611,7 +611,7 @@ export function EditTool(props: ToolProps) {
   )
 }
 
-export function BashTool(props: ToolProps) {
+function BashTool(props: ToolProps) {
   return (
     <ContentBash
       command={props.state.input.command}
@@ -620,7 +620,7 @@ export function BashTool(props: ToolProps) {
   )
 }
 
-export function GlobTool(props: ToolProps) {
+function GlobTool(props: ToolProps) {
   const messages = useShareMessages()
 
   return (
@@ -675,7 +675,7 @@ function ResultsButton(props: ResultsButtonProps) {
   )
 }
 
-export function Spacer() {
+function Spacer() {
   return <div data-component="spacer"></div>
 }
 
@@ -717,7 +717,7 @@ function TaskTool(props: ToolProps) {
   )
 }
 
-export function FallbackTool(props: ToolProps) {
+function FallbackTool(props: ToolProps) {
   return (
     <>
       <div data-component="tool-title">

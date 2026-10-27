@@ -3,11 +3,8 @@ import type { Locale } from "../../../../console/app/src/lib/language"
 
 export {
   LOCALES,
-  LOCALE_COOKIE,
   LOCALE_HEADER,
-  clearCookie,
   cookie,
-  detectFromAcceptLanguage,
   detectFromLanguages,
   dir,
   fromPathname,
@@ -20,7 +17,7 @@ export {
 
 export type { Locale } from "../../../../console/app/src/lib/language"
 
-export const basePath = "/data"
+const basePath = "/data"
 export const baseUrl = "https://opencode.ai"
 
 function normalizeDataPathname(pathname: string) {

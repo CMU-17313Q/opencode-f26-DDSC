@@ -10,7 +10,7 @@ import { PermissionProvider } from "../../../../src/context/permission"
 import { ExitProvider } from "../../../../src/context/exit"
 import { createEventSource, createFetch, type FetchHandler, directory } from "../../../fixture/tui-sdk"
 import { TestTuiContexts } from "../../../fixture/tui-environment"
-export { createEventSource, createFetch, directory, eventSource, json, worktree } from "../../../fixture/tui-sdk"
+export { directory, json } from "../../../fixture/tui-sdk"
 
 export async function wait(fn: () => boolean, timeout = 2000) {
   const start = Date.now()

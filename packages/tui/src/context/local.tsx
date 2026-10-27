@@ -14,7 +14,7 @@ import { useToast } from "../ui/toast"
 import { useRoute } from "./route"
 import { usePermission } from "./permission"
 
-export type LocalTheme = {
+type LocalTheme = {
   secondary: RGBA
   accent: RGBA
   success: RGBA

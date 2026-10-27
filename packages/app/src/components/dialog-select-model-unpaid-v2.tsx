@@ -1,4 +1,4 @@
-import { DialogBody, DialogHeader, DialogTitle, DialogV2 } from "@opencode-ai/ui/v2/dialog-v2"
+import { DialogBody, DialogHeader, DialogTitle, Dialog as DialogV2 } from "@opencode-ai/ui/v2/dialog-v2"
 import { Icon } from "@opencode-ai/ui/v2/icon"
 import { ProviderIcon } from "@opencode-ai/ui/provider-icon"
 import { Tag } from "@opencode-ai/ui/v2/badge-v2"

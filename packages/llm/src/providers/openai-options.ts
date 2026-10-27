@@ -2,7 +2,7 @@ import type { ProviderOptions, ReasoningEffort, TextVerbosity } from "../schema"
 import { mergeProviderOptions } from "../schema"
 import type { OpenAIResponseIncludable, OpenAIServiceTier } from "../protocols/utils/openai-options"
 
-export type { OpenAIResponseIncludable, OpenAIServiceTier } from "../protocols/utils/openai-options"
+export type { OpenAIResponseIncludable } from "../protocols/utils/openai-options"
 
 export interface OpenAIOptionsInput {
   readonly [key: string]: unknown
@@ -41,7 +41,7 @@ const openAIProviderOptions = (options: OpenAIOptionsInput | undefined): Provide
   return { openai }
 }
 
-export const gpt5DefaultOptions = (
+const gpt5DefaultOptions = (
   modelID: string,
   options: { readonly textVerbosity?: boolean } = {},
 ): ProviderOptions | undefined => {
@@ -63,7 +63,7 @@ export const gpt5DefaultOptions = (
   })
 }
 
-export const openAIDefaultOptions = (
+const openAIDefaultOptions = (
   modelID: string,
   options: { readonly textVerbosity?: boolean } = {},
 ): ProviderOptions | undefined =>

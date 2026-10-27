@@ -5,7 +5,7 @@ export type ScrollConfig = {
   scroll_speed?: number
 }
 
-export class CustomSpeedScroll implements ScrollAcceleration {
+class CustomSpeedScroll implements ScrollAcceleration {
   constructor(private speed: number) {}
 
   tick(_now?: number): number {

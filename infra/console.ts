@@ -33,7 +33,7 @@ const password = new planetscale.Password("DatabasePassword", {
   branch: branch.name,
 })
 
-export const database = new sst.Linkable("Database", {
+const database = new sst.Linkable("Database", {
   properties: {
     host: password.accessHostUrl,
     database: cluster.name,
@@ -60,7 +60,7 @@ const GITHUB_CLIENT_ID_CONSOLE = new sst.Secret("GITHUB_CLIENT_ID_CONSOLE")
 const GITHUB_CLIENT_SECRET_CONSOLE = new sst.Secret("GITHUB_CLIENT_SECRET_CONSOLE")
 const GOOGLE_CLIENT_ID = new sst.Secret("GOOGLE_CLIENT_ID")
 const authStorage = new sst.cloudflare.Kv("AuthStorage")
-export const auth = new sst.cloudflare.Worker("AuthApi", {
+const auth = new sst.cloudflare.Worker("AuthApi", {
   domain: `auth.${domain}`,
   handler: "packages/console/function/src/auth.ts",
   url: true,
@@ -71,7 +71,7 @@ export const auth = new sst.cloudflare.Worker("AuthApi", {
 // GATEWAY
 ////////////////
 
-export const stripeWebhook = new stripe.WebhookEndpoint("StripeWebhookEndpoint", {
+const stripeWebhook = new stripe.WebhookEndpoint("StripeWebhookEndpoint", {
   url: $interpolate`https://${domain}/stripe/webhook`,
   enabledEvents: [
     "checkout.session.async_payment_failed",

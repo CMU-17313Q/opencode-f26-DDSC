@@ -32,13 +32,13 @@ export const queryGoReferral = query(async (workspaceID: string) => {
   }, workspaceID)
 }, "go.referral.get")
 
-export const queryGoReferralUsagePreview = query(async (workspaceID: string, referralID?: string) => {
+const queryGoReferralUsagePreview = query(async (workspaceID: string, referralID?: string) => {
   "use server"
   if (!referralID) return null
   return withActor(() => Referral.usagePreview({ referralID }), workspaceID)
 }, "go.referral.usagePreview")
 
-export const applyGoReferralReward = action(async (workspaceID: string, referralID: string) => {
+const applyGoReferralReward = action(async (workspaceID: string, referralID: string) => {
   "use server"
   return json(await withActor(() => Referral.applyReward({ referralID }), workspaceID), {
     revalidate: [queryGoReferral.key, queryGoReferralUsagePreview.key, queryLiteSubscription.key],

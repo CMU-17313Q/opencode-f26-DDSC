@@ -35,7 +35,7 @@ type ErrorNotification = NotificationBase & {
   error: EventSessionError["properties"]["error"]
 }
 
-export type Notification = TurnCompleteNotification | ErrorNotification
+type Notification = TurnCompleteNotification | ErrorNotification
 
 type NotificationIndex = {
   session: {

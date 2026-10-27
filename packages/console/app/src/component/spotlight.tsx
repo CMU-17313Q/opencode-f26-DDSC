@@ -1,7 +1,7 @@
 import { createSignal, createEffect, onMount, onCleanup, Accessor } from "solid-js"
 import "./spotlight.css"
 
-export interface ParticlesConfig {
+interface ParticlesConfig {
   enabled: boolean
   amount: number
   size: [number, number]

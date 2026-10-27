@@ -1,7 +1,7 @@
 import { ButtonV2 } from "@opencode-ai/ui/v2/button-v2"
 import { Dialog, DialogBody, DialogFooter, DialogHeader, DialogTitle } from "@opencode-ai/ui/v2/dialog-v2"
 import { DividerV2 } from "@opencode-ai/ui/v2/divider-v2"
-import { Field } from "@opencode-ai/ui/v2/field-v2"
+import { FieldV2 as Field } from "@opencode-ai/ui/v2/field-v2"
 import { Icon } from "@opencode-ai/ui/v2/icon"
 import { ProjectAvatar, PROJECT_AVATAR_VARIANTS } from "@opencode-ai/ui/v2/project-avatar-v2"
 import { TextareaV2 } from "@opencode-ai/ui/v2/textarea-v2"

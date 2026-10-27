@@ -44,7 +44,7 @@ export function formatCount(value: number, locale: string, singular: string, plu
 interface AnchorProps extends JSX.HTMLAttributes<HTMLDivElement> {
   id: string
 }
-export function AnchorIcon(props: AnchorProps) {
+function AnchorIcon(props: AnchorProps) {
   const [local, rest] = splitProps(props, ["id", "children"])
   const [copied, setCopied] = createSignal(false)
   const messages = useShareMessages()

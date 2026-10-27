@@ -7,7 +7,7 @@ export type FileTreeV2Model = {
 
 export type FileTreeV2Node = FileNode & { originalPath: string }
 
-export type FileTreeV2Row = {
+type FileTreeV2Row = {
   node: FileTreeV2Node
   level: number
 }

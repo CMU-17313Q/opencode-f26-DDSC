@@ -500,7 +500,7 @@ export default function Share(props: {
   )
 }
 
-export function fromV1(v1: Message.Info): MessageWithParts {
+function fromV1(v1: Message.Info): MessageWithParts {
   if (v1.role === "assistant") {
     return {
       id: v1.id,

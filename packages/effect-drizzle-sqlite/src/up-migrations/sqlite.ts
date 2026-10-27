@@ -122,7 +122,7 @@ export function buildSQLiteMigrationBackfillStatements(
  * Version 0: Original schema (id, hash, created_at)
  * Version 1: Extended schema (id, hash, created_at, name, applied_at)
  */
-export function upgradeSyncIfNeeded(
+function upgradeSyncIfNeeded(
   migrationsTable: string,
   session: SQLiteSession<"sync", unknown, Record<string, unknown>, AnyRelations, TablesRelationalConfig>,
   localMigrations: MigrationMeta[],
@@ -190,7 +190,7 @@ const upgradeSyncFunctions: Record<
  * Version 0: Original schema (id, hash, created_at)
  * Version 1: Extended schema (id, hash, created_at, name, applied_at)
  */
-export async function upgradeAsyncIfNeeded(
+async function upgradeAsyncIfNeeded(
   migrationsTable: string,
   db: AsyncSQLiteDatabaseWithSession,
   localMigrations: MigrationMeta[],

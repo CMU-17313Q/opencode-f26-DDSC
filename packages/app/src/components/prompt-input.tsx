@@ -84,7 +84,7 @@ import { ImagePreview } from "@opencode-ai/ui/image-preview"
 import type { ReferenceInfo } from "@opencode-ai/sdk/v2/client"
 
 export { createPromptInputHistory }
-export type { PromptInputControls, PromptInputHistory, PromptInputProps, PromptInputState, PromptInputSubmission }
+export type { PromptInputProps, PromptInputState }
 
 const EXAMPLES = [
   "prompt.example.1",

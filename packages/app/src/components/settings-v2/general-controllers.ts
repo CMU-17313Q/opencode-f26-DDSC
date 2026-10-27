@@ -19,8 +19,8 @@ import {
 import { playSoundById, SOUND_OPTIONS } from "@/utils/sound"
 import { createSoundPreviewController, type ShellOption } from "./general-controller-behavior"
 
-export { createShellOptions, createSoundPreviewController } from "./general-controller-behavior"
-export type { ShellOption, ShellSelectOption } from "./general-controller-behavior"
+export { createShellOptions } from "./general-controller-behavior"
+
 
 export function createPermissionScopeController(sessionID: Accessor<string | undefined>) {
   const permission = usePermission()

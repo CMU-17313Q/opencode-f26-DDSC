@@ -4,12 +4,12 @@ import { LLMError, TransportReason } from "../../schema"
 import * as HttpTransport from "./http"
 import type { Transport } from "./index"
 
-export interface WebSocketRequest {
+interface WebSocketRequest {
   readonly url: string
   readonly headers: Headers.Headers
 }
 
-export interface WebSocketConnection {
+interface WebSocketConnection {
   readonly sendText: (message: string) => Effect.Effect<void, LLMError>
   readonly messages: Stream.Stream<string | Uint8Array, LLMError>
   readonly close: Effect.Effect<void, never>
@@ -122,7 +122,7 @@ const webSocketUrl = (value: string) =>
       }),
   })
 
-export const open = (input: WebSocketRequest) =>
+const open = (input: WebSocketRequest) =>
   Effect.try({
     try: () =>
       new (globalThis.WebSocket as unknown as WebSocketConstructorWithHeaders)(input.url, { headers: input.headers }),
@@ -133,9 +133,9 @@ export const open = (input: WebSocketRequest) =>
       }),
   }).pipe(Effect.flatMap((ws) => fromWebSocket(ws, input)))
 
-export const layer: Layer.Layer<Service> = Layer.succeed(Service, Service.of({ open }))
+const layer: Layer.Layer<Service> = Layer.succeed(Service, Service.of({ open }))
 
-export const fromWebSocket = (
+const fromWebSocket = (
   ws: globalThis.WebSocket,
   input: WebSocketRequest,
 ): Effect.Effect<WebSocketConnection, LLMError> =>
@@ -203,27 +203,27 @@ export const fromWebSocket = (
     }
   })
 
-export const messageText = (message: string | Uint8Array, decoder: TextDecoder) =>
+const messageText = (message: string | Uint8Array, decoder: TextDecoder) =>
   typeof message === "string" ? message : decoder.decode(message)
 
-export interface JsonPrepared {
+interface JsonPrepared {
   readonly url: string
   readonly headers: Headers.Headers
   readonly message: string
 }
 
-export interface JsonInput<Body, Message> {
+interface JsonInput<Body, Message> {
   readonly toMessage: (body: Body | Record<string, unknown>) => Effect.Effect<Message, LLMError>
   readonly encodeMessage: (message: Message) => string
 }
 
-export type JsonPatch<Body, Message> = Partial<JsonInput<Body, Message>>
+type JsonPatch<Body, Message> = Partial<JsonInput<Body, Message>>
 
-export interface JsonTransport<Body, Message> extends Transport<Body, JsonPrepared, string> {
+interface JsonTransport<Body, Message> extends Transport<Body, JsonPrepared, string> {
   readonly with: (patch: JsonPatch<Body, Message>) => JsonTransport<Body, Message>
 }
 
-export const json = <Body, Message>(input: JsonInput<Body, Message>): JsonTransport<Body, Message> => ({
+const json = <Body, Message>(input: JsonInput<Body, Message>): JsonTransport<Body, Message> => ({
   id: "websocket-json",
   with: (patch) => json({ ...input, ...patch }),
   prepare: (prepareInput) =>
@@ -261,7 +261,7 @@ export const json = <Body, Message>(input: JsonInput<Body, Message>): JsonTransp
   },
 })
 
-export const jsonTransport = {
+const jsonTransport = {
   id: "websocket-json",
   with: json,
 } as const

@@ -22,7 +22,7 @@ export const canonicalizeJson = (value: unknown): unknown => {
 
 export type { RequestMatcher } from "./types.js"
 
-export const canonicalSnapshot = (snapshot: RequestSnapshot): string =>
+const canonicalSnapshot = (snapshot: RequestSnapshot): string =>
   JSON.stringify({
     method: snapshot.method,
     url: snapshot.url,
@@ -70,7 +70,7 @@ const headerDiffs = (expected: Record<string, string>, received: Record<string, 
     return [`  ${key} expected ${safeText(expected[key])}, received ${safeText(received[key])}`]
   })
 
-export const requestDiff = (expected: RequestSnapshot, received: RequestSnapshot): ReadonlyArray<string> => {
+const requestDiff = (expected: RequestSnapshot, received: RequestSnapshot): ReadonlyArray<string> => {
   const lines: string[] = []
   if (expected.method !== received.method) {
     lines.push("method:", `  expected ${expected.method}, received ${received.method}`)

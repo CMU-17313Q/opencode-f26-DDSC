@@ -124,4 +124,4 @@ export function getTableLikeName(table: SQLiteTable | Subquery | SQLiteViewBase 
   ] as string
 }
 
-export type { JoinNullability }
+

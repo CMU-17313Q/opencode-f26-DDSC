@@ -20,7 +20,6 @@ import {
 } from "./prompt-state"
 
 export {
-  createPromptReady,
   createPromptSession,
   createPromptState,
   DEFAULT_PROMPT,
@@ -39,7 +38,6 @@ export type {
   PromptStore,
   PromptScope,
   PromptSession,
-  TextPart,
 } from "./prompt-state"
 
 const WORKSPACE_KEY = "__workspace__"

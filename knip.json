@@ -1,14 +1,14 @@
 {
   "$schema": "https://unpkg.com/knip@latest/schema.json",
-  // Generated code, ambient types, build output, and the vendored demo project under
-  // artifacts/ are not part of the dependency graph.
   "ignore": [
     "**/*.gen.ts",
     "**/gen/**",
     "**/*.d.ts",
     "**/dist/**",
     "artifacts/**",
-    "sdks/**"
+    "sdks/**",
+    "packages/web/src/components/icons/index.tsx",
+    "packages/plugin/src/v2/effect/{event,filesystem,location,npm,path}.ts"
   ],
   "ignoreBinaries": [
     "ulimit",
@@ -95,11 +95,13 @@
         "src/middleware.ts",
         "src/routes/**/*.{ts,tsx}",
         "script/**/*.ts",
+        "test/**/*.ts",
         "vite.config.ts"
       ],
       "project": [
         "src/**/*.{ts,tsx}",
-        "script/**/*.ts"
+        "script/**/*.ts",
+        "test/**/*.ts"
       ],
       "vite": {
         "config": []
@@ -187,11 +189,13 @@
         "src/entry-server.tsx",
         "src/routes/**/*.{ts,tsx}",
         "script/**/*.ts",
+        "test/**/*.ts",
         "vite.config.ts"
       ],
       "project": [
         "src/**/*.{ts,tsx,css}",
-        "script/**/*.ts"
+        "script/**/*.ts",
+        "test/**/*.ts"
       ],
       "vite": {
         "config": []

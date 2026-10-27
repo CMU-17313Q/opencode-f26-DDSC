@@ -2,18 +2,18 @@ import type { PermissionRequest, Session } from "@opencode-ai/sdk/v2/client"
 import { cmp } from "./utils"
 import { SESSION_RECENT_LIMIT, SESSION_RECENT_WINDOW } from "./types"
 
-export function sessionUpdatedAt(session: Session) {
+function sessionUpdatedAt(session: Session) {
   return session.time.updated ?? session.time.created
 }
 
-export function compareSessionRecent(a: Session, b: Session) {
+function compareSessionRecent(a: Session, b: Session) {
   const aUpdated = sessionUpdatedAt(a)
   const bUpdated = sessionUpdatedAt(b)
   if (aUpdated !== bUpdated) return bUpdated - aUpdated
   return cmp(a.id, b.id)
 }
 
-export function takeRecentSessions(sessions: Session[], limit: number, cutoff: number) {
+function takeRecentSessions(sessions: Session[], limit: number, cutoff: number) {
   if (limit <= 0) return [] as Session[]
   const selected: Session[] = []
   const seen = new Set<string>()

@@ -1,11 +1,11 @@
 // @ts-nocheck
 export const unit = 12
-export const PRIMARY_COLOR = "#211E1E"
-export const TEXT_COLOR = "#656363"
-export const LINK_COLOR = "#007AFF"
-export const LINK_BACKGROUND_COLOR = "#F9F8F8"
-export const BACKGROUND_COLOR = "#F0F0F1"
-export const SURFACE_DIVIDER_COLOR = "#D5D5D9"
+const PRIMARY_COLOR = "#211E1E"
+const TEXT_COLOR = "#656363"
+const LINK_COLOR = "#007AFF"
+const LINK_BACKGROUND_COLOR = "#F9F8F8"
+const BACKGROUND_COLOR = "#F0F0F1"
+const SURFACE_DIVIDER_COLOR = "#D5D5D9"
 
 export const body = {
   background: BACKGROUND_COLOR,

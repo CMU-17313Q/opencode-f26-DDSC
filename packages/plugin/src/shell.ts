@@ -1,6 +1,6 @@
-export type ShellFunction = (input: Uint8Array) => Uint8Array
+type ShellFunction = (input: Uint8Array) => Uint8Array
 
-export type ShellExpression =
+type ShellExpression =
   | { toString(): string }
   | Array<ShellExpression>
   | string
@@ -42,7 +42,7 @@ export interface BunShell {
   throws(shouldThrow: boolean): BunShell
 }
 
-export interface BunShellPromise extends Promise<BunShellOutput> {
+interface BunShellPromise extends Promise<BunShellOutput> {
   readonly stdin: WritableStream
 
   /**
@@ -102,7 +102,7 @@ export interface BunShellPromise extends Promise<BunShellOutput> {
   throws(shouldThrow: boolean): this
 }
 
-export interface BunShellOutput {
+interface BunShellOutput {
   readonly stdout: Buffer
   readonly stderr: Buffer
   readonly exitCode: number
@@ -133,4 +133,4 @@ export interface BunShellOutput {
   blob(): Blob
 }
 
-export type BunShellError = Error & BunShellOutput
+type BunShellError = Error & BunShellOutput

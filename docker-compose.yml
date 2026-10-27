@@ -1,0 +1,17 @@
+services:
+  opencode:
+    build: .
+    ports:
+      # Loopback-only by default, as before; set OPENCODE_HOST=0.0.0.0 to expose it publicly.
+      - "${OPENCODE_HOST:-127.0.0.1}:${OPENCODE_PORT:-4096}:4096"
+    environment:
+      OPENCODE_SERVER_PASSWORD: ${OPENCODE_SERVER_PASSWORD:-}
+    volumes:
+      # Sessions, archive state, folders and repo roots live in this database.
+      - opencode-data:/root/.local/share/opencode
+      # Repositories opencode can open as projects.
+      - ${OPENCODE_WORKSPACE:-.}:/workspace
+    restart: unless-stopped
+
+volumes:
+  opencode-data:

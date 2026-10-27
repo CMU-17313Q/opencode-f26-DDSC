@@ -33,16 +33,28 @@ export function createHomeSessionSearchController(home: HomeController, sessions
     async (params) => {
       if (!params.includeArchived || !params.query || !params.ctx) return []
       const projectByID = new Map(params.projects.flatMap((p) => (p.id ? [[p.id, p] as const] : [])))
-      const res = await params.ctx.sdk.client.session
-        .list({
-          search: params.query,
-          roots: true,
-          archived: true,
-          limit: 100,
-        })
-        .catch(() => ({ data: [] }))
+      // Session list is scoped to one project, so search each open project explicitly; without a
+      // directory the server only searches the project of its own working directory.
+      const client = params.ctx.sdk.client
+      const targets = params.selectedProject ? [params.selectedProject] : params.projects
+      const lists = await Promise.all(
+        targets.map((project) =>
+          client.session
+            .list({
+              directory: project.worktree,
+              search: params.query,
+              roots: true,
+              archived: true,
+              limit: 100,
+            })
+            .then((res) => res.data ?? [])
+            .catch(() => []),
+        ),
+      )
 
-      const items = (res.data ?? []).map(normalizeSessionInfo)
+      const items = [...new Map(lists.flat().map((session) => [session.id, session])).values()].map(
+        normalizeSessionInfo,
+      )
       return items.flatMap((session) => {
         const directory = pathKey(session.directory)
         const proj =
@@ -61,14 +73,15 @@ export function createHomeSessionSearchController(home: HomeController, sessions
   )
 
   const results = createMemo(() => {
-    if (state.includeArchived) {
-      return remoteResults() ?? []
-    }
     const value = query().toLowerCase()
     if (!value) return []
-    return sessions.data
+    const local = sessions.data
       .searchRecords()
       .filter((record) => `${record.session.title} ${record.projectName}`.toLowerCase().includes(value))
+    if (!state.includeArchived) return local
+    const seen = new Set(local.map(homeSessionSearchKey))
+    const archived = (remoteResults() ?? []).filter((record) => !seen.has(homeSessionSearchKey(record)))
+    return [...local, ...archived]
   })
   const active = createMemo(() => {
     const records = results()
@@ -131,7 +144,7 @@ export function createHomeSessionSearchController(home: HomeController, sessions
       toggleIncludeArchived: () => setState("includeArchived", (val) => !val),
     },
     result: {
-      loading: () => (state.includeArchived ? remoteResults.loading : sessions.data.loading()),
+      loading: () => sessions.data.loading() || (state.includeArchived && remoteResults.loading),
       list: results,
       active,
       noResultsLabel: () => language.t("home.sessions.search.noResults", { query: query() }),

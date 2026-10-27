@@ -166,7 +166,7 @@ Other tips and tricks:
 
 #### VSCode Setup
 
-If you use VSCode, you can use our example configurations [.vscode/settings.example.json](.vscode/settings.example.json) and [.vscode/launch.example.json](.vscode/launch.example.json).
+If you use VSCode, upstream opencode ships example configurations `.vscode/settings.example.json` and `.vscode/launch.example.json` (the `.vscode/` folder is not included in this fork).
 
 Some debug methods that can be problematic:
 

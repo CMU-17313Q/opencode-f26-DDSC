@@ -14,6 +14,7 @@
     "dev:storybook": "bun --cwd packages/storybook storybook",
     "lint": "oxlint",
     "typecheck": "bun turbo typecheck",
+    "test:mutation": "node node_modules/@stryker-mutator/core/bin/stryker.js run",
     "upgrade-opentui": "bun run script/upgrade-opentui.ts",
     "postinstall": "bun run --cwd packages/core fix-node-pty",
     "prepare": "husky",
@@ -97,6 +98,7 @@
   },
   "devDependencies": {
     "@actions/artifact": "5.0.1",
+    "@stryker-mutator/core": "10.1.1",
     "@tsconfig/bun": "catalog:",
     "@types/mime-types": "3.0.1",
     "@typescript/native-preview": "catalog:",

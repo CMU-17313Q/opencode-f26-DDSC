@@ -1,0 +1,102 @@
+name: security-audit
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+  schedule:
+    - cron: "0 6 * * *" # daily, 06:00 UTC
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  audit:
+    name: audit
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6 # v2.2.0
+        with:
+          bun-version-file: package.json
+
+      - name: Audit dependencies
+        # Report-only: findings are summarized but do not fail the job.
+        # To make this blocking, add a baseline ignore list, exit non-zero
+        # when findings remain, and mark this check as required on main.
+        run: |
+          set +e
+          bun audit --json > "$RUNNER_TEMP/bun-audit.json" 2> "$RUNNER_TEMP/bun-audit.err"
+          status=$?
+          set -e
+
+          if ! jq -e 'type == "object"' "$RUNNER_TEMP/bun-audit.json" > /dev/null 2>&1; then
+            echo "::error::bun audit did not produce a valid report"
+            cat "$RUNNER_TEMP/bun-audit.err"
+            exit 1
+          fi
+
+          total=$(jq '[.[] | .[]] | length' "$RUNNER_TEMP/bun-audit.json")
+          packages=$(jq 'keys | length' "$RUNNER_TEMP/bun-audit.json")
+          critical_high=$(jq '[.[] | .[] | select(.severity == "critical" or .severity == "high") | .url] | unique | length' "$RUNNER_TEMP/bun-audit.json")
+
+          {
+            echo "### bun audit"
+            echo ""
+            echo "Scanned \`bun.lock\`: **$total** advisories across **$packages** packages."
+            echo ""
+            echo "| Severity | Count |"
+            echo "| --- | ---: |"
+            jq -r '
+              [.[] | .[]]
+              | group_by(.severity)
+              | map({ severity: .[0].severity, count: length })
+              | sort_by(.severity | if . == "critical" then 0 elif . == "high" then 1 elif . == "moderate" then 2 else 3 end)
+              | .[]
+              | "| \(.severity) | \(.count) |"
+            ' "$RUNNER_TEMP/bun-audit.json"
+            if [ "$critical_high" -gt 0 ]; then
+              echo ""
+              echo "#### Critical and high findings"
+              echo ""
+              echo "| Severity | Package | Advisory |"
+              echo "| --- | --- | --- |"
+              jq -r '
+                [to_entries[] | .key as $package | .value[] | select(.severity == "critical" or .severity == "high") | { package: $package, severity, title, url }]
+                | unique_by(.url)
+                | sort_by(.severity | if . == "critical" then 0 else 1 end)
+                | .[:50][]
+                | "| \(.severity) | \(.package) | [\(.title | gsub("\\|"; "\\|"))](\(.url)) |"
+              ' "$RUNNER_TEMP/bun-audit.json"
+              if [ "$critical_high" -gt 50 ]; then
+                echo ""
+                echo "_Showing the first 50 of $critical_high unique critical/high advisories. See the job log for the full report._"
+              fi
+            fi
+            echo ""
+            echo "This check is report-only and does not block merges."
+          } >> "$GITHUB_STEP_SUMMARY"
+
+          echo "::warning::bun audit found $total advisories across $packages packages (report-only)."
+
+          # Print the full report to the job log without re-running the audit.
+          jq -r 'to_entries[] | .key as $package | .value[] | "\(.severity)\t\($package)\t\(.title)\t\(.url)"' "$RUNNER_TEMP/bun-audit.json"
+
+          if [ "$status" -ne 0 ] && [ "$total" -eq 0 ]; then
+            echo "::error::bun audit failed without reporting any advisories"
+            cat "$RUNNER_TEMP/bun-audit.err"
+            exit "$status"
+          fi

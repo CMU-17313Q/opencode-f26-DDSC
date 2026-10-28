@@ -27,7 +27,7 @@ concurrency:
 jobs:
   local-links:
     name: local links (blocking)
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 10
     steps:
       - name: Checkout repository
@@ -52,7 +52,7 @@ jobs:
   external-links:
     name: external links (report only)
     if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 15
     steps:
       - name: Checkout repository

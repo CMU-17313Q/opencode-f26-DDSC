@@ -11,7 +11,7 @@ concurrency:
 
 jobs:
   typecheck:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - name: Checkout repository
         uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
@@ -21,5 +21,5 @@ jobs:
 
       - name: Run typecheck
         # Default turbo concurrency (10) spawns enough parallel tsgo
-        # processes to OOM-kill the runner (ubuntu-latest: 4 vCPU/16GB).
+        # processes to OOM-kill the runner (ubuntu-24.04: 4 vCPU/16GB).
         run: bun turbo typecheck --concurrency=4

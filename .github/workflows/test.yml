@@ -21,7 +21,7 @@ env:
 jobs:
   unit:
     name: unit
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     # Belt-and-suspenders: without this, a step with no timeout-minutes of its
     # own that hangs runs until GitHub's default 6h job cap instead of failing
     # fast (see the httpapi-exercise incident this guards against).
@@ -59,7 +59,7 @@ jobs:
 
       - name: Run unit tests
         timeout-minutes: 15
-        # Default turbo concurrency (10) oversubscribes ubuntu-latest's 4
+        # Default turbo concurrency (10) oversubscribes ubuntu-24.04's 4
         # vCPUs across 5 packages' test tasks running at once — same
         # contention issue typecheck.yml already caps for tsgo.
         run: GITHUB_ACTIONS=false bun turbo test --concurrency=4
@@ -71,7 +71,7 @@ jobs:
 
   e2e:
     name: e2e (smoke)
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     env:
       PLAYWRIGHT_BROWSERS_PATH: ${{ github.workspace }}/.playwright-browsers
       # Default CI worker count (5) oversubscribes a standard GitHub-hosted

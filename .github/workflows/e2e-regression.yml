@@ -15,7 +15,7 @@ env:
 jobs:
   e2e-regression:
     name: e2e (regression)
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     env:
       PLAYWRIGHT_BROWSERS_PATH: ${{ github.workspace }}/.playwright-browsers
       # See test.yml's e2e job for why this is capped.

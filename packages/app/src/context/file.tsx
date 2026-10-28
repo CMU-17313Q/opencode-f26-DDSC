@@ -34,7 +34,7 @@ import {
   type SelectedLineRange,
 } from "./file/types"
 
-export type { FileSelection, SelectedLineRange,  FileState }
+export type { FileSelection, SelectedLineRange, FileState }
 export { selectionFromLines }
 
 

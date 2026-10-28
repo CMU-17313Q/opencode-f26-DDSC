@@ -8,8 +8,13 @@
     "artifacts/**",
     "sdks/**",
     "packages/web/src/components/icons/index.tsx",
-    "packages/plugin/src/v2/effect/{event,filesystem,location,npm,path}.ts"
+    "packages/plugin/src/v2/effect/{event,filesystem,location,npm,path}.ts",
+    "packages/plugin/src/example*.ts"
   ],
+  "ignoreIssues": {
+    "packages/ui/src/v2/components/dialog-v2.tsx": ["duplicates"],
+    "packages/ui/src/v2/components/field-v2.tsx": ["duplicates"]
+  },
   "ignoreBinaries": [
     "ulimit",
     "vim",

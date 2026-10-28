@@ -9,8 +9,8 @@ const targets = {
     flags: "--tsconfig-override ../../script/mutation-core.tsconfig.json",
   },
   tui: {
-    files: ["src/prompt/paste-chip.ts"],
-    tests: "test/prompt/paste-chip.test.ts",
+    files: ["src/component/session-folder.ts", "src/prompt/paste-chip.ts"],
+    tests: "test/component/dialog-session-list.test.ts test/prompt/paste-chip.test.ts",
   },
   app: {
     files: [
@@ -49,10 +49,10 @@ export default {
   commandRunner: {
     command: `cd packages/${group} && bun test ${target.flags ?? ""} --timeout 30000 ${target.tests}`,
   },
-  // Pure helpers do not need renderer/server integration preloads. Replace only
-  // the sandbox bunfig; normal package test configuration stays unchanged.
+  // Wildcard helpers do not need server integration preloads. Replace only
+  // the sandbox bunfig; preserve TUI preloads for the session dialog tests.
   buildCommand:
-    group === "opencode" || group === "tui"
+    group === "opencode"
       ? `cp script/mutation-unit.bunfig.toml packages/${group}/bunfig.toml`
       : undefined,
   coverageAnalysis: "off",

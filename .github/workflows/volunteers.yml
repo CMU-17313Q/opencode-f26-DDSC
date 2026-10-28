@@ -4,7 +4,7 @@ on: [issue_comment, workflow_dispatch]
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
     - uses: bhermann/issue-volunteer@v0.1.12
       with:

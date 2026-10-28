@@ -5,6 +5,7 @@ name: knip
 
 on:
   push:
+    branches: [main]
   pull_request:
   workflow_dispatch:
 
@@ -16,15 +17,12 @@ permissions:
   contents: read
 
 env:
-  # PHASE 1 (report only): findings are printed and uploaded but never fail the job.
-  # PHASE 2 (blocking): set this to an empty string ("") once the baseline is clean,
-  # then mark the "knip" job as a required status check in branch protection.
-  KNIP_EXTRA_ARGS: "--no-exit-code"
+  KNIP_EXTRA_ARGS: ""
 
 jobs:
   knip:
     name: knip
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 20
     defaults:
       run:

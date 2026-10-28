@@ -16,9 +16,6 @@ concurrency:
 permissions:
   contents: read
 
-env:
-  KNIP_EXTRA_ARGS: ""
-
 jobs:
   knip:
     name: knip
@@ -40,8 +37,20 @@ jobs:
         run: |
           set -o pipefail
           # Knip exit codes: 0 = clean, 1 = findings, 2 = Knip itself failed.
-          # --no-exit-code only silences "1"; a crash ("2") still fails the job.
-          bunx knip $KNIP_EXTRA_ARGS 2>&1 | tee knip-report.txt
+          # Both non-zero codes fail the job, and the report is uploaded either way.
+          {
+            echo "knip $(bunx knip --version) on commit $(git rev-parse --short HEAD)"
+            echo
+            if bunx knip; then
+              echo
+              echo "No findings."
+            else
+              status=$?
+              echo
+              echo "Knip exited with status $status (see findings above)."
+              exit $status
+            fi
+          } 2>&1 | tee knip-report.txt
 
       - name: Add report to job summary
         if: always()

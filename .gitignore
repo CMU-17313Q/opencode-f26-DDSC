@@ -11,3 +11,7 @@ test-results/.last-run.json
 # lychee link checker: local cache and report output
 .lycheecache
 lychee/
+
+# Stryker mutation sandboxes and generated reports
+.stryker-tmp/
+reports/mutation/

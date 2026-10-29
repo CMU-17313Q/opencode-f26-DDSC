@@ -1,0 +1,24 @@
+# Gitleaks secret scanning config (Project 3B). Used by .github/workflows/gitleaks.yml.
+#
+# Starts from gitleaks' default rule set and only allowlists values that are known to be fake.
+# Historical false positives in specific commits are listed by fingerprint in .gitleaksignore
+# instead, so new code in those same files is still scanned.
+
+title = "opencode-f26-DDSC gitleaks config"
+
+[extend]
+useDefault = true
+
+[[allowlists]]
+description = "Test fixtures that deliberately contain fake credentials (e.g. redaction tests)"
+paths = [
+  '''^packages/http-recorder/test/''',
+  '''(^|/)test/fixtures?/''',
+]
+
+[[allowlists]]
+description = "Documentation placeholders such as YOUR_API_KEY"
+regexTarget = "match"
+regexes = [
+  '''(?i)\byour[_-]?(api[_-]?)?(key|token|secret)\b''',
+]

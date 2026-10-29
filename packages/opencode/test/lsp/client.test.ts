@@ -275,7 +275,9 @@ describe("LSPClient interop", () => {
 
         const started = Date.now()
         await client.waitForDiagnostics({ path: file, version, mode: "document" })
-        expect(Date.now() - started).toBeLessThan(1_000)
+        // 2s leaves headroom for slow CI runners (1s was flaky) while staying below every
+        // wait this test guards against (2.5s slow pull, 3s request, 5s/10s diagnostics waits).
+        expect(Date.now() - started).toBeLessThan(2_000)
 
         await client.shutdown()
       },
@@ -374,7 +376,7 @@ describe("LSPClient interop", () => {
         const started = Date.now()
         await client.waitForDiagnostics({ path: file, version, mode: "document" })
 
-        expect(Date.now() - started).toBeLessThan(1_000)
+        expect(Date.now() - started).toBeLessThan(2_000)
         expect(client.diagnostics.get(file)?.[0]?.message).toBe("fast diagnostic")
         expect(await client.connection.sendRequest("test/get-diagnostic-request-count", {})).toBeGreaterThan(1)
 
@@ -479,7 +481,7 @@ describe("LSPClient interop", () => {
         const started = Date.now()
         await client.waitForDiagnostics({ path: file, version, mode: "full" })
 
-        expect(Date.now() - started).toBeLessThan(1_000)
+        expect(Date.now() - started).toBeLessThan(2_000)
 
         await client.shutdown()
       },

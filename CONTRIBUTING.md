@@ -286,6 +286,25 @@ These are not strictly enforced, they are just general guidelines:
 - **Naming:** Choose concise single-word identifiers when they remain descriptive.
 - **Runtime APIs:** Use Bun helpers such as `Bun.file()` when they fit the use case.
 
+### Secret Scanning
+
+Every PR and push to `main` runs [Gitleaks](https://github.com/gitleaks/gitleaks) (`.github/workflows/gitleaks.yml`) over the full git history, and any finding blocks the merge. To check locally before pushing:
+
+```bash
+brew install gitleaks   # or download a release binary
+gitleaks git --config .gitleaks.toml --redact -v --log-opts="HEAD"
+```
+
+If it flags something that is **not** a secret (a test fixture, a placeholder, a public ID):
+
+- For a one-off line, add a `gitleaks:allow` comment at the end of that line.
+- For a value in an existing commit, add its `Fingerprint` from the report to `.gitleaksignore` with a short note.
+- For a whole folder of fake credentials, add the path to the allowlist in `.gitleaks.toml`.
+
+Use these only for values you have verified are not secrets, and mention the exception in your PR description.
+
+If a **real** secret was committed: rotate or revoke the credential first, since anything pushed stays in git history. Then remove it from the code and tell the team. Never add a real secret to `.gitleaksignore`.
+
 ## Feature Requests
 
 For net-new functionality, start with a design conversation. Open an issue describing the problem, your proposed approach (optional), and why it belongs in OpenCode. The core team will help decide whether it should move forward; please wait for that approval instead of opening a feature PR directly.

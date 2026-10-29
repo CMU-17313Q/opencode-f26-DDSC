@@ -115,3 +115,4 @@ export function Dialog(props: DialogProps) {
 }
 
 export const DialogV2 = Dialog
+

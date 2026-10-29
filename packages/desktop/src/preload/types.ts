@@ -22,14 +22,14 @@ export type ServerReadyData = {
   password: string | null
 }
 
-export type WslServersAPI = WslServersPlatform
-export type UpdaterAPI = {
+type WslServersAPI = WslServersPlatform
+type UpdaterAPI = {
   subscribe: (cb: (state: UpdaterState) => void) => Promise<() => void>
   check: () => Promise<UpdaterState>
   install: () => Promise<void>
 }
 
-export type LinuxDisplayBackend = "wayland" | "auto"
+type LinuxDisplayBackend = "wayland" | "auto"
 export type TitlebarTheme = {
   mode: "light" | "dark"
   scheme?: "system" | "light" | "dark"

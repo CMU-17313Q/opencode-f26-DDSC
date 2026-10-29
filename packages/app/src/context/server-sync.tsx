@@ -144,7 +144,7 @@ export const loadMcpResourcesQuery = (
     placeholderData: {},
   })
 
-export const loadLspQuery = (scope: ServerScope, directory: string, sdk: OpencodeClient) =>
+const loadLspQuery = (scope: ServerScope, directory: string, sdk: OpencodeClient) =>
   queryOptions({
     queryKey: [scope, directory, "lsp"] as const,
     queryFn: () => sdk.lsp.status().then((r) => r.data ?? []),

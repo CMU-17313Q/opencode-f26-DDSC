@@ -135,7 +135,7 @@ export interface ISerializeRange {
   end: number
 }
 
-export interface IHTMLSerializeOptions {
+interface IHTMLSerializeOptions {
   /**
    * The number of rows in the scrollback buffer to serialize, starting from
    * the bottom of the scrollback buffer.

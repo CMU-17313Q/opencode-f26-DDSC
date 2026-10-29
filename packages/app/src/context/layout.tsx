@@ -22,7 +22,7 @@ import { requireServerKey } from "@/utils/session-route"
 import { type DraftTab, useTabs } from "./tabs"
 import { closeSessionTab, openSessionTab, previewSessionTab, type SessionTabs } from "./layout-tabs"
 
-export { createSessionKeyReader, ensureSessionKey, pruneSessionKeys }
+
 
 export type { ProjectAvatarVariant }
 
@@ -127,7 +127,7 @@ const normalizeStoredSessionTabs = (key: string, tabs: SessionTabs) => {
   }
 }
 
-export const currentRoute = (pathname: string, search: string): LayoutRoute => {
+const currentRoute = (pathname: string, search: string): LayoutRoute => {
   const parts = pathname.split("/").filter(Boolean)
   if (parts.length === 0) return { type: "home" }
 

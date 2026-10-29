@@ -17,8 +17,7 @@ import type { useToast } from "../ui/toast"
 import * as Keymap from "../keymap"
 import { createCommandShim } from "./command-shim"
 import type { PluginRoutes } from "./api"
-export type { RouteMap } from "./api"
-export { createPluginRoutes, createTuiApi } from "./api"
+
 
 type Input = {
   version: string

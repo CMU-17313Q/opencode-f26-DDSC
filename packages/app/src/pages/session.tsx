@@ -350,7 +350,7 @@ function SessionPanelFrame(props: ParentProps<{ newLayout: boolean; raised?: boo
   )
 }
 
-export default function Page() {
+function Page() {
   const serverSync = useServerSync()
   const layout = useLayout()
   const local = useLocal()

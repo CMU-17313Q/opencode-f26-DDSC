@@ -43,7 +43,7 @@ async function writeDebugData(port: number, id: string, env: Record<string, stri
   await rename(DEV_DATA_TEMP_FILE, DEV_DATA_FILE)
 }
 
-export const DebugWorkspacePlugin: Plugin = async ({ experimental_workspace }) => {
+const DebugWorkspacePlugin: Plugin = async ({ experimental_workspace }) => {
   experimental_workspace.register("debug", {
     name: "Debug",
     description: "Create a debugging server",

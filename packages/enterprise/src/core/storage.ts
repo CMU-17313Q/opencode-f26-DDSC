@@ -119,11 +119,4 @@ export namespace Storage {
     return result.map((x) => x.replace(/\.json$/, "").split("/"))
   }
 
-  export async function update<T>(key: string[], fn: (draft: T) => void) {
-    const val = await read<T>(key)
-    if (!val) throw new Error("Not found")
-    fn(val)
-    await write(key, val)
-    return val
   }
-}

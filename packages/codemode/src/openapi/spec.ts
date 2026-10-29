@@ -28,7 +28,7 @@ export const nonEmptyString = (value: unknown): string | undefined =>
 export const own = <T>(record: Readonly<Record<string, T>>, key: string): T | undefined =>
   Object.hasOwn(record, key) ? record[key] : undefined
 
-export const resolve = (document: Document, value: unknown): unknown => {
+const resolve = (document: Document, value: unknown): unknown => {
   const next = (current: unknown, seen: ReadonlySet<string>): unknown => {
     if (!isRecord(current)) return current
     const ref = nonEmptyString(current.$ref)

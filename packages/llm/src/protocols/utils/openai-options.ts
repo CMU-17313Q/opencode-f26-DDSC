@@ -2,14 +2,14 @@ import { Schema } from "effect"
 import type { LLMRequest, ReasoningEffort, TextVerbosity as TextVerbosityValue } from "../../schema"
 import { ReasoningEfforts, TextVerbosity } from "../../schema"
 
-export const OpenAIReasoningEfforts = ReasoningEfforts.filter(
+const OpenAIReasoningEfforts = ReasoningEfforts.filter(
   (effort): effort is Exclude<ReasoningEffort, "max"> => effort !== "max",
 )
 export type OpenAIReasoningEffort = (typeof OpenAIReasoningEfforts)[number]
 
 // Mirrors OpenAI's `ResponseIncludable` union from the official SDK. Keep this
 // in lockstep with `openai-node/src/resources/responses/responses.ts`.
-export const OpenAIResponseIncludables = [
+const OpenAIResponseIncludables = [
   "file_search_call.results",
   "web_search_call.results",
   "web_search_call.action.sources",
@@ -20,7 +20,7 @@ export const OpenAIResponseIncludables = [
   "message.output_text.logprobs",
 ] as const
 export type OpenAIResponseIncludable = (typeof OpenAIResponseIncludables)[number]
-export const OpenAIServiceTiers = ["auto", "default", "flex", "priority"] as const
+const OpenAIServiceTiers = ["auto", "default", "flex", "priority"] as const
 export type OpenAIServiceTier = (typeof OpenAIServiceTiers)[number]
 
 const REASONING_EFFORTS = new Set<string>(ReasoningEfforts)

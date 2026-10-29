@@ -3,18 +3,18 @@ import { createSimpleContext } from "./helper"
 import type { PromptInfo } from "../prompt/history"
 import { useTuiStartup } from "./runtime"
 
-export type HomeRoute = {
+type HomeRoute = {
   type: "home"
   prompt?: PromptInfo
 }
 
-export type SessionRoute = {
+type SessionRoute = {
   type: "session"
   sessionID: string
   prompt?: PromptInfo
 }
 
-export type PluginRoute = {
+type PluginRoute = {
   type: "plugin"
   id: string
   data?: Record<string, unknown>
@@ -52,7 +52,7 @@ function initialRoute(value: unknown): Route | undefined {
   }
 }
 
-export type RouteContext = ReturnType<typeof useRoute>
+type RouteContext = ReturnType<typeof useRoute>
 
 export function useRouteData<T extends Route["type"]>(type: T) {
   const route = useRoute()

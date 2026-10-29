@@ -13,11 +13,11 @@ export function referralCookie(code: string) {
   return `${REFERRAL_COOKIE}=${encodeURIComponent(code)}; Path=/; Max-Age=${REFERRAL_MAX_AGE}; SameSite=Lax; HttpOnly`
 }
 
-export function clearReferralCookie() {
+function clearReferralCookie() {
   return `${REFERRAL_COOKIE}=; Path=/; Max-Age=0; SameSite=Lax; HttpOnly`
 }
 
-export function referralCodeFromCookieHeader(header: string | null) {
+function referralCodeFromCookieHeader(header: string | null) {
   if (!header) return undefined
 
   return normalizeReferralCode(

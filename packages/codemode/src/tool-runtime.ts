@@ -21,7 +21,7 @@ import {
 
 const estimateTokens = (input: string) => Math.max(0, Math.round(input.length / 4))
 
-export type HostTool<R = never> = (...args: Array<unknown>) => Effect.Effect<unknown, unknown, R>
+type HostTool<R = never> = (...args: Array<unknown>) => Effect.Effect<unknown, unknown, R>
 
 export type HostTools<R = never> = {
   [name: string]: HostTool<R> | Definition<R> | HostTools<R>
@@ -339,7 +339,7 @@ const visibleDefinitions = <R>(tools: HostTools<R>) =>
     description: describeDefinition(path, definition),
   }))
 
-export const catalog = <R>(tools: HostTools<R>): ReadonlyArray<ToolDescription> =>
+const catalog = <R>(tools: HostTools<R>): ReadonlyArray<ToolDescription> =>
   visibleDefinitions(tools).map(({ description }) => description)
 
 export type DiscoveryPlan = {

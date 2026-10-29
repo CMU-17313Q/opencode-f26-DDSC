@@ -26,7 +26,7 @@ import {
   mergeProviderOptions,
 } from "../schema"
 
-export interface RouteBody<Body> {
+interface RouteBody<Body> {
   /** Schema for the validated provider-native body sent as the JSON request. */
   readonly schema: Schema.Codec<Body, unknown>
   /** Build the provider-native body from a common `LLMRequest`. */
@@ -58,7 +58,7 @@ export interface Route<Body, Prepared = unknown> {
 // oxlint-disable-next-line typescript-eslint/no-explicit-any
 export type AnyRoute = Route<any, any>
 
-export type HttpOptionsInput = HttpOptions.Input
+type HttpOptionsInput = HttpOptions.Input
 
 export type RouteModelInput = Omit<Model.Input, "provider" | "route">
 
@@ -80,7 +80,7 @@ export interface RouteDefaultsInput {
   readonly http?: HttpOptions.Input
 }
 
-export interface RoutePatch<Body, Prepared> extends RouteDefaultsInput {
+interface RoutePatch<Body, Prepared> extends RouteDefaultsInput {
   readonly id?: string
   readonly provider?: string | ProviderID
   readonly auth?: AuthDef
@@ -130,10 +130,10 @@ const mergeHeaders = (...items: ReadonlyArray<Record<string, string> | undefined
   return Object.fromEntries(entries)
 }
 
-export const generationOptions = (input: GenerationOptions.Input | undefined) =>
+const generationOptions = (input: GenerationOptions.Input | undefined) =>
   input === undefined ? undefined : GenerationOptions.make(input)
 
-export const httpOptions = (input: HttpOptionsInput | undefined) => {
+const httpOptions = (input: HttpOptionsInput | undefined) => {
   if (input === undefined) return input
   return HttpOptions.make(input)
 }
@@ -154,11 +154,11 @@ export interface Interface {
   readonly generate: GenerateMethod
 }
 
-export interface StreamMethod {
+interface StreamMethod {
   (request: LLMRequest): Stream.Stream<LLMEvent, LLMError>
 }
 
-export interface GenerateMethod {
+interface GenerateMethod {
   (request: LLMRequest): Effect.Effect<LLMResponse, LLMError>
 }
 
@@ -179,7 +179,7 @@ const resolveRequestOptions = (request: LLMRequest) => {
   })
 }
 
-export interface MakeInput<Body, Frame, Event, State> {
+interface MakeInput<Body, Frame, Event, State> {
   /** Route id used in diagnostics and prepared request metadata. */
   readonly id: string
   /** Provider identity for route-owned model construction. */
@@ -198,7 +198,7 @@ export interface MakeInput<Body, Frame, Event, State> {
   readonly defaults?: RouteDefaultsInput
 }
 
-export interface MakeTransportInput<Body, Prepared, Frame, Event, State> {
+interface MakeTransportInput<Body, Prepared, Frame, Event, State> {
   /** Route id used in diagnostics and prepared request metadata. */
   readonly id: string
   /** Provider identity for route-owned model construction. */
@@ -300,7 +300,7 @@ function makeFromTransport<Body, Prepared, Frame, Event, State>(
   return build({ ...input, defaults: mergeRouteDefaults(undefined, input.defaults ?? {}) })
 }
 
-export function make<Body, Prepared, Frame, Event, State>(
+function make<Body, Prepared, Frame, Event, State>(
   input: MakeTransportInput<Body, Prepared, Frame, Event, State>,
 ): Route<Body, Prepared>
 /**
@@ -318,10 +318,10 @@ export function make<Body, Prepared, Frame, Event, State>(
  * this four-axis model, add a purpose-built constructor rather than widening
  * the public surface preemptively.
  */
-export function make<Body, Frame, Event, State>(
+function make<Body, Frame, Event, State>(
   input: MakeInput<Body, Frame, Event, State>,
 ): Route<Body, HttpTransport.HttpPrepared<Frame>>
-export function make<Body, Prepared, Frame, Event, State>(
+function make<Body, Prepared, Frame, Event, State>(
   input: MakeInput<Body, Frame, Event, State> | MakeTransportInput<Body, Prepared, Frame, Event, State>,
 ): Route<Body, Prepared> | Route<Body, HttpTransport.HttpPrepared<Frame>> {
   if ("transport" in input) return makeFromTransport(input)
@@ -390,10 +390,10 @@ const generateWith = (stream: Interface["stream"]) =>
     )
   })
 
-export const prepare = <Body = unknown>(request: LLMRequest) =>
+const prepare = <Body = unknown>(request: LLMRequest) =>
   prepareWith(request) as Effect.Effect<PreparedRequestOf<Body>, LLMError>
 
-export function stream(request: LLMRequest): Stream.Stream<LLMEvent, LLMError> {
+function stream(request: LLMRequest): Stream.Stream<LLMEvent, LLMError> {
   return Stream.unwrap(
     Effect.gen(function* () {
       return (yield* Service).stream(request)
@@ -401,20 +401,20 @@ export function stream(request: LLMRequest): Stream.Stream<LLMEvent, LLMError> {
   ) as Stream.Stream<LLMEvent, LLMError>
 }
 
-export function generate(request: LLMRequest): Effect.Effect<LLMResponse, LLMError> {
+function generate(request: LLMRequest): Effect.Effect<LLMResponse, LLMError> {
   return Effect.gen(function* () {
     return yield* (yield* Service).generate(request)
   }) as Effect.Effect<LLMResponse, LLMError>
 }
 
-export const streamRequest = (request: LLMRequest) =>
+const streamRequest = (request: LLMRequest) =>
   Stream.unwrap(
     Effect.gen(function* () {
       return (yield* Service).stream(request)
     }),
   )
 
-export const layer: Layer.Layer<Service, never, RequestExecutor.Service> = Layer.effect(
+const layer: Layer.Layer<Service, never, RequestExecutor.Service> = Layer.effect(
   Service,
   Effect.gen(function* () {
     const stream = streamRequestWith({

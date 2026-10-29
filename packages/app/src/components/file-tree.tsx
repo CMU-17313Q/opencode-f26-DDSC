@@ -78,7 +78,7 @@ const kindDotColor = (kind: Kind) => {
   return "background-color: var(--icon-diff-modified-base)"
 }
 
-export const visibleKind = (node: FileNode, kinds?: ReadonlyMap<string, Kind>, marks?: Set<string>) => {
+const visibleKind = (node: FileNode, kinds?: ReadonlyMap<string, Kind>, marks?: Set<string>) => {
   const kind = kinds?.get(node.path)
   if (!kind) return
   if (!marks?.has(node.path)) return

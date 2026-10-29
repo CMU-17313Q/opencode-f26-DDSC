@@ -16,10 +16,6 @@ export namespace Identifier {
   export function ascending(prefix: Prefix, given?: string) {
     return generateID(prefix, false, given)
   }
-
-  export function descending(prefix: Prefix, given?: string) {
-    return generateID(prefix, true, given)
-  }
 }
 
 function generateID(prefix: Prefix, descending: boolean, given?: string): string {

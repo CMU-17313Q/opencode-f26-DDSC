@@ -845,5 +845,5 @@ export const dict = {
   "bench.detail.rawJson": "Surowy JSON",
 } as const
 
-export type Key = keyof typeof dict
-export type Dict = Record<Key, string>
+type Key = keyof typeof dict
+type Dict = Record<Key, string>

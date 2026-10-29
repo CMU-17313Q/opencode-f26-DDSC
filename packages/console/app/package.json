@@ -11,13 +11,10 @@
     "start": "vite start"
   },
   "dependencies": {
-    "@cloudflare/vite-plugin": "1.15.2",
     "@ibm/plex": "6.4.1",
-    "@jsx-email/render": "1.1.1",
     "@kobalte/core": "catalog:",
     "@openauthjs/openauth": "catalog:",
     "@opencode-ai/console-core": "workspace:*",
-    "@opencode-ai/console-mail": "workspace:*",
     "@opencode-ai/console-resource": "workspace:*",
     "@opencode-ai/ui": "workspace:*",
     "@smithy/eventstream-codec": "4.2.7",
@@ -32,6 +29,7 @@
     "solid-js": "catalog:",
     "solid-list": "0.3.0",
     "solid-stripe": "0.8.1",
+    "stripe": "18.0.0",
     "vite": "catalog:",
     "zod": "catalog:"
   },
@@ -39,8 +37,7 @@
     "@types/bun": "catalog:",
     "@typescript/native-preview": "catalog:",
     "@webgpu/types": "0.1.54",
-    "typescript": "catalog:",
-    "wrangler": "4.50.0"
+    "typescript": "catalog:"
   },
   "engines": {
     "node": ">=22"

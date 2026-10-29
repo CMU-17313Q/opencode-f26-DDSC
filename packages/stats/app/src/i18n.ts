@@ -253,7 +253,7 @@ const en = {
 } as const
 
 export type Key = keyof typeof en
-export type Dict = Record<Key, string>
+type Dict = Record<Key, string>
 
 const dictionaries = {
   ar,

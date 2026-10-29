@@ -4,7 +4,7 @@ import { useCommand } from "@/context/command"
 import { useLanguage } from "@/context/language"
 import { useDialog } from "@opencode-ai/ui/context/dialog"
 
-export function useSettingsDialog(defaultValue?: string) {
+function useSettingsDialog(defaultValue?: string) {
   const dialog = useDialog()
   const params = useParams<{ id?: string }>()
   let run = 0

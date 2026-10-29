@@ -151,7 +151,7 @@ export function normalizeProviderList(
   }
 }
 
-export function sanitizeProject(project: Project) {
+function sanitizeProject(project: Project) {
   if (!project.icon?.url && !project.icon?.override) return project
   return {
     ...project,

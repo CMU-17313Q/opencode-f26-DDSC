@@ -1,4 +1,4 @@
-export const docsLocale = [
+const docsLocale = [
   "ar",
   "bs",
   "da",
@@ -19,13 +19,13 @@ export const docsLocale = [
   "zh-tw",
 ] as const
 
-export type DocsLocale = (typeof docsLocale)[number]
+type DocsLocale = (typeof docsLocale)[number]
 
-export const locale = ["root", ...docsLocale] as const
+const locale = ["root", ...docsLocale] as const
 
-export type Locale = (typeof locale)[number]
+type Locale = (typeof locale)[number]
 
-export const localeAlias = {
+const localeAlias = {
   ar: "ar",
   br: "pt-br",
   bs: "bs",

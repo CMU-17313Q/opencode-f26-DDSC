@@ -3,12 +3,12 @@ const OPENAI_COMPATIBLE = "@ai-sdk/openai-compatible"
 
 type Translator = (key: string, vars?: Record<string, string | number | boolean>) => string
 
-export type ModelErr = {
+type ModelErr = {
   id?: string
   name?: string
 }
 
-export type HeaderErr = {
+type HeaderErr = {
   key?: string
   value?: string
 }

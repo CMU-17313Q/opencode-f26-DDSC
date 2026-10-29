@@ -18,8 +18,8 @@ export type HomeSessionIndex = {
   eventSequence: number
 }
 
-export const homeSessionIndexKey = (server: string) => ["home", "session-index", server] as const
-export const homeSessionEventsKey = (server: string) => ["home", "session-events", server] as const
+const homeSessionIndexKey = (server: string) => ["home", "session-index", server] as const
+const homeSessionEventsKey = (server: string) => ["home", "session-events", server] as const
 
 type HomeSessionPage = { data?: V2SessionListResponse }
 
@@ -59,7 +59,7 @@ export function appendHomeSessionEvent(current: HomeSessionEvents | undefined, e
   }
 }
 
-export function trimHomeSessionEvents(current: HomeSessionEvents | undefined, sequence: number): HomeSessionEvents {
+function trimHomeSessionEvents(current: HomeSessionEvents | undefined, sequence: number): HomeSessionEvents {
   return {
     sequence: current?.sequence ?? sequence,
     entries: (current?.entries ?? []).filter((entry) => entry.sequence > sequence),

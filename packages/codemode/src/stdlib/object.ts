@@ -3,7 +3,7 @@ import { isBlockedMember } from "../tool-runtime.js"
 import { isSandboxValue, SandboxMap, SandboxURLSearchParams } from "../values.js"
 import { boundedData, coerceToString } from "./value.js"
 
-export const objectStatics = new Set(["keys", "values", "entries", "hasOwn", "assign", "fromEntries"])
+const objectStatics = new Set(["keys", "values", "entries", "hasOwn", "assign", "fromEntries"])
 
 export const invokeObjectMethod = (name: string, args: Array<unknown>, node: AstNode): unknown => {
   if (!objectStatics.has(name)) throw new InterpreterRuntimeError(`Object.${name} is not available in CodeMode.`, node)

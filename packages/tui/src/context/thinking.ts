@@ -16,7 +16,7 @@ export function reasoningSummary(text: string) {
   return { title: match[1].trim(), body: content.slice(match[0].length).trimEnd() }
 }
 
-export function isThinkingMode(value: unknown): value is ThinkingMode {
+function isThinkingMode(value: unknown): value is ThinkingMode {
   return typeof value === "string" && (MODES as readonly string[]).includes(value)
 }
 

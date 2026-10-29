@@ -4,13 +4,13 @@ import { createSimpleContext } from "@opencode-ai/ui/context"
 import { persisted } from "@/utils/persist"
 import { usePlatform } from "@/context/platform"
 
-export interface NotificationSettings {
+interface NotificationSettings {
   agent: boolean
   permissions: boolean
   errors: boolean
 }
 
-export interface SoundSettings {
+interface SoundSettings {
   agentEnabled: boolean
   agent: string
   permissionsEnabled: boolean
@@ -60,7 +60,7 @@ export const terminalDefault = "JetBrainsMono Nerd Font Mono"
 const legacyNewLayoutDesignsDefault = import.meta.env.VITE_OPENCODE_CHANNEL !== "prod"
 export const newLayoutDesignsDefault = true
 // Existing users can switch layouts until local midnight on this date. Set new Date(YYYY, M-1, D) to show.
-export const oldInterfaceSunset = new Date(2026, 8, 14)
+const oldInterfaceSunset = new Date(2026, 8, 14)
 const newLayoutDesignsUpgradeCutoff = "1.17.19"
 
 function compareVersions(a: string, b: string) {

@@ -4,7 +4,7 @@ import { createMemo, type Accessor } from "solid-js"
 import { reuseTimelineRows } from "./row-reconciliation"
 import { Timeline, TimelineRow } from "./rows"
 
-export { reuseTimelineRows } from "./row-reconciliation"
+
 
 export function createTimelineProjection(input: {
   messages: Accessor<Message[]>

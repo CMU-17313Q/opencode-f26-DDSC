@@ -84,7 +84,7 @@ export function treePathWithin(base: string | undefined, path: string) {
   return pickerRelativePath(base, path) !== undefined
 }
 
-export function canonicalPickerPath(path: string) {
+function canonicalPickerPath(path: string) {
   const value = normalizePickerDrive(path)
   const root = pickerRoot(value)
   const parts = value.slice(root.length).split("/")
@@ -100,7 +100,7 @@ export function canonicalPickerPath(path: string) {
   return joinPickerPath(root, resolved.join("/"))
 }
 
-export function pickerRelativePath(base: string | undefined, path: string) {
+function pickerRelativePath(base: string | undefined, path: string) {
   if (!base) return
   const rootPath = canonicalPickerPath(base)
   const targetPath = canonicalPickerPath(path)
@@ -240,7 +240,7 @@ export function selectedTreePath(root: string, path: string, mode: "directory" |
   return directory ? nativePickerPath(absoluteTreePath(root, path)) : undefined
 }
 
-export function nativePickerPath(path: string) {
+function nativePickerPath(path: string) {
   const value = trimPickerPath(path)
   if (/^[A-Za-z]:\//.test(value) || value.startsWith("//")) return value.replaceAll("/", "\\")
   return value
@@ -254,25 +254,25 @@ export function cleanPickerInput(value: string) {
   return first.replace(/[\u0000-\u001F\u007F]/g, "").trim()
 }
 
-export function normalizePickerPath(input: string) {
+function normalizePickerPath(input: string) {
   const value = input.replaceAll("\\", "/")
   if (value.startsWith("//") && !value.startsWith("///")) return "//" + value.slice(2).replace(/\/+/g, "/")
   return value.replace(/\/+/g, "/")
 }
 
-export function normalizePickerDrive(input: string) {
+function normalizePickerDrive(input: string) {
   const value = normalizePickerPath(input)
   if (/^[A-Za-z]:$/.test(value)) return value + "/"
   return value
 }
 
-export function trimPickerPath(input: string) {
+function trimPickerPath(input: string) {
   const value = normalizePickerDrive(input)
   if (value === "/" || value === "//" || /^[A-Za-z]:\/$/.test(value)) return value
   return value.replace(/\/+$/, "")
 }
 
-export function joinPickerPath(base: string | undefined, relative: string) {
+function joinPickerPath(base: string | undefined, relative: string) {
   const root = trimPickerPath(base ?? "")
   const path = trimPickerPath(relative).replace(/^\/+/, "")
   if (!root) return path

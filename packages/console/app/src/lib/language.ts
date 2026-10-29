@@ -21,7 +21,7 @@ export const LOCALES = [
 
 export type Locale = (typeof LOCALES)[number]
 
-export const LOCALE_COOKIE = "oc_locale" as const
+const LOCALE_COOKIE = "oc_locale" as const
 export const LOCALE_HEADER = "x-opencode-locale" as const
 
 function fix(pathname: string) {
@@ -185,7 +185,7 @@ export function fromPathname(pathname: string) {
   return parseLocale(fix(pathname).split("/")[1])
 }
 
-export function fromDocsPathname(pathname: string) {
+function fromDocsPathname(pathname: string) {
   const next = fix(pathname)
   const value = next.split("/")[2]?.toLowerCase()
   if (!value) return null
@@ -263,7 +263,7 @@ export function detectFromLanguages(languages: readonly string[]) {
   return "en" satisfies Locale
 }
 
-export function detectFromAcceptLanguage(header: string | null) {
+function detectFromAcceptLanguage(header: string | null) {
   if (!header) return "en" satisfies Locale
 
   const items = header

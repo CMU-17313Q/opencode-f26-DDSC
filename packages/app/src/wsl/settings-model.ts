@@ -13,7 +13,7 @@ export type AddServerText = {
   params?: Record<string, string>
 }
 
-export type DistroStatusTone = "success" | "warning" | "muted"
+type DistroStatusTone = "success" | "warning" | "muted"
 
 export type DistroStatus = {
   label: AddServerText
@@ -36,7 +36,7 @@ export type AddableProbePlan = {
   distros: string[]
 }
 
-export type AutoProbePlan = { key: "runtime"; action: "probeRuntime" } | { key: "distros"; action: "refreshDistros" }
+type AutoProbePlan = { key: "runtime"; action: "probeRuntime" } | { key: "distros"; action: "refreshDistros" }
 
 export type AddServerProbePlan =
   | { kind: "auto"; key: string; plan: AutoProbePlan }
@@ -57,7 +57,7 @@ export function wslOpencodeAction(check?: WslOpencodeCheck) {
   if (check.matchesDesktop === false) return "wsl.onboarding.updateOpencode"
 }
 
-export function wslDistroReady(state: WslServersState | undefined, name: string) {
+function wslDistroReady(state: WslServersState | undefined, name: string) {
   const installed = state?.installed.find((item) => item.name === name)
   const probe = state?.distroProbes[name]
   if (!probe || !installed) return false

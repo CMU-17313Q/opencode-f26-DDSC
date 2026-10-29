@@ -18,7 +18,7 @@ export function compareSessionTime(a: Session, b: Session) {
 const isRootVisibleSession = (session: Session, directory: string) =>
   pathKey(session.directory) === pathKey(directory) && !session.parentID && !session.time?.archived
 
-export const roots = (store: SessionStore) =>
+const roots = (store: SessionStore) =>
   (store.session ?? []).filter((session) => isRootVisibleSession(session, store.path.directory))
 
 export const sortedRootSessions = (store: SessionStore, _now: number) => roots(store).sort(compareSessionTime)

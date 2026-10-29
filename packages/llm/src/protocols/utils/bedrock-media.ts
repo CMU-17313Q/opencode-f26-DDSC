@@ -4,8 +4,8 @@ import { ProviderShared } from "../shared"
 
 // Bedrock Converse accepts image `format` as the file extension and
 // `source.bytes` as base64 in the JSON wire format.
-export const ImageFormat = Schema.Literals(["png", "jpeg", "gif", "webp"])
-export type ImageFormat = Schema.Schema.Type<typeof ImageFormat>
+const ImageFormat = Schema.Literals(["png", "jpeg", "gif", "webp"])
+type ImageFormat = Schema.Schema.Type<typeof ImageFormat>
 
 export const ImageBlock = Schema.Struct({
   image: Schema.Struct({
@@ -17,8 +17,8 @@ export type ImageBlock = Schema.Schema.Type<typeof ImageBlock>
 
 // Bedrock document blocks require a user-facing name so the model can refer to
 // the uploaded document.
-export const DocumentFormat = Schema.Literals(["pdf", "csv", "doc", "docx", "xls", "xlsx", "html", "txt", "md"])
-export type DocumentFormat = Schema.Schema.Type<typeof DocumentFormat>
+const DocumentFormat = Schema.Literals(["pdf", "csv", "doc", "docx", "xls", "xlsx", "html", "txt", "md"])
+type DocumentFormat = Schema.Schema.Type<typeof DocumentFormat>
 
 export const DocumentBlock = Schema.Struct({
   document: Schema.Struct({

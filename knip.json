@@ -55,7 +55,9 @@
         "packages/containers/script/**/*.ts"
       ],
       "ignoreDependencies": [
-        "turbo"
+        "turbo",
+        // Stryker 10 bundles the "command" runner in core; Knip's plugin still expects a separate package.
+        "@stryker-mutator/command-runner"
       ]
     },
     "github": {},

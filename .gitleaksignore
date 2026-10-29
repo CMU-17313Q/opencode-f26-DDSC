@@ -1,0 +1,71 @@
+# Known false positives in existing history, reviewed when gitleaks was added (Project 3B).
+# Format: <commit>:<file>:<rule>:<line>. Each entry only matches that exact commit and line,
+# so new commits touching the same files are still scanned.
+#
+# Reviewed 2026-10-29, none are real secrets:
+# - console/app/src/i18n/*.ts: long translated sentences under keys like "grokRetention"
+# - console/app/package.json: Stripe publishable *test* key (public by design)
+# - opencode/src/plugin/digitalocean.ts: public OAuth client ID (no client secret in the file)
+# - app/src/pages/layout.tsx, sdk/js/src/v2/gen/sdk.gen.ts, session-ui tool-count-summary.tsx,
+#   app/e2e/.../context-matrix.spec.ts: identifiers like `key:` / `keybind:` next to plain strings
+#
+# They appear in three commits: the fork's initial upstream import (a02bf694) and two commits
+# that rewrote line endings (6f4a6578, 15f38435).
+#
+# To add a new entry: copy the "Fingerprint" from the gitleaks report, and only for values that
+# are verifiably not secrets. Real secrets must be rotated, never ignored.
+
+15f3843588df992419fd4621be3ce58beaf0d2c7:packages/app/e2e/performance/timeline-stability/context-matrix.spec.ts:generic-api-key:136
+15f3843588df992419fd4621be3ce58beaf0d2c7:packages/console/app/package.json:generic-api-key:9
+15f3843588df992419fd4621be3ce58beaf0d2c7:packages/console/app/src/i18n/ar.ts:generic-api-key:346
+15f3843588df992419fd4621be3ce58beaf0d2c7:packages/console/app/src/i18n/br.ts:generic-api-key:353
+15f3843588df992419fd4621be3ce58beaf0d2c7:packages/console/app/src/i18n/da.ts:generic-api-key:350
+15f3843588df992419fd4621be3ce58beaf0d2c7:packages/console/app/src/i18n/de.ts:generic-api-key:352
+15f3843588df992419fd4621be3ce58beaf0d2c7:packages/console/app/src/i18n/en.ts:generic-api-key:348
+15f3843588df992419fd4621be3ce58beaf0d2c7:packages/console/app/src/i18n/es.ts:generic-api-key:353
+15f3843588df992419fd4621be3ce58beaf0d2c7:packages/console/app/src/i18n/fr.ts:generic-api-key:354
+15f3843588df992419fd4621be3ce58beaf0d2c7:packages/console/app/src/i18n/it.ts:generic-api-key:349
+15f3843588df992419fd4621be3ce58beaf0d2c7:packages/console/app/src/i18n/no.ts:generic-api-key:350
+15f3843588df992419fd4621be3ce58beaf0d2c7:packages/console/app/src/i18n/pl.ts:generic-api-key:351
+15f3843588df992419fd4621be3ce58beaf0d2c7:packages/console/app/src/i18n/ru.ts:generic-api-key:355
+15f3843588df992419fd4621be3ce58beaf0d2c7:packages/console/app/src/i18n/th.ts:generic-api-key:347
+15f3843588df992419fd4621be3ce58beaf0d2c7:packages/console/app/src/i18n/uk.ts:generic-api-key:351
+15f3843588df992419fd4621be3ce58beaf0d2c7:packages/opencode/src/plugin/digitalocean.ts:generic-api-key:8
+15f3843588df992419fd4621be3ce58beaf0d2c7:packages/session-ui/src/components/tool-count-summary.tsx:generic-api-key:6
+6f4a657808a61279a3d41f0eecc08889991cd38e:packages/app/e2e/performance/timeline-stability/context-matrix.spec.ts:generic-api-key:136
+6f4a657808a61279a3d41f0eecc08889991cd38e:packages/console/app/package.json:generic-api-key:9
+6f4a657808a61279a3d41f0eecc08889991cd38e:packages/console/app/src/i18n/ar.ts:generic-api-key:346
+6f4a657808a61279a3d41f0eecc08889991cd38e:packages/console/app/src/i18n/br.ts:generic-api-key:353
+6f4a657808a61279a3d41f0eecc08889991cd38e:packages/console/app/src/i18n/da.ts:generic-api-key:350
+6f4a657808a61279a3d41f0eecc08889991cd38e:packages/console/app/src/i18n/de.ts:generic-api-key:352
+6f4a657808a61279a3d41f0eecc08889991cd38e:packages/console/app/src/i18n/en.ts:generic-api-key:348
+6f4a657808a61279a3d41f0eecc08889991cd38e:packages/console/app/src/i18n/es.ts:generic-api-key:353
+6f4a657808a61279a3d41f0eecc08889991cd38e:packages/console/app/src/i18n/fr.ts:generic-api-key:354
+6f4a657808a61279a3d41f0eecc08889991cd38e:packages/console/app/src/i18n/it.ts:generic-api-key:349
+6f4a657808a61279a3d41f0eecc08889991cd38e:packages/console/app/src/i18n/no.ts:generic-api-key:350
+6f4a657808a61279a3d41f0eecc08889991cd38e:packages/console/app/src/i18n/pl.ts:generic-api-key:351
+6f4a657808a61279a3d41f0eecc08889991cd38e:packages/console/app/src/i18n/ru.ts:generic-api-key:355
+6f4a657808a61279a3d41f0eecc08889991cd38e:packages/console/app/src/i18n/th.ts:generic-api-key:347
+6f4a657808a61279a3d41f0eecc08889991cd38e:packages/console/app/src/i18n/uk.ts:generic-api-key:351
+6f4a657808a61279a3d41f0eecc08889991cd38e:packages/opencode/src/plugin/digitalocean.ts:generic-api-key:8
+6f4a657808a61279a3d41f0eecc08889991cd38e:packages/session-ui/src/components/tool-count-summary.tsx:generic-api-key:6
+a02bf694cb202984458f2d36890c35e053f9e464:packages/app/e2e/performance/timeline-stability/context-matrix.spec.ts:generic-api-key:136
+a02bf694cb202984458f2d36890c35e053f9e464:packages/app/src/pages/layout.tsx:generic-api-key:965
+a02bf694cb202984458f2d36890c35e053f9e464:packages/app/src/pages/layout.tsx:generic-api-key:972
+a02bf694cb202984458f2d36890c35e053f9e464:packages/console/app/package.json:generic-api-key:9
+a02bf694cb202984458f2d36890c35e053f9e464:packages/console/app/src/i18n/ar.ts:generic-api-key:346
+a02bf694cb202984458f2d36890c35e053f9e464:packages/console/app/src/i18n/br.ts:generic-api-key:353
+a02bf694cb202984458f2d36890c35e053f9e464:packages/console/app/src/i18n/da.ts:generic-api-key:350
+a02bf694cb202984458f2d36890c35e053f9e464:packages/console/app/src/i18n/de.ts:generic-api-key:352
+a02bf694cb202984458f2d36890c35e053f9e464:packages/console/app/src/i18n/en.ts:generic-api-key:348
+a02bf694cb202984458f2d36890c35e053f9e464:packages/console/app/src/i18n/es.ts:generic-api-key:353
+a02bf694cb202984458f2d36890c35e053f9e464:packages/console/app/src/i18n/fr.ts:generic-api-key:354
+a02bf694cb202984458f2d36890c35e053f9e464:packages/console/app/src/i18n/it.ts:generic-api-key:349
+a02bf694cb202984458f2d36890c35e053f9e464:packages/console/app/src/i18n/no.ts:generic-api-key:350
+a02bf694cb202984458f2d36890c35e053f9e464:packages/console/app/src/i18n/pl.ts:generic-api-key:351
+a02bf694cb202984458f2d36890c35e053f9e464:packages/console/app/src/i18n/ru.ts:generic-api-key:355
+a02bf694cb202984458f2d36890c35e053f9e464:packages/console/app/src/i18n/th.ts:generic-api-key:347
+a02bf694cb202984458f2d36890c35e053f9e464:packages/console/app/src/i18n/uk.ts:generic-api-key:351
+a02bf694cb202984458f2d36890c35e053f9e464:packages/opencode/src/plugin/digitalocean.ts:generic-api-key:8
+a02bf694cb202984458f2d36890c35e053f9e464:packages/sdk/js/src/v2/gen/sdk.gen.ts:generic-api-key:5370
+a02bf694cb202984458f2d36890c35e053f9e464:packages/session-ui/src/components/tool-count-summary.tsx:generic-api-key:6

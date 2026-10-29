@@ -1,0 +1,90 @@
+name: gitleaks
+
+# Gitleaks secret scanning (Project 3B)
+#
+#   secret-scan   every PR + push to main. Scans the full history of the checked-out
+#                 commit (for a PR: main merged with the PR) for hardcoded secrets
+#                 (API keys, tokens, private keys). BLOCKS merges on any finding.
+#
+# Rules and allowlists live in .gitleaks.toml; reviewed historical false positives are
+# listed by fingerprint in .gitleaksignore. We install the CLI directly because
+# gitleaks/gitleaks-action requires a license key for organization-owned repositories.
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+env:
+  GITLEAKS_VERSION: 8.30.1
+  # sha256 of gitleaks_8.30.1_linux_x64.tar.gz from the release's checksums.txt
+  GITLEAKS_SHA256: 551f6fc83ea457d62a0d98237cbad105af8d557003051f41f3e7ca7b3f2470eb
+
+jobs:
+  secret-scan:
+    name: secret scan (blocking)
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - name: Checkout repository (full history)
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
+        with:
+          fetch-depth: 0
+
+      - name: Install gitleaks
+        working-directory: ${{ runner.temp }}
+        run: |
+          curl -sSfL -o gitleaks.tar.gz \
+            "https://github.com/gitleaks/gitleaks/releases/download/v${GITLEAKS_VERSION}/gitleaks_${GITLEAKS_VERSION}_linux_x64.tar.gz"
+          echo "${GITLEAKS_SHA256}  gitleaks.tar.gz" | sha256sum --check
+          tar -xzf gitleaks.tar.gz gitleaks
+          sudo install gitleaks /usr/local/bin/gitleaks
+          gitleaks version
+
+      - name: Scan git history for secrets
+        run: |
+          set -o pipefail
+          mkdir -p "$RUNNER_TEMP/gitleaks-report"
+          # --log-opts=HEAD: without it gitleaks scans `git log --all`, i.e. every branch the
+          # full checkout fetched, so an unrelated branch could fail this PR.
+          gitleaks git --config .gitleaks.toml --redact --verbose --log-opts="HEAD" \
+            --report-format json --report-path "$RUNNER_TEMP/gitleaks-report/report.json" \
+            2>&1 | tee "$RUNNER_TEMP/gitleaks-report/scan.log"
+
+      - name: Write job summary
+        if: always()
+        run: |
+          report="$RUNNER_TEMP/gitleaks-report/report.json"
+          {
+            echo "## Gitleaks secret scan"
+            echo
+            echo "gitleaks ${GITLEAKS_VERSION}, full history, config \`.gitleaks.toml\`"
+            echo
+            if [ ! -s "$report" ]; then
+              echo "No report was produced; see the scan step log."
+            elif [ "$(jq length "$report")" -eq 0 ]; then
+              echo "No leaks found."
+            else
+              echo "**$(jq length "$report") finding(s).** Rotate any real secret first, then remove it."
+              echo
+              echo "| Rule | File | Line | Commit |"
+              echo "| --- | --- | --- | --- |"
+              jq -r '.[] | "| \(.RuleID) | `\(.File)` | \(.StartLine) | \(.Commit[0:8]) |"' "$report"
+            fi
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Upload report
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: gitleaks-report
+          path: ${{ runner.temp }}/gitleaks-report/
+          retention-days: 90

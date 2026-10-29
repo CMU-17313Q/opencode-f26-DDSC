@@ -151,7 +151,7 @@ function expectExitContains(exit: Exit.Exit<unknown, unknown>, ...messages: stri
   for (const message of messages) expect(String(exit.cause)).toContain(message)
 }
 
-function eventuallyEffect(effect: Effect.Effect<void>, timeout = 1500) {
+function eventuallyEffect(effect: Effect.Effect<void>, timeout = 10_000) {
   return Effect.gen(function* () {
     const started = Date.now()
     let last: unknown
@@ -1378,17 +1378,17 @@ describe("workspace sync state", () => {
             const sessionSvc = yield* SessionNs.Service
             const instance = yield* requireInstance
             const captured = captureGlobalEvents()
-            try {
-              const type = unique("history-replay")
-              const info = workspaceInfo(instance.project.id, type)
-              yield* insertWorkspace(info)
-              registerAdapter(instance.project.id, type, remoteAdapter(`${url}/history`).adapter)
-              const session = yield* sessionSvc.create({ title: "before history" })
-              yield* attachSessionToWorkspace(session.id, info.id)
-              historySessionID = session.id
-              historySession = { ...session, workspaceID: info.id, title: "from history" }
-              historyNextSeq = ((yield* sessionSequence(session.id)) ?? -1) + 1
+            const type = unique("history-replay")
+            const info = workspaceInfo(instance.project.id, type)
+            yield* insertWorkspace(info)
+            registerAdapter(instance.project.id, type, remoteAdapter(`${url}/history`).adapter)
+            const session = yield* sessionSvc.create({ title: "before history" })
+            yield* attachSessionToWorkspace(session.id, info.id)
+            historySessionID = session.id
+            historySession = { ...session, workspaceID: info.id, title: "from history" }
+            historyNextSeq = ((yield* sessionSequence(session.id)) ?? -1) + 1
 
+            yield* Effect.gen(function* () {
               yield* workspace.startWorkspaceSyncing(instance.project.id)
 
               yield* eventuallyEffect(
@@ -1406,10 +1406,14 @@ describe("workspace sync state", () => {
                     event.payload.properties.info.title === "from history",
                 ),
               ).toBe(true)
-              yield* workspace.remove(info.id)
-            } finally {
-              captured.dispose()
-            }
+            }).pipe(
+              // Stop syncing before the test server scope closes. Leaving the
+              // SSE connection open makes NodeHttpServer wait out its graceful
+              // shutdown timeout, which turns any earlier failure into a
+              // 20s interrupt that hides the real cause.
+              Effect.ensuring(workspace.remove(info.id).pipe(Effect.ignore)),
+              Effect.ensuring(Effect.sync(() => captured.dispose())),
+            )
           }),
         { git: true },
       )

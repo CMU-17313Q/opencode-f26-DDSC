@@ -31,34 +31,45 @@ describe("util.process", () => {
 
   test("aborts a running process", async () => {
     const abort = new AbortController()
-    const started = Date.now()
-    setTimeout(() => abort.abort(), 25)
-
-    const out = await Process.run(node("setInterval(() => {}, 1000)"), {
+    const proc = Process.spawn(node('process.stdout.write("ready");setInterval(() => {}, 1000)'), {
+      stdout: "pipe",
       abort: abort.signal,
-      nothrow: true,
     })
+    if (!proc.stdout) throw new Error("Process output not available")
+    const stdout = proc.stdout
+    await new Promise<void>((resolve) => stdout.once("data", () => resolve()))
 
-    expect(out.code).not.toBe(0)
+    // Measure from the abort, not from spawn: process startup can be slow on
+    // loaded CI runners and would otherwise drown out the behavior under test.
+    const started = Date.now()
+    abort.abort()
+
+    expect(await proc.exited).not.toBe(0)
     expect(Date.now() - started).toBeLessThan(1000)
-  }, 3000)
+  }, 10_000)
 
   test("kills after timeout when process ignores terminate signal", async () => {
     if (process.platform === "win32") return
 
     const abort = new AbortController()
+    const proc = Process.spawn(
+      node('process.on("SIGTERM", () => {});process.stdout.write("ready");setInterval(() => {}, 1000)'),
+      {
+        stdout: "pipe",
+        abort: abort.signal,
+        timeout: 25,
+      },
+    )
+    if (!proc.stdout) throw new Error("Process output not available")
+    const stdout = proc.stdout
+    await new Promise<void>((resolve) => stdout.once("data", () => resolve()))
+
     const started = Date.now()
-    setTimeout(() => abort.abort(), 25)
+    abort.abort()
 
-    const out = await Process.run(node('process.on("SIGTERM", () => {}); setInterval(() => {}, 1000)'), {
-      abort: abort.signal,
-      nothrow: true,
-      timeout: 25,
-    })
-
-    expect(out.code).not.toBe(0)
+    expect(await proc.exited).not.toBe(0)
     expect(Date.now() - started).toBeLessThan(1000)
-  }, 3000)
+  }, 10_000)
 
   test("uses cwd when spawning commands", async () => {
     await using tmp = await tmpdir()

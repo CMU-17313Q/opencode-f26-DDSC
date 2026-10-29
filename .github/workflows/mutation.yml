@@ -1,0 +1,58 @@
+name: mutation
+
+on:
+  pull_request:
+    paths:
+      - "packages/**"
+      - "patches/**"
+      - "package.json"
+      - "bun.lock"
+      - "tsconfig.json"
+      - "stryker.config.mjs"
+      - "script/mutation-*"
+      - ".github/workflows/mutation.yml"
+      - ".github/actions/setup-bun/**"
+  push:
+    branches: [main]
+  schedule:
+    - cron: "30 2 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: mutation-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  mutation:
+    name: mutation (${{ matrix.package }})
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        package: [opencode, core, tui, app]
+    env:
+      MUTATION_PACKAGE: ${{ matrix.package }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
+      - name: Setup Bun and Node
+        uses: ./.github/actions/setup-bun
+        with:
+          install-flags: --frozen-lockfile
+      - name: Run mutation testing
+        run: bun run test:mutation
+      - name: Summarize mutation report
+        if: always()
+        run: bun script/mutation-summary.ts "${MUTATION_PACKAGE}"
+      - name: Upload mutation reports
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: mutation-${{ matrix.package }}
+          path: reports/mutation/${{ matrix.package }}/
+          if-no-files-found: warn
+          retention-days: 14

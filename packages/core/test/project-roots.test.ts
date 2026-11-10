@@ -13,10 +13,23 @@ describe("ProjectRoots.list", () => {
     ])
   })
 
-  test("suffixes aliases when folder names collide", () => {
+  test("suffixes aliases when folder names collide, independent of order", () => {
     const other = path.resolve("/elsewhere/repo-a")
     const third = path.resolve("/third/repo-a")
-    expect(ProjectRoots.list(a, [other, third]).map((root) => root.alias)).toEqual(["repo-a", "repo-a-2", "repo-a-3"])
+    const aliases = ProjectRoots.list(a, [other, third]).map((root) => root.alias)
+    expect(new Set(aliases).size).toBe(3)
+    aliases.forEach((alias) => expect(alias).toMatch(/^repo-a-[0-9a-f]{6}$/))
+    expect(
+      ProjectRoots.list(third, [other, a])
+        .map((root) => root.alias)
+        .toSorted(),
+    ).toEqual(aliases.toSorted())
+  })
+
+  test("a folder name that stops colliding goes back to the plain name", () => {
+    const other = path.resolve("/elsewhere/repo-a")
+    expect(ProjectRoots.list(b, [a, other]).map((root) => root.alias)[2]).toMatch(/^repo-a-[0-9a-f]{6}$/)
+    expect(ProjectRoots.list(b, [other]).map((root) => root.alias)).toEqual(["repo-b", "repo-a"])
   })
 
   test("drops duplicates and the worktree itself", () => {
@@ -37,7 +50,15 @@ describe("ProjectRoots.display", () => {
 
   test("colliding folder names still produce distinct paths", () => {
     const other = path.resolve("/elsewhere/repo-a")
-    expect(ProjectRoots.display(path.join(other, "main.py"), a, [other])).toBe(path.join("repo-a-2", "main.py"))
+    const shown = ProjectRoots.display(path.join(other, "main.py"), a, [other])
+    expect(shown).not.toBe(ProjectRoots.display(path.join(a, "main.py"), a, [other]))
+    expect(ProjectRoots.resolve(shown, a, a, [other])).toBe(path.join(other, "main.py"))
+  })
+
+  test("a hashed alias still resolves after its name stops colliding", () => {
+    const other = path.resolve("/elsewhere/repo-a")
+    const shown = ProjectRoots.display(path.join(other, "main.py"), b, [a, other])
+    expect(ProjectRoots.resolve(shown, b, b, [other])).toBe(path.join(other, "main.py"))
   })
 
   test("nested root wins over its parent", () => {

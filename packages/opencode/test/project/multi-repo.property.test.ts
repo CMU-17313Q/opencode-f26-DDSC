@@ -35,9 +35,11 @@ const relativeFile = fc.array(segment, { minLength: 1, maxLength: 3 })
 
 describe("multi-repo roots (pure)", () => {
   // R2: Removing a repo removes only that repo from the active list. Every other repo stays listed and is
-  // still reached by the same absolute path and the same alias, and files already written to disk are untouched.
+  // still reached by the same absolute path and, while more than one repo remains, by the same alias. Once only
+  // one repo is left, the session behaves exactly like a single-repo session. Files already written to disk
+  // are untouched.
   // Kind: invariant
-  test("R2: removing a repo leaves every other repo's directory and alias unchanged", () => {
+  test("R2: removing a repo leaves every other repo listed and reachable by its old alias", () => {
     fc.assert(
       fc.property(
         fc
@@ -46,16 +48,23 @@ describe("multi-repo roots (pure)", () => {
         (input) => {
           const before = ProjectRoots.list(PRIMARY, input[0])
           // Same removal the Repositories sidebar sends: the current roots minus the removed directory.
-          const after = ProjectRoots.list(
-            PRIMARY,
-            input[0].filter((dir) => dir !== input[1]),
-          )
-          expect(after.map((root) => root.directory)).toEqual(
+          const remaining = input[0].filter((dir) => dir !== input[1])
+          expect(ProjectRoots.list(PRIMARY, remaining).map((root) => root.directory)).toEqual(
             before.map((root) => root.directory).filter((dir) => dir !== input[1]),
           )
-          after.forEach((root) =>
-            expect(before.find((item) => item.directory === root.directory)?.alias).toBe(root.alias),
-          )
+          // Back to one repo: aliases no longer apply, exactly as if no repo had ever been added (C-4).
+          if (remaining.length === 0) {
+            expect(ProjectRoots.list(PRIMARY, remaining)).toEqual(ProjectRoots.list(PRIMARY))
+            return
+          }
+          // A path the agent was given before the removal must still land in the same repo afterwards.
+          before
+            .filter((root) => root.directory !== input[1])
+            .forEach((root) =>
+              expect(ProjectRoots.resolve(path.join(root.alias, "f.ts"), PRIMARY, PRIMARY, remaining)).toBe(
+                path.join(root.directory, "f.ts"),
+              ),
+            )
         },
       ),
     )
@@ -160,7 +169,9 @@ afterEach(async () => {
 
 describe("multi-repo roots (through the server)", () => {
   // R2: Removing a repo removes only that repo from the active list. Every other repo stays listed and is
-  // still reached by the same absolute path and the same alias, and files already written to disk are untouched.
+  // still reached by the same absolute path and, while more than one repo remains, by the same alias. Once only
+  // one repo is left, the session behaves exactly like a single-repo session. Files already written to disk
+  // are untouched.
   // Kind: round-trip (add a repo, then remove it)
   test("R2: adding then removing a repo restores the list and keeps its files", async () => {
     await using primary = await tmpdir({ git: true })

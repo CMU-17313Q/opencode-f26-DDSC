@@ -28,6 +28,7 @@
   ],
   "ignoreDependencies": [
     "@effect/language-service",
+    "fast-check",
     "react"
   ],
   "ignoreUnresolved": [

@@ -4,6 +4,7 @@ import { useTheme } from "../context/theme"
 import { useTerminalDimensions } from "@opentui/solid"
 import { createMemo, onMount } from "solid-js"
 import { useBindings } from "../keymap"
+import { pastedTextDialogHeight } from "../prompt/pasted-text-layout"
 
 export interface DialogPastedTextProps {
   content: string
@@ -16,22 +17,10 @@ export function DialogPastedText(props: DialogPastedTextProps) {
   const dimensions = useTerminalDimensions()
   onMount(() => dialog.setSize("full"))
 
-  const contentWidth = createMemo(() => Math.max(1, dimensions().width - 8))
-
-  // Word wrap turns long logical lines into multiple visual rows. Estimate the
-  // wrapped row count so the dialog fits wrapped text instead of clipping it;
-  // the scrollbox absorbs any packing slack the estimate misses.
-  const visualLines = createMemo(() => {
-    const width = contentWidth()
-    return props.content
-      .split("\n")
-      .reduce((total, line) => total + Math.max(1, Math.ceil(Bun.stringWidth(line) / width)), 0)
-  })
-
   // The content box fits short content (header + padding account for 4 rows)
   // and caps at the panel height, with the scrollbox absorbing any overflow.
   // It stays centered inside the full-height panel via the root container.
-  const dialogHeight = createMemo(() => Math.min(visualLines() + 4, dimensions().height - 5))
+  const dialogHeight = createMemo(() => pastedTextDialogHeight(props.content, dimensions().width, dimensions().height))
 
   useBindings(() => ({
     bindings: [

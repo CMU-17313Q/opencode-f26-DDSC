@@ -566,7 +566,7 @@ const layer: Layer.Layer<
       if (input?.roots) conditions.push(isNull(SessionTable.parent_id))
       if (input?.start) conditions.push(gte(SessionTable.time_updated, input.start))
       if (input?.cursor) conditions.push(lt(SessionTable.time_updated, input.cursor))
-      if (input?.search) conditions.push(like(SessionTable.title, `%${input.search}%`))
+      if (input?.search) conditions.push(...titleSearch(input.search))
       if (!input?.archived) conditions.push(isNull(SessionTable.time_archived))
 
       const query =
@@ -1011,7 +1011,7 @@ function listByProject(
     conditions.push(gte(SessionTable.time_updated, input.start))
   }
   if (input.search) {
-    conditions.push(like(SessionTable.title, `%${input.search}%`))
+    conditions.push(...titleSearch(input.search))
   }
   const limit = input.limit ?? 100
 
@@ -1019,13 +1019,22 @@ function listByProject(
     .select()
     .from(SessionTable)
     .where(and(...conditions))
-    .orderBy(desc(SessionTable.time_updated))
+    .orderBy(desc(SessionTable.time_updated), desc(SessionTable.id))
     .limit(limit)
     .all()
     .pipe(
       Effect.orDie,
       Effect.map((rows) => rows.map(fromRow)),
     )
+}
+
+// Every whitespace-separated word of the search must appear in the title as literal text, in any order. LIKE treats
+// `%` and `_` as wildcards, so they (and the escape character) are escaped. SQLite's LIKE ignores case for ASCII only.
+function titleSearch(search: string) {
+  return search
+    .split(/\s+/)
+    .filter(Boolean)
+    .map((word) => sql`${SessionTable.title} LIKE ${`%${word.replace(/[\\%_]/g, "\\$&")}%`} ESCAPE '\\'`)
 }
 
 export const node = LayerNode.make({

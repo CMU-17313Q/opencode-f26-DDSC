@@ -64,6 +64,18 @@ jobs:
         # contention issue typecheck.yml already caps for tsgo.
         run: GITHUB_ACTIONS=false bun turbo test --concurrency=4
 
+      - name: Run search-archived property tests (server)
+        timeout-minutes: 5
+        working-directory: packages/opencode
+        # The unit step above already runs these, but its --only-failures flag
+        # hides passing tests. This lists every property by name in the log.
+        run: GITHUB_ACTIONS=false bun test --timeout 60000 test/session/search-archived.property.test.ts
+
+      - name: Run search-archived property tests (app)
+        timeout-minutes: 5
+        working-directory: packages/app
+        run: bun test --conditions=solid --preload ./happydom.ts src/pages/home/home-session-search.property.test.ts
+
       - name: Check generated client
         timeout-minutes: 5
         working-directory: packages/client

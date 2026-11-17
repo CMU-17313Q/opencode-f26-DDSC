@@ -1,6 +1,7 @@
 export * as ProjectRoots from "./roots"
 
 import path from "path"
+import { Hash } from "../util/hash"
 
 export interface Root {
   readonly alias: string
@@ -10,20 +11,29 @@ export interface Root {
 
 /**
  * Every repository root of a project, primary worktree first. Each root gets a
- * unique alias (its folder name, suffixed when two roots share a name) that is
- * used to prefix paths so identically named files in different repos stay distinct.
+ * unique alias (its folder name, or `name-<hash of its path>` when two roots share
+ * a name) that is used to prefix paths so identically named files in different
+ * repos stay distinct. An alias never depends on the order of the roots, so adding,
+ * removing or reordering repos cannot move an alias onto a different repo.
  */
 export function list(worktree: string, roots: readonly string[] = []): Root[] {
   const extra = roots.filter((dir, index) => dir !== worktree && roots.indexOf(dir) === index)
   const directories = [worktree, ...extra]
-  return directories.reduce<Root[]>((result, directory, index) => {
-    const base = path.basename(directory) || "root"
-    const unique = (n: number): string => {
-      const alias = n === 1 ? base : `${base}-${n}`
-      return result.some((root) => root.alias === alias) ? unique(n + 1) : alias
-    }
-    return [...result, { alias: unique(1), directory, primary: index === 0 }]
-  }, [])
+  return directories.map((directory, index) => ({
+    alias: directories.some((other) => other !== directory && name(other) === name(directory))
+      ? hashed(directory)
+      : name(directory),
+    directory,
+    primary: index === 0,
+  }))
+}
+
+function name(directory: string) {
+  return path.basename(directory) || "root"
+}
+
+function hashed(directory: string) {
+  return `${name(directory)}-${Hash.fast(directory).slice(0, 6)}`
 }
 
 /** The deepest root containing `filepath`, if any. */
@@ -49,14 +59,17 @@ export function display(filepath: string, worktree: string, roots: readonly stri
  * Resolve a tool supplied path. Relative paths that start with a root alias
  * (`repo-b/src/app.ts`) resolve inside that root; everything else resolves
  * against `directory` as before. Alias lookup only applies once extra roots
- * exist so single-repo sessions keep their original behavior.
+ * exist so single-repo sessions keep their original behavior. A root's hashed
+ * alias keeps working after it stops sharing a name, so paths the agent was
+ * already given still reach the same repo.
  */
 export function resolve(input: string, directory: string, worktree: string, roots: readonly string[] = []) {
   if (path.isAbsolute(input)) return input
   const all = list(worktree, roots)
   if (all.length === 1) return path.resolve(directory, input)
-  const [head, ...rest] = path.normalize(input).split(/[\\/]/)
-  const root = all.find((item) => item.alias === head)
+  // Split on the platform separator only: on POSIX a backslash is part of a file name.
+  const [head, ...rest] = path.normalize(input).split(path.sep)
+  const root = all.find((item) => item.alias === head) ?? all.find((item) => hashed(item.directory) === head)
   if (!root) return path.resolve(directory, input)
   return path.join(root.directory, ...rest)
 }

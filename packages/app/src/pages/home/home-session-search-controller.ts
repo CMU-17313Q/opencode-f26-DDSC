@@ -10,6 +10,7 @@ import { createMemo, createResource, onCleanup } from "solid-js"
 import { createStore } from "solid-js/store"
 import type { HomeController } from "./home-controller"
 import { homeSessionSearchKey, type HomeSessionRecord, type HomeSessionsController } from "./home-sessions-controller"
+import { matchesSessionSearch, mergeSessionSearchResults } from "./home-session-search"
 
 type HomeSessionSearchSource = Pick<HomeSessionsController, "data" | "session">
 
@@ -73,15 +74,11 @@ export function createHomeSessionSearchController(home: HomeController, sessions
   )
 
   const results = createMemo(() => {
-    const value = query().toLowerCase()
+    const value = query()
     if (!value) return []
-    const local = sessions.data
-      .searchRecords()
-      .filter((record) => `${record.session.title} ${record.projectName}`.toLowerCase().includes(value))
+    const local = sessions.data.searchRecords().filter((record) => matchesSessionSearch(record, value))
     if (!state.includeArchived) return local
-    const seen = new Set(local.map(homeSessionSearchKey))
-    const archived = (remoteResults() ?? []).filter((record) => !seen.has(homeSessionSearchKey(record)))
-    return [...local, ...archived]
+    return mergeSessionSearchResults(local, remoteResults() ?? [])
   })
   const active = createMemo(() => {
     const records = results()
